@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Category</title>
+    <link rel="stylesheet" href="/stylesheet/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="/assets/ecommerce logo.png" alt="Company Logo">
+        </div>
+        <div class="nav-box">
+            <a href="/home" class="btn">Back to Home</a>
+            <a href="/logout" class="btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="sidebar">
+            <a href="/admin/addproduct" class="btn">Add Product</a>
+            <a href="/admin/viewproducts" class="btn">View Products</a>
+        </div>
+
+        <div class="container">
+            <h1>Admin Dashboard</h1>
+
+            <section>
+                <h2>Add New Category</h2>
+                <form action="/admin/addcategory" method="POST">
+                    <div class="form-group">
+                    <% if (sucessmessage) { %>
+                      <p style="color: green;"> <%= sucessmessage %></p> 
+                     
+                    <% } %>
+
+
+                        <% if (errorMessage) { %>
+                            <p style="color: red;"><%= errorMessage %></p>
+                        <% } %>
+                        <label for="categoryName">Category Name:</label>
+                        <input type="text" id="categoryName" name="categoryName">
+                    </div>
+                    <div class="form-group">
+                        <label for="newSubcategory">New Subcategory:</label>
+                        <input type="text" id="newSubcategory" name="subcategories">
+                    </div>
+                   
+                    
+                    <button type="submit" class="btn" id="sweetalert">Add Category</button>
+                </form>
+            </section>
+
+
+            
+           
+        </div>
+    </div>
+
+    
+
+
+</body>
+</html>

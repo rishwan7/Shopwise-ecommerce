@@ -1,0 +1,134 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    background-image:url(../assets/ecommerce\ background.jpg) ;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.welcome-section {
+    flex: 1;
+    padding: 20px;
+    text-align: center;
+}
+
+.welcome-content {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
+}
+
+.illustration {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin-top: 20px;
+}
+
+.signup-section {
+    flex: 1;
+    padding: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
+}
+
+
+.signup-content {
+    text-align: center;
+}
+
+.signup-content h2 {
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-group input[type="text"],
+.input-group input[type="email"],
+.input-group input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.signup-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.signup-btn:hover {
+    background-color: #0056b3;
+}
+
+.login-prompt {
+    margin-top: 20px;
+}
+
+.login-prompt a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login-prompt a:hover {
+    text-decoration: underline;
+}
+
+.google-signup {
+    margin-top: 20px;
+}
+
+.btn-google {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ea4335;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.btn-google:hover {
+    background-color: #d62d20;
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .signup-section {
+        margin-top: 20px;
+    }
+}
