@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffcc; /* Pale yellow background */
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff; /* White form background */
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        textarea {
+            resize: vertical;
+        }
+        button[type="submit"] {
+            background-color: #ffcc00; /* Yellow submit button */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #e6b800; /* Darker yellow on hover */
+        }
+    </style>
+</head>
+<body>
+    <h1>Update Product</h1>
+    <% if (errorMessage) { %>
+     <p style="color: red;"> <%= errorMessage %></p>   
+     
+    <% } %>
+    <form action="/admin/updateproduct/<%= products._id %>" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName" name="productName" value="<%= products.productName %>">
+        </div>
+        <div class="form-group">
+            <label for="productDescription">Product Description:</label>
+            <textarea id="productDescription" name="productDescription" rows="4"><%= products.productDescription %></textarea>
+        </div>
+        <div class="form-group">
+            <label for="productPrice">Product Price:</label>
+            <input type="number" id="productPrice" name="productPrice" step="0.01" value="<%= products.productPrice %>">
+        </div>
+        <div class="form-group">
+            <label for="offerPrice">Offer Price:</label>
+            <input type="number" id="offerPrice" name="offerPrice" step="0.01" value="<%= products.offerPrice %>">
+        </div>
+        <div class="form-group">
+            <label for="productStock">Product Stock:</label>
+            <input type="number" id="productStock" name="productStock" value="<%= products.productStock %>">
+        </div>
+        <div class="form-group">
+            <label for="productImage">Product Image:</label>
+            <input type="file" id="productImage" name="productImage">
+        </div>
+        <div class="form-group">
+            <label for="productCategory">Product Category:</label>
+            <select id="productCategory" name="productCategory">
+                <% categories.forEach(category => { %>
+                    <option value="<%= category._id %>" <% if (category._id === products.productCategory) { %> selected <% } %>><%= category.categoryName %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="productSubCategory">Product Sub-Category:</label>
+            <select id="productSubCategory" name="productSubCategory">
+                <% subcategories.forEach(subcategory => { %>
+                    <option value="<%= subcategory %>" <% if (subcategory === products.productSubCategory) { %> selected <% } %>><%= subcategory %></option>
+                <% }) %>
+            </select>
+        </div>
+        <button type="submit">Update Product</button>
+    </form>
+</body>
+</html>

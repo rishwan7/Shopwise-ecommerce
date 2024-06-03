@@ -39,8 +39,6 @@ const ProductSchema = new mongoose.Schema({
     ref:'categories', 
     required: true },
 
-  category: 
-  { type: mongoose.Types.ObjectId }
 });
 
 const categorySchema = new mongoose.Schema({
@@ -48,13 +46,26 @@ const categorySchema = new mongoose.Schema({
   { type: String, 
     required: true },
 
-  subcategories: 
-  { type: [String], 
-    required: true },
+ 
 });
+
+
+const subcategorySchema=new mongoose.Schema({
+  subcategoryName:
+  {type:String,
+    required:true
+  },
+
+  category:
+   { type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Category' }
+
+
+})
 
 const product = mongoose.model("products", ProductSchema);
 
 const category = mongoose.model("categories", categorySchema);
+const subcategory=mongoose.model("subcategories",subcategorySchema)
 
-module.exports = { product, category };
+module.exports = { product, category,subcategory };

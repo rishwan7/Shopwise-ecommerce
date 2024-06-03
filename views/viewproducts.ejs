@@ -17,22 +17,41 @@
         font-size: 24px;
         color: #333;
       }
-      table {
+      .container {
         width: 90%;
-        margin: 20px auto;
-        border-collapse: collapse;
-        background-color: #fff;
+        margin: 0 auto;
+        padding: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+      }
+      .category-selection {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .category-selection select {
+        padding: 5px;
+        font-size: 16px;
+      }
+      .bk-home {
+        font-size: larger;
+        text-decoration: none;
+        border: 1px solid;
+        color: black;
+        border-radius: 5px;
+        background-color: rgb(72, 72, 21);
+        padding: 5px 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
       }
       th,
       td {
         padding: 15px;
         text-align: left;
         border-bottom: 1px solid #ddd;
-      }
-      .read-more {
-        color: blue;
-        cursor: pointer;
       }
       th {
         background-color: #f4f4f4;
@@ -47,13 +66,12 @@
         display: block;
         margin: 0 auto;
       }
-      td img {
-        vertical-align: middle;
+      .description {
+        max-width: 200px;
       }
-      .error-message {
-        color: red;
-        text-align: center;
-        margin-top: 10px;
+      .read-more {
+        color: blue;
+        cursor: pointer;
       }
       .btn-delete {
         background-color: red;
@@ -65,71 +83,142 @@
       }
       .btn-update {
         background-color: blue;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 3px;
         margin-right: 5px;
+      }
+      @media (max-width: 768px) {
+        .category-selection {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .category-selection select {
+          margin-bottom: 10px;
+        }
+        table,
+        th,
+        td {
+          display: block;
+          width: 100%;
+        }
+        th,
+        td {
+          padding: 10px;
+        }
+        th {
+          background-color: transparent;
+          font-weight: normal;
+        }
+        td {
+          border-bottom: none;
+          border-top: 1px solid #ddd;
+        }
+        tr {
+          margin-bottom: 20px;
+          display: block;
+        }
+        tr:hover {
+          background-color: transparent;
+        }
+        .description {
+          max-width: 100%;
+        }
       }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
   <body>
-    <h1>Product List</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>Image</th>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Price</th>
-          <th>Offer Price</th>
-          <th>Stock</th>
-          <th>Category</th>
-          <th>Subcategory</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% products.forEach(product => { %>
-        <tr>
-          <td>
-            <img
-              src="/productImage/<%= product.productImage %>"
-              alt="<%= product.productName %>"
-            />
-          </td>
-          <td><%= product.productName %></td>
-          <td>
-            <div class="description">
-              <%= product.productDescription.substring(0, 50) %>
-              <!-- Display initial part of description -->
-              <span
-                class="read-more"
-                data-full-description="<%= product.productDescription %>"
-                >Read More</span
-              >
-            </div>
-          </td>
-          <td><%= product.productPrice %></td>
-          <td><%= product.offerPrice %></td>
-          <td><%= product.productStock %></td>
-          <td><%= product.productCategory?.categoryName %></td>
-          <td><%= product.productSubCategory %></td>
-          <td>
-            <button class="btn-update" data-id="<%= product._id %>">
-              Update
-            </button>
-            <button class="btn-delete" data-id="<%= product._id %>">
-              Delete
-            </button>
-          </td>
-        </tr>
-
-        <% }); %>
-      </tbody>
-    </table>
-
-    
-
+    <header>
+      <h1>Product List</h1>
+      <div class="container">
+        <div class="category-selection">
+          <label for="category-select"> Select Category:</label>
+          <select id="category-select">
+            <option value="">All Categories</option>
+            <% categories.forEach(category => { %>
+            <option value="<%= category._id %>">
+              <%= category.categoryName %>
+            </option>
+            <% }) %>
+          </select>
+          <a href="/admin/addproduct" class="bk-home">Back to home</a>
+        </div>
+      </div>
+    </header>
+    <div class="container">
+      <table>
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Offer Price</th>
+            <th>Stock</th>
+            <th>Category</th>
+            <th>Subcategory</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% products.forEach(product => { %>
+          <tr>
+            <td>
+              <img
+                src="/productImage/<%= product.productImage %>"
+                alt="<%= product.productName %>"
+              />
+            </td>
+            <td><%= product.productName %></td>
+            <td>
+              <div class="description">
+                <%= product.productDescription.substring(0, 50) %>
+                <span
+                  class="read-more"
+                  data-full-description="<%= product.productDescription %>"
+                  >Read More</span
+                >
+              </div>
+            </td>
+            <td><%= product.productPrice %></td>
+            <td><%= product.offerPrice %></td>
+            <td><%= product.productStock %></td>
+            <td><%= product.productCategory?.categoryName %></td>
+            <td><%= product.productSubCategory %></td>
+            <td>
+              <button class="btn-update" data-id="<%= product._id %>">
+                Update
+              </button>
+              <button class="btn-delete" data-id="<%= product._id %>">
+                Delete
+              </button>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
     <script>
+      document.querySelectorAll(".btn-update").forEach((button) => {
+        button.addEventListener("click", function () {
+          const productId = this.getAttribute("data-id");
+          window.location.href = `/admin/updateproduct/${productId}`;
+        });
+      });
+
+      document.querySelector("#category-select").addEventListener("change", function () {
+        const categoryId = this.value;
+        let url = "/admin/viewproducts";
+        if (categoryId) {
+          url += `/${categoryId}`;
+        }
+        window.location.href = url;
+      });
+
       document.querySelectorAll(".btn-delete").forEach((button) => {
         button.addEventListener("click", function () {
           const productId = this.getAttribute("data-id");

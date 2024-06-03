@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Categories</title>
+   
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .btn-update {
+            background-color: #4CAF50;
+        }
+        button:hover {
+            background-color: #ff1a1a;
+        }
+        .btn-update:hover {
+            background-color: #45a049;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn-submit:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>All Categories</h1>
+        <ul>
+            <% categories.forEach(category => { %>
+                <li>
+                    <span class="category-name"><%= category.categoryName %></span>
+                    <div class="buttons">
+                        <button data-id="<%= category._id %>" data-name="<%= category.categoryName %>" class="btn-update">Update</button>
+                        <button data-id="<%= category._id %>" class="btn-delete-category">Delete</button>
+                    </div>
+                </li>
+            <% }) %>
+        </ul>
+        <h2>Subcategories</h2>
+        <ul>
+            <% subcategories.forEach(subcategory => { %>
+                <li>
+                    <span class="subcategory-name"><%= subcategory.subcategoryName %></span>
+                    <div class="buttons">
+                        <button data-id="<%= subcategory._id %>" data-name="<%= subcategory.subcategoryName %>" class="btn-update">Update</button>
+                        <button data-id="<%= subcategory._id %>" class="btn-delete-subcategory">Delete</button>
+                    </div>
+                </li>
+            <% }) %>
+        </ul>
+    </div>
+
+    <!-- The Modal -->
+    <div id="updateModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form id="updateForm">
+                <div class="form-group">
+                    <label for="updateName">Name:</label>
+                    <input type="text" id="updateName" name="name" required>
+                </div>
+                <input type="hidden" id="updateId">
+                <input type="hidden" id="updateType">
+                <button type="submit" class="btn-submit">Update</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Get the modal
+        const modal = document.getElementById("updateModal");
+        const span = document.getElementsByClassName("close")[0];
+        const form = document.getElementById("updateForm");
+
+        // When the user clicks the button, open the modal 
+        document.querySelectorAll('.btn-update').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name');
+                const type = this.closest('ul').previousElementSibling.innerText.trim();
+
+                document.getElementById('updateName').value = name;
+                document.getElementById('updateId').value = id;
+                document.getElementById('updateType').value = type;
+
+                modal.style.display = "block";
+            });
+        });
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Handle form submission
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const id = document.getElementById('updateId').value;
+            const name = document.getElementById('updateName').value;
+            const type = document.getElementById('updateType').value.toLowerCase();
+
+            fetch(`/admin/update${type}/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire(
+                        'Updated!',
+                        `${type} has been updated.`,
+                        'success'
+                    ).then(() => {
+                        const updatedElement = document.querySelector(`[data-id='${id}']`).closest('li').querySelector(`.${type}-name`);
+                        updatedElement.innerText = name;
+                        modal.style.display = "none";
+                    });
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        `There was an error updating the ${type}.`,
+                        'error'
+                    );
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire(
+                    'Error!',
+                    `There was an error updating the ${type}.`,
+                    'error'
+                );
+            });
+        });
+    </script>
+</body>
+</html>

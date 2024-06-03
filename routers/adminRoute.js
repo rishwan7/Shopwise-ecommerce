@@ -1,5 +1,8 @@
 const express=require("express")
 const admin=require("../controller/adminControll")
+const productController=require("../controller/productcontrol")
+const categoryController=require("../controller/categorycontrol")
+const adminLogout=require("../controller/commoncontrol")
 const multer=require("multer")
 const router=express.Router()
 
@@ -13,16 +16,33 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-router.get("/addproduct",admin.getAddProduct)
-.post("/addproduct",upload.single('productImage'),admin.postAddProduct)
+//product-control route
 
-router.get("/addcategory",admin.getAddCategory)
-.post("/addcategory",admin.postAddCategory)
+router.get("/addproduct",productController.getAddProduct)
+.post("/addproduct",upload.single('productImage'),productController.postAddProduct)
+router.get('/viewproducts/:categoryId?',productController.getViewProducts)
+router.delete('/deleteproduct/:id', productController.deleteProduct);
+router.get("/updateproduct/:id",productController.getUpdateProduct)
+router.post("/updateproduct/:id",upload.single('productImage'),productController.postUpdateProduct)
 
-router.get('/viewproducts',admin.getViewProducts)
 
-router.delete('/deleteproduct/:id', admin.deleteProduct);
-router.post('/updateproduct/:id', upload.single('productImage'), admin.updateProduct)
+//category-controlroute
+router.get("/addcategory",categoryController.getAddCategory)
+.get("/viewcategories",categoryController.viewCategories)
+.post("/addcategory",categoryController.postAddCategory)
+.delete("/deletecategory/:id",categoryController.deleteCategory)
+.delete("/deletesubcategory/:id",categoryController.deleteSubcategory)
+.get("/updatecategory/:id",categoryController.getUpdateCAtegory)
+.post("/updatecategory/:id",categoryController.updateCategory)
+
+
+//logout
+
+router.get("/logout",adminLogout.logout)
+
+
+
+
 
 
 
