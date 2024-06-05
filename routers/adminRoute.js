@@ -28,6 +28,7 @@ router.post("/updateproduct/:id",upload.single('productImage'),productController
 
 //category-controlroute
 router.get("/addcategory",categoryController.getAddCategory)
+.get("/getSubcategories/:categoryId",categoryController.getSubcategory)
 .get("/viewcategories",categoryController.viewCategories)
 .post("/addcategory",categoryController.postAddCategory)
 .delete("/deletecategory/:id",categoryController.deleteCategory)

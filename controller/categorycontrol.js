@@ -6,9 +6,10 @@ module.exports = {
   getAddCategory: async (req, res) => {
     const errorMessage = req.session.errorMessage;
     req.session.errorMessage = "";
-    const sucessmessage = req.session.sucsessMsg;
+    const sucessmessage = req.session.successMessage;
+    req.session.successMessage=""
     const subcategories = await category.distinct("subcategory");
-    req.session.sucsessMsg = "";
+   
 
     res.render("addcategory", { errorMessage, subcategories, sucessmessage });
   },
@@ -52,7 +53,7 @@ module.exports = {
 
       req.session.successMessage =
         "Category and subcategory added successfully.";
-      return res.redirect("/admin/addcategory?success=true");
+      return res.redirect("/admin/addcategory");
     } catch (error) {
       console.error(error);
       req.session.errorMessage = "Error adding category.";
@@ -122,4 +123,20 @@ module.exports = {
       res.json({ success: false, error: "Failed to update category" });
     }
   },
+
+
+  getSubcategory:async(req,res)=>{
+
+    try {
+      const categoryId = req.params.categoryId;
+      console.log(categoryId,"this is id");
+      const subcategories = await subcategory.find({ category: categoryId });
+      res.json(subcategories);
+    } catch (error) {
+      console.error("Error fetching subcategories:", error);
+      res.status(500).json({ error: "Error fetching subcategories." });
+    }
+  
+
+  }
 };

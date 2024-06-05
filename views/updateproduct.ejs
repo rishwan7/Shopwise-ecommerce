@@ -4,108 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Product</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #ffffcc; /* Pale yellow background */
-        }
-        h1 {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 24px;
-            color: #333;
-        }
-        form {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff; /* White form background */
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="number"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        textarea {
-            resize: vertical;
-        }
-        button[type="submit"] {
-            background-color: #ffcc00; /* Yellow submit button */
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button[type="submit"]:hover {
-            background-color: #e6b800; /* Darker yellow on hover */
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Update Product</h1>
+<body class="bg-yellow-100">
+    <h1 class="text-center text-2xl font-bold mt-5 text-gray-800">Update Product</h1>
     <% if (errorMessage) { %>
-     <p style="color: red;"> <%= errorMessage %></p>   
-     
+     <p class="text-red-500 text-center"> <%= errorMessage %></p>   
     <% } %>
-    <form action="/admin/updateproduct/<%= products._id %>" method="POST" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="productName">Product Name:</label>
-            <input type="text" id="productName" name="productName" value="<%= products.productName %>">
+    <form action="/admin/updateproduct/<%= products._id %>" method="POST" enctype="multipart/form-data" class="max-w-xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
+        <div class="form-group mb-4">
+            <label for="productName" class="block text-sm font-bold mb-2">Product Name:</label>
+            <input type="text" id="productName" name="productName" value="<%= products.productName %>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
         </div>
-        <div class="form-group">
-            <label for="productDescription">Product Description:</label>
-            <textarea id="productDescription" name="productDescription" rows="4"><%= products.productDescription %></textarea>
+        <div class="form-group mb-4">
+            <label for="productDescription" class="block text-sm font-bold mb-2">Product Description:</label>
+            <textarea id="productDescription" name="productDescription" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md"><%= products.productDescription %></textarea>
         </div>
-        <div class="form-group">
-            <label for="productPrice">Product Price:</label>
-            <input type="number" id="productPrice" name="productPrice" step="0.01" value="<%= products.productPrice %>">
+        <div class="form-group mb-4">
+            <label for="productPrice" class="block text-sm font-bold mb-2">Product Price:</label>
+            <input type="number" id="productPrice" name="productPrice" step="0.01" value="<%= products.productPrice %>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
         </div>
-        <div class="form-group">
-            <label for="offerPrice">Offer Price:</label>
-            <input type="number" id="offerPrice" name="offerPrice" step="0.01" value="<%= products.offerPrice %>">
+        <div class="form-group mb-4">
+            <label for="offerPrice" class="block text-sm font-bold mb-2">Offer Price:</label>
+            <input type="number" id="offerPrice" name="offerPrice" step="0.01" value="<%= products.offerPrice %>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
         </div>
-        <div class="form-group">
-            <label for="productStock">Product Stock:</label>
-            <input type="number" id="productStock" name="productStock" value="<%= products.productStock %>">
+        <div class="form-group mb-4">
+            <label for="productStock" class="block text-sm font-bold mb-2">Product Stock:</label>
+            <input type="number" id="productStock" name="productStock" value="<%= products.productStock %>" class="w-full px-3 py-2 border border-gray-300 rounded-md">
         </div>
-        <div class="form-group">
-            <label for="productImage">Product Image:</label>
-            <input type="file" id="productImage" name="productImage">
+        <div class="form-group mb-4">
+            <label for="productImage" class="block text-sm font-bold mb-2">Product Image:</label>
+            <input type="file" id="productImage" name="productImage" class="w-full px-3 py-2 border border-gray-300 rounded-md">
         </div>
-        <div class="form-group">
-            <label for="productCategory">Product Category:</label>
-            <select id="productCategory" name="productCategory">
+        <div class="form-group mb-4">
+            <label for="productCategory" class="block text-sm font-bold mb-2">Product Category:</label>
+            <select id="productCategory" name="productCategory" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                 <% categories.forEach(category => { %>
                     <option value="<%= category._id %>" <% if (category._id === products.productCategory) { %> selected <% } %>><%= category.categoryName %></option>
                 <% }) %>
             </select>
         </div>
-        <div class="form-group">
-            <label for="productSubCategory">Product Sub-Category:</label>
-            <select id="productSubCategory" name="productSubCategory">
+        <div class="form-group mb-6">
+            <label for="productSubCategory" class="block text-sm font-bold mb-2">Product Sub-Category:</label>
+            <select id="productSubCategory" name="productSubCategory" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                 <% subcategories.forEach(subcategory => { %>
                     <option value="<%= subcategory %>" <% if (subcategory === products.productSubCategory) { %> selected <% } %>><%= subcategory %></option>
                 <% }) %>
             </select>
         </div>
-        <button type="submit">Update Product</button>
+        <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-md">Update Product</button>
     </form>
+
+
+    <script>
+        const categoryDropdown = document.getElementById("productCategory");
+        const subcategoryDropdown = document.getElementById("productSubCategory");
+        
+        categoryDropdown.addEventListener("change", function() {
+          const categoryId = categoryDropdown.value;
+          fetch(`/admin/getSubcategories/${categoryId}`)
+            .then(response => response.json())
+            .then(subcategories => {
+              // Clear existing options
+              subcategoryDropdown.innerHTML = "";
+              // Add new options based on the selected category
+              subcategories.forEach(subcategory => {
+                const option = document.createElement("option");
+                option.value = subcategory._id;
+                option.textContent = subcategory.subcategoryName;
+                subcategoryDropdown.appendChild(option);
+              });
+            })
+            .catch(error => console.error("Error fetching subcategories:", error));
+        });
+      </script>
 </body>
 </html>

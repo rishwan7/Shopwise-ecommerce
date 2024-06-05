@@ -1,88 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Product - Admin</title>
-    <link rel="stylesheet" href="../stylesheet/style.css">
-</head>
-<body>
-    <div class="header">
-        <div class="logo">
-            <img src="../assets/shopmate logo.png" alt="Company Logo">
-        </div>
-        <div class="nav-box">
-            <a href="/home" class="btn">Back to Home</a>
-            <a href="/admin/logout" class="btn">Logout</a>
-        </div>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        background-image: url("../assets/ecommerce background.jpg");
+        background-size: cover;
+        background-repeat: round;
+        background-attachment: fixed;
+      }
+    </style>
+  </head>
+  <body class="font-sans bg-yellow-200 flex flex-col min-h-screen">
+    <div
+      class="header w-full flex justify-between items-center p-4 bg-yellow-500 text-white"
+    >
+      <div class="logo">
+        <img
+          src="../assets/shopmate logo.png"
+          alt="Company Logo"
+          class="h-12"
+        />
+      </div>
+      <div class="nav-box flex gap-4">
+        <a
+          href="/home"
+          class="btn text-white no-underline px-4 py-2 bg-yellow-400 rounded transition duration-300 hover:bg-yellow-300"
+          >Back to Home</a
+        >
+        <a
+          href="/admin/logout"
+          class="btn text-white no-underline px-4 py-2 bg-yellow-400 rounded transition duration-300 hover:bg-yellow-300"
+          >Logout</a
+        >
+      </div>
     </div>
 
-    <div class="main-content">
-        <div class="sidebar">
-            <button onclick="window.location.href='/admin/addcategory'" class="btn">Add Category</button>
-            <button onclick="window.location.href='/admin/viewproducts'" class="btn">View Products</button>
-            <button onclick="window.location.href='/admin/viewcategories'" class="btn">View Categories</button>
-        </div>
+    <div
+      class="main-content flex justify-center items-start p-4 w-full max-w-screen-lg mx-auto"
+    >
+      <div class="sidebar w-64 bg-transparent p-4 mr-20 rounded shadow">
+        <button
+          onclick="window.location.href='/admin/addcategory'"
+          class="btn w-full bg-yellow-500 text-black text-center py-2 mb-2 rounded hover:bg-yellow-400"
+        >
+          Add Category
+        </button>
+        <button
+          onclick="window.location.href='/admin/viewproducts'"
+          class="btn w-full bg-yellow-500 text-black text-center py-2 mb-2 rounded hover:bg-yellow-400"
+        >
+          View Products
+        </button>
+        <button
+          onclick="window.location.href='/admin/viewcategories'"
+          class="btn w-full bg-yellow-500 text-black text-center py-2 mb-2 rounded hover:bg-yellow-400"
+        >
+          View Categories
+        </button>
+      </div>
 
-        <div class="container">
-            <h1>Admin Dashboard</h1>
+      <div class="container bg-white p-6 rounded shadow w-full max-w-lg">
+        <h1 class="text-2xl text-center mb-4">Admin Dashboard</h1>
 
-            <section>
-                <% if (errorMessage) { %>
-                    <p style="color: red;"><%= errorMessage %></p>
-                <% } %>
-                <h2>Add New Product</h2>
-                <form action="/admin/addproduct" method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="productName">Product Name:</label>
-                        <input type="text" id="productName" name="productName">
-                    </div>
-                    <div class="form-group">
-                        <label for="productDescription">Product Description:</label>
-                        <textarea id="productDescription" name="productDescription" rows="4"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="productPrice">Product Price:</label>
-                        <input type="number" id="productPrice" name="productPrice" step="0.01">
-                    </div>
-                    <div class="form-group">
-                        <label for="offerPrice">Offer Price:</label>
-                        <input type="number" id="offerPrice" name="offerPrice" step="0.01">
-                    </div>
-                    <div class="form-group">
-                        <label for="productStock">Product Stock:</label>
-                        <input type="number" id="productStock" name="productStock">
-                    </div>
-                    <div class="form-group">
-                        <label for="productImage">Product Image:</label>
-                        <input type="file" id="productImage" name="productImage">
-                    </div>
-                    <div class="form-group">
-                        <label for="productCategory">Product Category:</label>
-                        <select id="productCategory" name="productCategory">
-                            <% categories.forEach(category => { %>
-                                <option value="<%= category._id %>"><%= category.categoryName %></option>
-                            <% }) %>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="productSubCategory">Product Sub-Category:</label>
-                        <select id="productSubCategory" name="productSubCategory">
-                            <% subcategories.forEach(function(subcategory) { %>
-                                <option value="<%= subcategory %>"><%= subcategory %></option>
-                            <% }); %>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn">Add Product</button>
-                </form>
-            </section>
-        </div>
+        <section>
+          <% if (errorMessage) { %>
+          <p class="text-red-500 mb-4"><%= errorMessage %></p>
+          <% } %>
+          <h2 class="text-xl text-center mb-4">Add New Product</h2>
+          <form
+            action="/admin/addproduct"
+            method="POST"
+            enctype="multipart/form-data"
+            class="space-y-4"
+          >
+            <div class="form-group">
+              <label for="productName" class="block font-semibold mb-1"
+                >Product Name:</label
+              >
+              <input
+                type="text"
+                id="productName"
+                name="productName"
+                class="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div class="form-group">
+              <label for="productDescription" class="block font-semibold mb-1"
+                >Product Description:</label
+              >
+              <textarea
+                id="productDescription"
+                name="productDescription"
+                rows="4"
+                class="w-full p-2 border border-gray-300 rounded"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="productPrice" class="block font-semibold mb-1"
+                >Product Price:</label
+              >
+              <input
+                type="number"
+                id="productPrice"
+                name="productPrice"
+                step="0.01"
+                class="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div class="form-group">
+              <label for="offerPrice" class="block font-semibold mb-1"
+                >Offer Price:</label
+              >
+              <input
+                type="number"
+                id="offerPrice"
+                name="offerPrice"
+                step="0.01"
+                class="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div class="form-group">
+              <label for="productStock" class="block font-semibold mb-1"
+                >Product Stock:</label
+              >
+              <input
+                type="number"
+                id="productStock"
+                name="productStock"
+                class="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div class="form-group">
+              <label for="productImage" class="block font-semibold mb-1"
+                >Product Image:</label
+              >
+              <input
+                type="file"
+                id="productImage"
+                name="productImage"
+                class="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div class="form-group">
+              <label for="productCategory" class="block font-semibold mb-1"
+                >Product Category:</label
+              >
+              <select
+                id="productCategory"
+                name="productCategory"
+                class="w-full p-2 border border-gray-300 rounded"
+              >
+                <% categories.forEach(category => { %>
+                <option value="<%= category._id %>">
+                  <%= category.categoryName %>
+                </option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="productSubCategory" class="block font-semibold mb-1"
+                >Product Sub-Category:</label
+              >
+              <select
+                id="productSubCategory"
+                name="productSubCategory"
+                class="w-full p-2 border border-gray-300 rounded"
+              >
+                <% subcategories.forEach(function(subcategory) { %>
+                <option value="<%= subcategory %>"><%= subcategory %></option>
+                <% }); %>
+              </select>
+            </div>
+            <button
+              type="submit"
+              class="btn w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-400"
+            >
+              Add Product
+            </button>
+          </form>
+        </section>
+      </div>
     </div>
 
-   
-
-
-    
-   
-</body>
+    <script>
+        const categoryDropdown = document.getElementById("productCategory");
+        const subcategoryDropdown = document.getElementById("productSubCategory");
+        
+        categoryDropdown.addEventListener("change", function() {
+          const categoryId = categoryDropdown.value;
+          fetch(`/admin/getSubcategories/${categoryId}`)
+            .then(response => response.json())
+            .then(subcategories => {
+              // Clear existing options
+              subcategoryDropdown.innerHTML = "";
+              // Add new options based on the selected category
+              subcategories.forEach(subcategory => {
+                const option = document.createElement("option");
+                option.value = subcategory._id;
+                option.textContent = subcategory.subcategoryName;
+                subcategoryDropdown.appendChild(option);
+              });
+            })
+            .catch(error => console.error("Error fetching subcategories:", error));
+        });
+      </script>
+      
+      
+  </body>
 </html>
