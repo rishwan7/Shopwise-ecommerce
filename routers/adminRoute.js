@@ -32,9 +32,8 @@ router.get("/addcategory",categoryController.getAddCategory)
 .post("/addcategory",categoryController.postAddCategory)
 .delete("/deletecategory/:id",categoryController.deleteCategory)
 .delete("/deletesubcategory/:id",categoryController.deleteSubcategory)
-.get("/updatecategory/:id",categoryController.getUpdateCAtegory)
-.post("/updatecategory/:id",categoryController.updateCategory)
-
+.post("/updatecategory/:id",categoryController.postUpdateCategory)
+.post("/updatesubcategory/:id",categoryController.postUPdateSubcategory)
 
 //logout
 
