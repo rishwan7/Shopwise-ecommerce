@@ -6,7 +6,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const session=require("express-session")
 const adminRouter = require("./routers/adminRoute");
-const userRoute=require("./routers/userRoute")
+const userRouter=require("./routers/userRoute")
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -41,7 +41,7 @@ mongoose
  
 
 app.use("/admin", adminRouter);
-app.use("/",userRoute)
+app.use("/",userRouter)
 
 
 app.listen(3000, () => {

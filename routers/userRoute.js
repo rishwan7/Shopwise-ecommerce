@@ -4,6 +4,7 @@ const userControll=require("../controller/userControll")
 
 
 router.get("/login",userControll.getLoginpage)
-router.get("/signup",userControll.getsignuppage)
+.get("/signup",userControll.getsignupage)
+.post("/signup",userControll.postSignup)
 router.get("/otpvalidation",userControll.getSignupOtp)
 module.exports=router

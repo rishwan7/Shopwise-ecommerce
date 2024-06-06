@@ -1,4 +1,4 @@
-/* body {
+body {
     font-family: Arial, sans-serif;
     background-color: #fff9c4;
     margin: 0;
@@ -19,7 +19,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: #ffc107;
+    background-color: #ffc10700;
     color: white;
     box-sizing: border-box;
 }
@@ -169,4 +169,4 @@ button.btn:hover {
     .header .nav-box .btn {
         padding: 8px 12px;
     }
-} */
+}

@@ -129,7 +129,7 @@ module.exports = {
 
     try {
       const categoryId = req.params.categoryId;
-      console.log(categoryId,"this is id");
+      // console.log(categoryId,"this is id");
       const subcategories = await subcategory.find({ category: categoryId });
       res.json(subcategories);
     } catch (error) {
