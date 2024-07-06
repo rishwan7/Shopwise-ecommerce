@@ -115,7 +115,7 @@ console.log("cart details is",cartDetails);
                     // Add new item if product doesn't exist
                     cartItems.items.push({ productId, quantity });
                 }
-                cartItems.total += Products.productPrice * parseInt(quantity, 10);
+                cartItems.total += Products.offerPrice * parseInt(quantity, 10);
             }
 
             Products.productStock -= parseInt(quantity, 10);

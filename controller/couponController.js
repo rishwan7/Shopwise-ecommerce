@@ -76,11 +76,12 @@ console.log("this is cart details",cartDetails);
     if (couponcodes) {
       console.log("Coupon code is valid.");
       const discountPercentage = couponcodes.discountPercentage;
+      const coupon = couponcodes.couponCode
 
       const discountAmount = (totalAmount * discountPercentage) / 100;
       console.log('Discount Amount:', discountAmount);
       const finalAmount = totalAmount - discountAmount;
-      await cart.findOneAndUpdate({ userId: userId }, {  coupenDiscount: discountAmount });
+      await cart.findOneAndUpdate({ userId: userId }, {  coupenDiscount: discountAmount,couponcode:coupon });
 
       console.log('Final Amount after discount:', finalAmount);
       res.json({ message: "coupon is valid",finalAmount,couponCode:true,discountAmount ,discountPercentage});
@@ -93,16 +94,27 @@ console.log("this is cart details",cartDetails);
     console.log("error occured", error);
   }
 };
+
 const removeDiscountCoupon=async(req,res)=>{
+  console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
 
-    const userId=req.session.userId
 
- const result = await cart.findOneAndUpdate(
-  { userId: userId },
-  { $set: { couponDiscount: 0 } },
-  { new: true }
-);
-    console.log('Coupon removed from the cart:', result);
+    const userId=mongoose.Types.ObjectId.createFromHexString(req.session.userId)
+    console.log(userId,"issssssssssssssssssssss");
+
+    const result = await cart.findOneAndUpdate(
+      { userId: userId },
+      { $set: { coupenDiscount: 0 ,couponcode:null} },
+      { new: true }
+  );
+
+  if (result) {
+      console.log('Updated cart with couponDiscount set to 0:', result);
+      // Handle success
+  } else {
+      console.log('No cart found for userId:', userId);
+      // Handle case where no cart is found
+  }
 
    const cartValue= await cart.findOne({userId:userId})
    if (cartValue) {

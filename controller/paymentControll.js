@@ -17,6 +17,7 @@ const getCheckOutPage = async (req, res) => {
         const userDetails = await userdetails.findById(userId);
         const userAddresses = await UserAddress.findOne({ userId });
         let couponslist= await coupons.find({})
+        let appliedCoupon=await cart.findOne({})
         console.log(couponslist);
         
      
@@ -52,15 +53,40 @@ const getCheckOutPage = async (req, res) => {
                                 "$items.quantity"
                             ]
                         },
+                        total: "$total",                // Include total
+                        couponDiscount: "$coupenDiscount",
+                        couponCode:"$couponcode"
+                         // Include couponDiscount
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$userId",
+                        items: { $push: "$$ROOT" },
+                        total: { $first: "$total" },          // Ensure total is grouped correctly
+                        couponDiscount: { $first: "$couponDiscount" },
+                        couponCode: { $first: "$couponCode" }, // Ensure couponDiscount is grouped correctly
+                        totalAmount: { $sum: "$subtotal" },
+                        totalDiscount: { $sum: "$discountAmount" }
+                    }
+                },
+                {
+                    $addFields: {
+                        finalTotal: { $subtract: ["$totalAmount", "$couponDiscount"] } // Calculate final total
                     }
                 }
             ]);
 
-            let totalAmount = cartDetails.reduce((acc, item) => acc + item.subtotal, 0);
-            let cartSubtotal = totalAmount;
-            let totalDiscount = cartDetails.reduce((acc, item) => acc + item.discountAmount, 0);
-            let shippingCharge = totalAmount < 500 ? 99 : 0;
-            cartSubtotal += shippingCharge;
+            console.log(cartDetails[0].couponCode,"fdhvvvvvvsjdbkbsdbksdbbssdbdsbj");
+
+            const cartDetail = cartDetails[0] || {};
+            const totalAmount = cartDetail.totalAmount || 0;
+            const couponDiscount = cartDetail.couponDiscount;
+            const cartSubtotal = cartDetail.finalTotal || totalAmount;
+            const totalDiscount = cartDetail.totalDiscount || 0;
+            const shippingCharge = totalAmount < 500 ? 99 : 0;
+            const finalTotal = cartSubtotal + shippingCharge;
+            const couponcode=cartDetails[0].couponCode
 
             req.session.cartDetails = cartDetails;
             req.session.totalAmount = cartSubtotal;
@@ -71,14 +97,16 @@ const getCheckOutPage = async (req, res) => {
            
             res.render("user/checkout", {
                 userDetails,
-                cartDetails,
+                cartDetails: cartDetail.items || [],
                 totalAmount,
-                cartSubtotal,
+                cartSubtotal: finalTotal,
                 shippingCharge,
                 totalDiscount,
                 userAddresses,
                 userId,
-                couponAvailable
+                couponAvailable: couponslist,
+                couponDiscount,
+                couponcode
             });
         }
     } catch (error) {
