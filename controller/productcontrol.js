@@ -3,15 +3,6 @@ const { product, category ,subcategory} = require("../model/adminDb");
 const multer = require("multer");
 const { Session } = require("express-session");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/product");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-const upload = multer({ storage: storage });
 
 module.exports = {
 
@@ -23,7 +14,7 @@ module.exports = {
 
     const categories = await category.find({});
     const subcategories = await subcategory.distinct("subcategoryName");
-    res.render("addproduct", { errorMessage, categories, subcategories });
+    res.render("admin/addproduct", { errorMessage, categories, subcategories });
   },
 
   // adding new products
@@ -37,27 +28,40 @@ module.exports = {
       productStock,
       productCategory,
       productSubCategory,
-    } = req.body;
+      productSize
 
-    if (!req.file) {
+    } = req.body;
+    console.log("done 1");
+    console.log(productSize);
+
+    if (!req.files) {
       req.session.errorMessage = "All field must be required";
+      console.log("error 1");
       return res.redirect("/admin/addproduct");
+      console.log("error 1");
     }
 
-    const productImage = req.file.filename;
+    const productImage = req.files.map(file=>file.filename)
 
     if (
       !productName ||
       !productDescription ||
       !productCategory ||
       !productPrice ||
-      !productStock
+      !productStock||
+      !productImage||
+      !productSubCategory
     ) {
+
       req.session.errorMessage = "All fields must be filled out.";
+      console.log("error 2");
       return res.redirect("/admin/addproduct");
+      
     }
     console.log(req.body);
     try {
+
+      const percentageDifference = ((productPrice - offerPrice) / productPrice) * 100;
       const newProduct = new product({
         productName,
         productDescription,
@@ -65,10 +69,13 @@ module.exports = {
         offerPrice,
         productStock,
         productCategory,
+        percentageDifference: percentageDifference.toFixed(2),
         productSubCategory,
         productImage,
+        productSize
       });
       await newProduct.save();
+      console.log("done2");
       res.redirect("/admin/addproduct");
     } catch (error) {
       console.error(error);
@@ -87,15 +94,15 @@ module.exports = {
 
         if (categoryId) {
 
-            products = await product.find({ productCategory: categoryId }).populate('productCategory');
+            products = await product.find({ productCategory: categoryId }).populate('productCategory').populate('productSubCategory');
             console.log("this is",products);
         } else {
-            products = await product.find().populate('productCategory');
+            products = await product.find().populate('productCategory').populate('productSubCategory');
         }
 
         const categories = await category.find();
       // console.log(products);
-      res.render("viewproducts", { products,categories });
+      res.render("admin/viewproducts", { products,categories });
     } catch (error) {
       console.error(error);
       req.session.errorMessage = "Error fetching products.";
@@ -135,7 +142,7 @@ module.exports = {
 
     errorMessage=req.session.errorMessage
     req.session.errorMessage=""
-    res.render("updateproduct", {
+    res.render("admin/updateproduct", {
       products: productToUpdate,
       categories,
       subcategories,
@@ -148,26 +155,37 @@ module.exports = {
   postUpdateProduct:async(req,res)=>{
     const productId=req.params.id
     console.log("this is peoduct id:",productId);
-    const{productName, productStock, productDescription, productPrice, offerPrice, productCategory, productSubCategory }=req.body
+    const{productName, productStock, productDescription, productPrice, offerPrice, productCategory, productSubCategory,productSize }=req.body
 
     try{
+      const percentageDifference = ((productPrice - offerPrice) / productPrice) * 100;
       const updatedProduct={
         productName,
         productStock,
         productDescription,
         productPrice,
         offerPrice,
+        percentageDifference: percentageDifference.toFixed(2),
         productCategory,
-        productSubCategory
+        productSubCategory,
+        productSize
       }
-      if (req.file) {
-        updatedProduct.productImage = req.file.path;
-      }
-      await product.findByIdAndUpdate(productId,updatedProduct)
+      if (req.files && req.files.length>0) {
+        console.log("this is ",req.files);
+        console.log("not found");
+        updatedProduct.productImage = req.files.map(file=>file.filename)
+        await product.findByIdAndUpdate(productId,updatedProduct)
         
-      res.redirect("/admin/viewproducts")
+        res.redirect("/admin/viewproducts")
+      }else{
+        console.log("not image updated");
+        await product.findByIdAndUpdate(productId,updatedProduct)
+        res.redirect("/admin/viewproducts")
+      }
+     
 
-    }catch(error){
+    }
+    catch(error){
       console.error(error);
       req.session.errorMessage="Error while updating product"
       res.redirect("/admin/updateproduct")
@@ -178,4 +196,5 @@ module.exports = {
 
     
   }
+
 };

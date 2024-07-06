@@ -7,65 +7,51 @@ const ProductSchema = new mongoose.Schema({
   },
   productStock: {
     type: Number,
- required:true },
-
+    required: true,
+  },
   productImage: {
-    type: String,
+    type: [String],
+    required: true,
+  },
+  productSize: { type: String },
+
+  productDescription: { type: String, required: true },
+
+  percentageDifference: {
+    type: Number,
     required: true,
   },
 
+  productPrice: { type: Number, required: true },
 
-  productDescription:
-   { type: String,
-     required: true },
+  offerPrice: { type: Number, required: true },
 
+  productSubCategory: { type: mongoose.Types.ObjectId,ref: "subcategories", },
 
-  productPrice:
-   { type: Number,
-     required: true },
+  productCategory: {
+    type: mongoose.Types.ObjectId,
+    ref: "categories",
+    required: true,
+  },
 
-
-     offerPrice:
-     {type:Number,
-      required:true},
-
-
-  productSubCategory:
-   { type: String },
-
-
-  productCategory: 
-  { type: mongoose.Types.ObjectId,
-    ref:'categories', 
-    required: true },
-
+  productSize: {
+    type: [String],
+  },
 });
 
 const categorySchema = new mongoose.Schema({
-  categoryName: 
-  { type: String, 
-    required: true },
-
- 
+  categoryName: { type: String, required: true },
 });
 
+const subcategorySchema = new mongoose.Schema({
+  subcategoryName: { type: String, required: true },
 
-const subcategorySchema=new mongoose.Schema({
-  subcategoryName:
-  {type:String,
-    required:true
-  },
-
-  category:
-   { type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Category' }
-
-
-})
+  category: { type: mongoose.Schema.Types.ObjectId, ref: "categories"},
+});
 
 const product = mongoose.model("products", ProductSchema);
 
 const category = mongoose.model("categories", categorySchema);
-const subcategory=mongoose.model("subcategories",subcategorySchema)
+const subcategory = mongoose.model("subcategories", subcategorySchema);
 
-module.exports = { product, category,subcategory };
+module.exports = { product, category, subcategory };

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OTP Verification</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .navbar {
+      background-color: #333;
+    }
+    .navbar .navbar-brand {
+      color: #fff;
+    }
+    .navbar .nav-link {
+      color: #fff;
+    }
+    .otp-container {
+      margin-top: 50px;
+      text-align: center;
+    }
+    .otp-container h2 {
+      margin-bottom: 30px;
+    }
+    .otp-input {
+      width: 50px;
+      display: inline-block;
+      margin: 0 5px;
+    }
+    .btn-custom {
+      background-color: #ff3366;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <a class="navbar-brand" href="#">  <img class="logo_dark" src="assets/images/logo_dark.png" alt="logo">  </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact Us</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- OTP Container -->
+  <div class="container otp-container">
+    <h2>OTP Verification</h2>
+    <form>
+      <div class="form-group">
+        <input type="text" class="form-control otp-input" maxlength="1">
+        <input type="text" class="form-control otp-input" maxlength="1">
+        <input type="text" class="form-control otp-input" maxlength="1">
+        <input type="text" class="form-control otp-input" maxlength="1">
+        <input type="text" class="form-control otp-input" maxlength="1">
+        <input type="text" class="form-control otp-input" maxlength="1">
+      </div>
+      <button type="submit" class="btn btn-custom">Verify OTP</button>
+    </form>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

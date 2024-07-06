@@ -11,7 +11,7 @@ module.exports = {
     const subcategories = await category.distinct("subcategory");
    
 
-    res.render("addcategory", { errorMessage, subcategories, sucessmessage });
+    res.render("admin/addcategory", { errorMessage, subcategories, sucessmessage });
   },
   postAddCategory: async (req, res) => {
     const { categoryName, subcategoryName } = req.body;
@@ -65,7 +65,7 @@ module.exports = {
     const categories = await category.find();
     const subcategories = await subcategory.find();
     // console.log(categories);
-    res.render("viewcategories", { categories, subcategories });
+    res.render("admin/viewcategories", { categories, subcategories });
   },
   deleteCategory: async (req, res) => {
     try {

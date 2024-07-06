@@ -1,13 +1,11 @@
 body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
-    background-image: url(../assets/ecommerce\ background.jpg);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0;
+    background-color: #f7f8fc;
+    font-family: 'Arial', sans-serif;
 }
 
 .container {
@@ -15,70 +13,55 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 100%;
     width: 100%;
-    max-width: 1200px;
     padding: 20px;
-}
-
-.welcome-section {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.welcome-content {
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.logo {
-    width: 150px;
-    height: auto;
-}
-
-.illustration {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    margin-top: 20px;
+    box-sizing: border-box;
 }
 
 .otp-section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
     width: 100%;
     max-width: 400px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    text-align: center;
 }
 
 .otp-content h2 {
     margin-bottom: 20px;
+    color: #333;
 }
 
 .input-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
     margin-bottom: 20px;
 }
 
-.input-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+.input-group input {
+    width: 80%;
+    height: 50px;
+    text-align: center;
+    font-size: 24px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s;
 }
 
-.input-group input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.input-group input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 .otp-btn {
-    width: 100%;
-    padding: 10px;
     background-color: #007bff;
     color: #fff;
     border: none;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -88,7 +71,7 @@ body {
     background-color: #0056b3;
 }
 
-.resend-otp {
+.resend-otp p {
     margin-top: 20px;
 }
 
@@ -101,18 +84,49 @@ body {
     text-decoration: underline;
 }
 
-@media screen and (min-width: 769px) {
-    .container {
-        flex-direction: row;
+.logo {
+    width: 80%;
+    max-width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+    .input-group input {
+        width: 18%;
+        height: 40px;
+        font-size: 20px;
     }
 
-    .welcome-section {
-        flex: 1;
-        margin-bottom: 0;
+    .otp-btn {
+        padding: 8px 16px;
     }
 
     .otp-section {
-        flex: 1;
-        margin-top: 0;
+        padding: 15px;
+    }
+
+    .otp-content h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .input-group input {
+        width: 16%;
+        height: 35px;
+        font-size: 18px;
+    }
+
+    .otp-btn {
+        padding: 6px 12px;
+    }
+
+    .otp-section {
+        padding: 10px;
+    }
+
+    .otp-content h2 {
+        font-size: 1.25rem;
     }
 }
