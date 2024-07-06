@@ -3,7 +3,7 @@ const express = require("express");
 
 module.exports={ 
     getAdminHome:(req,res)=>{
-        res.render("adminHome")
+        res.render("admin/adminHome")
     }
     
    }
