@@ -5,7 +5,7 @@ const { cart } = require("../model/cartDb");
 
 const getCoupon = (req, res) => {
 
-  res.render("addCoupon");
+  res.render("admin/addCoupon");
 };
 
 const postCouponControl = async (req, res) => {

@@ -23,6 +23,7 @@ const getCheckOutPage = async (req, res) => {
 
         if (userId) {
 
+            
             const cartDetails = await cart.aggregate([
                 { $match: { userId: mongoose.Types.ObjectId.createFromHexString(userId) } },
                 { $unwind: "$items" },
@@ -52,26 +53,9 @@ const getCheckOutPage = async (req, res) => {
                             ]
                         },
                     }
-                },
-                {
-                    $group: {
-                        _id: "$userId",
-                        items: { $push: "$$ROOT" },
-                        total: { $sum: "$subtotal" },
-                        totalDiscount: { $sum: "$discountAmount" },
-                        couponDiscount: { $first: "$coupenDiscount" } // Assuming couponDiscount is a field in the cart document
-                    }
-                },
-                {
-                    $addFields: {
-                        finalTotal: { $subtract: ["$total", "$couponDiscount"] }
-                    }
                 }
             ]);
 
-
-            console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvkkkkkkkkkkkkkkkkkkkkkkkk",cartDetails[0]);
-            
             let totalAmount = cartDetails.reduce((acc, item) => acc + item.subtotal, 0);
             let cartSubtotal = totalAmount;
             let totalDiscount = cartDetails.reduce((acc, item) => acc + item.discountAmount, 0);
