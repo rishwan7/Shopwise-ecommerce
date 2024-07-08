@@ -47,7 +47,7 @@
     <div class="bottom_header dark_skin main_menu_uppercase">
     	<div class="container">
             <nav class="navbar navbar-expand-lg"> 
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="/index">
                     <img class="logo_light" src="/assets/images/logo_light.png" alt="logo" />
                     <img class="logo_dark" src="/assets/images/logo_dark.png" alt="logo" />
                 </a>
@@ -285,7 +285,7 @@
                             </form>
                         </div><div class="search_overlay"></div>
                     </li>
-                    <li class="dropdown cart_dropdown"><a class="nav-link cart_trigger" href="#" data-bs-toggle="dropdown"><i class="linearicons-cart"></i><span class="cart_count">10</span></a>
+                    <li class="dropdown cart_dropdown"><a class="nav-link cart_trigger" href="/cart" data-bs-toggle="dropdown"><i class="linearicons-cart"></i><span class="cart_count" id="cart-quantity"> <%= cartQuantity %> </span></a>
                         <div class="cart_box dropdown-menu dropdown-menu-right">
                             <ul class="cart_list">
                                 <li>
@@ -322,4 +322,31 @@ document.getElementById('userDropdown').addEventListener('change', function() {
             window.location.href = '/logout'; // Redirect to logout route
         }
     });
+
+
+    async function fetchCartQuantity() {
+            try {
+                const response = await fetch('/cartqty', {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        document.getElementById('cart-quantity').innerText = `Number of items in the cart: ${data.cartQuantity}`;
+                    } else {
+                        console.error('Failed to fetch cart quantity:', data.message);
+                    }
+                } else {
+                    console.error('Failed to fetch cart quantity: HTTP error', response.status);
+                }
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+            }
+        }
+
+        // Call the function on page load
+        window.onload = fetchCartQuantity;
 </script>

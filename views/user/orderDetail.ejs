@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags and title -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shopwise - Order Details</title>
+
+    <!-- Favicon and CSS links -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.png">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+
+    <!-- Inline styles for custom styling -->
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+            padding: 20px;
+        }
+        .card h4 {
+            margin-bottom: 15px;
+        }
+        .card img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+        .product-info {
+            flex-grow: 1;
+        }
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .product-price {
+            font-weight: bold;
+            color: #4285f4;
+        }
+        .delivery-status {
+            color: green;
+            margin-top: 5px;
+        }
+        .review-button {
+            color: #4285f4;
+            text-decoration: none;
+        }
+        .order-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-top: 20px;
+        }
+        .order-timeline .step {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .order-timeline .step.complete .step-icon {
+            background-color: green;
+            color: white;
+        }
+        .order-timeline .step .step-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-block;
+            line-height: 30px;
+            text-align: center;
+            margin-bottom: 5px;
+            background-color: #ddd;
+        }
+        .order-timeline .line {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #ddd;
+            z-index: 0;
+        }
+        .order-timeline .line.complete {
+            background-color: green;
+        }
+        .order-summary {
+            margin-top: 20px;
+        }
+        .order-summary p {
+            display: flex;
+            justify-content: space-between;
+            margin: 0;
+        }
+        .order-summary p.total-price {
+            font-weight: bold;
+            color: #4285f4;
+        }
+        .payment-method {
+            margin-top: 20px;
+        }
+        .cancel-order {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .cancel-order button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Delivery Address -->
+        <div class="card">
+            <h4>Delivery Address</h4>
+            <p><strong><%= useraddress.firstName %> <%= useraddress.lastName %></strong></p>
+            <p><%= useraddress.address %> ,<%= useraddress.address2 %></p>
+            <p><%= useraddress.city %>, <%= useraddress.state %>,<%= useraddress.postalCode %></p>
+            <p><%= useraddress.phone %></p>
+        </div>
+        
+
+        <!-- More Actions -->
+        <div class="card">
+            <h4>More Actions</h4>
+            <a href="#" class="btn btn-primary">Download Invoice</a>
+        </div>
+
+        <!-- Product Details and Shipping Status -->
+        <div class="card">
+            <div class="d-flex">
+                <img src="/productImage/<%= order.productImage[0] %>" alt="<%= order.productName %>" class="product-image">
+                <div class="product-info">
+                    <p class="product-name"><%= order.productName %></p>
+                    <p class="product-price">₹<%= order.productPrice %></p>
+                    <% if (order.status === "delivered") { %>
+                        <p>Your item has been delivered</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="card">
+
+                <% if (order.status=="Order Confirmed"||order.status=="Shipped"|| order.status=="Out for Delivery"||order.status=="Delivered"||order.status=="Pending"||order.status=="paid") { %>
+                    
+                <div class="order-timeline mt-4" id="shippingsatus">
+                    <div class="line" id="timeline-line"></div>
+                    <div class="step" id="step1">
+                        <div class="step-icon">1</div>
+                        <p>Order Confirmed</p>
+                    </div>
+                    <div class="step" id="step2">
+                        <div class="step-icon">2</div>
+                        <p>Shipped</p>
+                    </div>
+                    <div class="step" id="step3">
+                        <div class="step-icon">3</div>
+                        <p>Out for Delivery</p>
+                    </div>
+                    <div class="step" id="step4">
+                        <div class="step-icon">4</div>
+                        <p>Delivered</p>
+                    </div>
+                </div>
+                 
+                <% } %>
+
+
+
+                 <% if (order.status=="canceled") { %>
+                    <div class="order-timeline mt-4" id="shippingcancel" >
+                        <div class="line" id="timeline-line" style="background-color: #dc3545;"></div>
+                        <div class="step" id="step1">
+                            <div class="step-icon" style="background-color:red;">1</div>
+                            <p>Order Confirmed</p>
+                        </div>
+                        <div class="step" id="step2">
+                            <div class="step-icon" style="background-color: red;">2</div>
+                            <p>Canceled</p>
+                        </div>
+                       
+                       
+                    </div>
+                  
+                 <% } %>
+
+                 <div class="order-timeline mt-4" id="shippingcancel" style="display: none;" >
+                    <div class="line" id="timeline-line" style="background-color: #dc3545;"></div>
+                    <div class="step" id="step1">
+                        <div class="step-icon" style="background-color:red;">1</div>
+                        <p>Order Confirmed</p>
+                    </div>
+                    <div class="step" id="step2">
+                        <div class="step-icon" style="background-color: red;">2</div>
+                        <p>Canceled</p>
+                    </div>
+                   
+                   
+                </div>
+                
+
+
+
+
+
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="card order-summary">
+            <h4>Order Summary</h4>
+            <p>Subtotal: <span>₹ <%= order.price %> </span></p>
+            <% if (order.totalprice < 500) { %>
+                <p>Shipping: <span>₹99</span></p>
+            <% } %>
+            <p>Discount: <span>₹ <%= order.price - order.productPrice %> </span></p>
+            <% if (order.DiscountviaCoupon) { %>
+                <p style="color: green;">Applied coupon: <span><%= order.couponcode %> </span></p>
+                <p>coupon discount: <span>₹<%= order.DiscountviaCoupon %> </span></p>
+            <% } %>
+            <p class="total-price">Total: <span>₹ <%= order.totalprice %> </span></p>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="card payment-method">
+            <h4>Payment Method</h4>
+            <p> <%= order.paymentMethod %> </p>
+        </div>
+
+        <!-- Additional Actions -->
+        <div class="card">
+            <a href="#" class="review-button">Rate & Review Product</a>
+           
+        </div>
+
+        <!-- Cancel Order -->
+        <% if (order.status=="Order Confirmed"||order.status=="Shipped"|| order.status=="Out for Delivery") { %>
+
+     
+            <div class="cancel-order">
+
+                <button onclick="cancelOrder('<%= order.orderId%>')"  id="cancelorder">Cancel Order</button>
+                
+            
+                   
+               
+
+            
+            
+            </div>
+
+            <% } %>
+        </div>
+
+       
+      
+
+    <!-- JavaScript for cancel order functionality -->
+    <script>
+
+
+          async function cancelOrder(orderId) {
+        try {
+            const response = await fetch("/admin/cancelorder", {
+                method: "POST",
+                headers: {
+                     "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ orderId })
+            });
+            console.log("vvvvvvvvvvvvvvvvvv",orderId,"ccccccccccccccccccccccccc");
+
+
+            const result = await response.json();
+
+            if (result.success) {
+                console.log("okkkkk");
+                Swal.fire({
+                  position: "top-end",
+                 icon: "success",
+                title: "Your order has been canceled",
+                     showConfirmButton: false,
+                    timer: 1500
+                       });
+
+               document.getElementById("shippingsatus").style.display="none"
+               document.getElementById("shippingcancel").style.display="block"
+               document.getElementById("cancelorder").style.display="none"
+                // Optionally, you can update the UI to reflect the cancelled status
+                // Reload the page to reflect changes
+            } else {
+                alert(`Failed to cancel order: ${result.message}`);
+            }
+        } catch (error) {
+            console.error('There was a problem with the cancel order request:', error);
+            alert('There was an error cancelling the order. Please try again.');
+        }
+    }
+      
+
+        function updateTimeline(status) {
+    const steps = {
+        'Order Confirmed': 1,
+        'Shipped': 2,
+        'Out for Delivery': 3,
+        'Delivered': 4
+    };
+
+        const currentStep = steps[status];
+
+if (currentStep >= 1) {
+    document.getElementById('step1').classList.add('complete');
+}
+if (currentStep >= 2) {
+    document.getElementById('step2').classList.add('complete');
+}
+if (currentStep >= 3) {
+    document.getElementById('step3').classList.add('complete');
+}
+if (currentStep >= 4) {
+    document.getElementById('step4').classList.add('complete');
+}
+
+if (currentStep > 1) {
+    document.getElementById('timeline-line').classList.add('complete');
+}
+        }
+
+updateTimeline('<%= order.status %>');
+    </script>
+</body>
+</html>

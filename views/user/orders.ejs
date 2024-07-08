@@ -1,57 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Orders</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="Anil z" name="author">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Shopwise is Powerful features and You Can Use The Perfect Build this Template For Any eCommerce Website. The template is built for sell Fashion Products, Shoes, Bags, Cosmetics, Clothes, Sunglasses, Furniture, Kids Products, Electronics, Stationery Products and Sporting Goods.">
+    <meta name="keywords" content="ecommerce, electronics store, Fashion store, furniture store, bootstrap 4, clean, minimal, modern, online store, responsive, retail, shopping, ecommerce store">
+
+    <!-- SITE TITLE -->
+    <title>Shopwise - eCommerce Bootstrap 5 HTML Template</title>
+    <!-- Favicon Icon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.png">
+    <!-- Animation CSS -->
+    <link rel="stylesheet" href="assets/css/animate.css">	
+    <!-- Latest Bootstrap min CSS -->
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&amp;display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet"> 
+    <!-- Icon Font CSS -->
+    <link rel="stylesheet" href="assets/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/ionicons.min.css">
+    <link rel="stylesheet" href="assets/css/themify-icons.css">
+    <link rel="stylesheet" href="assets/css/linearicons.css">
+    <link rel="stylesheet" href="assets/css/flaticon.css">
+    <link rel="stylesheet" href="assets/css/simple-line-icons.css">
+    <!--- owl carousel CSS-->
+    <link rel="stylesheet" href="assets/owlcarousel/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="assets/owlcarousel/css/owl.theme.css">
+    <link rel="stylesheet" href="assets/owlcarousel/css/owl.theme.default.min.css">
+    <!-- Magnific Popup CSS -->
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
+    <!-- jquery-ui CSS -->
+    <link rel="stylesheet" href="assets/css/jquery-ui.css">
+    <!-- Slick CSS -->
+    <link rel="stylesheet" href="assets/css/slick.css">
+    <link rel="stylesheet" href="assets/css/slick-theme.css">
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        #search-input {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .order-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .product-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+        .product-info {
+            flex-grow: 1;
+        }
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .product-price {
+            font-weight: bold;
+            color: #4285f4;
+        }
+        .delivery-status {
+            color: green;
+            margin-top: 5px;
+            text-align: center;
+        }
+        .review-button {
+            color: #4285f4;
+            text-decoration: none;
+        }
+    </style>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106310707-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-106310707-1', { 'anonymize_ip': true });
+    </script>
+
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6MPNF0KNC"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-G6MPNF0KNC');
+    </script>
+
+    <!-- Hotjar Tracking Code for bestwebcreator.com -->
+    <script>
+        (function(h,o,t,j,a,r){
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:2073024,hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    </script>
+
+    <!-- Start of StatCounter Code -->
+    <script>
+        var sc_project=11921154;
+        var sc_security="6c07f98b";
+        var scJsHost = (("https:" == document.location.protocol) ? "https://secure." : "http://www.");
+        document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js'></"+"script>");
+    </script>
+    <!-- End of StatCounter Code -->
 </head>
-<body class="bg-gray-100">
-  <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">My Orders</h1>
-    <div id="orders-container" class="space-y-4">
-      <!-- Orders will be dynamically inserted here -->
+
+<body>
+    <!-- LOADER -->
+    <div class="preloader">
+        <div class="lds-ellipsis">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </div>
-  </div>
 
-  <script>
-    // Fetch orders data from the backend
-    fetch('/orders')
-      .then(response => response.json())
-      .then(orders => {
-        const ordersContainer = document.getElementById('orders-container');
-        orders.forEach(order => {
-          const orderElement = document.createElement('div');
-          orderElement.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow-md');
+    <%- include('../layout/header') %>
 
-          orderElement.innerHTML = `
-            <div class="flex justify-between items-center mb-4">
-              <h2 class="text-xl font-semibold">Order #${order._id}</h2>
-              <span class="text-sm text-gray-500">${new Date(order.purchaseDate).toLocaleDateString()}</span>
-            </div>
-            <div class="mb-4">
-              <p><strong>Status:</strong> ${order.status}</p>
-              <p><strong>Total:</strong> $${order.total.toFixed(2)}</p>
-            </div>
-            <div class="mb-4">
-              <h3 class="font-semibold">Products:</h3>
-              <ul class="list-disc list-inside">
-                ${order.products.map(product => `
-                  <li>
-                    ${product.productId.name} - Quantity: ${product.quantity}
-                  </li>
-                `).join('')}
-              </ul>
-            </div>
-            <div>
-              <h3 class="font-semibold">Delivery Address:</h3>
-              <p>${order.deliveryAddress}</p>
-            </div>
-          `;
+    <h1 style="text-align: center;">Orders</h1>
 
-          ordersContainer.appendChild(orderElement);
-        });
-      });
-  </script>
+    <table class="table">
+        <tbody>
+            <% orderDetails.forEach(order => { %>
+                <tr>
+                  
+                </tr>
+                <tr>
+                    <td colspan="4">
+                      <div> OrderId:<%= order.orderId%> </div>
+                        <div class="order-card">
+                            <img src="productImage/<%= order.productImage[0] %>" alt="<%= order.productName %>" class="product-image">
+                            <div class="product-info">
+                              <h6 class="product-name"><a href="orderdetails/<%= order. ids %>" > <%= order.productName %></a></h6>
+                                <!-- <div class="product-name"></div> -->
+                                <div class="product-price">₹<%= order.totalprice %></div>
+                               
+                               
+                                
+                              
+                               
+                            </div>
+                            <div class="delivery-status">Order Status: <%= order.status %></div>
+                        </div>
+                      
+                    </td>
+                   
+
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <%- include('../layout/footer') %>
+
+    <!-- Latest jQuery --> 
+    <script src="assets/js/jquery-3.7.0.min.js"></script> 
+    <!-- jquery-ui --> 
+    <script src="assets/js/jquery-ui.js"></script>
+    <!-- popper min js -->
+    <script src="assets/js/popper.min.js"></script>
+    <!-- Latest compiled and minified Bootstrap --> 
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script> 
+    <!-- owl-carousel min js  --> 
+    <script src="assets/owlcarousel/js/owl.carousel.min.js"></script> 
+    <!-- magnific-popup min js  --> 
+    <script src="assets/js/magnific-popup.min.js"></script> 
+    <!-- waypoints min js  --> 
+    <script src="assets/js/waypoints.min.js"></script> 
+    <!-- parallax js  --> 
+    <script src="assets/js/parallax.js"></script> 
+    <!-- countdown js  --> 
+    <script src="assets/js/jquery.countdown.min.js"></script> 
+    <!-- imagesloaded js --> 
+    <script src="assets/js/imagesloaded.pkgd.min.js"></script>
+    <!-- isotope min js --> 
+    <script src="assets/js/isotope.min.js"></script>
+    <!-- jquery.dd.min js -->
+    <script src="assets/js/jquery.dd.min.js"></script>
+    <!-- slick js -->
+    <script src="assets/js/slick.min.js"></script>
+    <!-- elevatezoom js -->
+    <script src="assets/js/jquery.elevatezoom.js"></script>
+    <!-- scripts js --> 
+    <script src="assets/js/scripts.js"></script>
 </body>
 </html>

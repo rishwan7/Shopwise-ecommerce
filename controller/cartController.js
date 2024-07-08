@@ -58,9 +58,9 @@ const {userdetails}=require("../model/userDb")
               }else{
                 shippingCharge=0
               }
-            
+
+
               
-       
         res.render("user/shop-cart", {cartDetails,totalAmount,shippingCharge,cartSubtotal,userDetails})
 console.log("cart details is",cartDetails);        
     

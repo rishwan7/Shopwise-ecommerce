@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Admin - Order Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        @media (max-width: 767.98px) {
+            .table-responsive-sm {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .table-responsive-sm > .table-bordered {
+                border: 0;
+            }
+            .card-header {
+                font-size: 1.2rem;
+            }
+            select.form-control {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid mt-4">
+        <div class="card">
+            <h4 class="card-header bg-dark text-white text-center">Order Management</h4>
+            <div class="card-body p-0">
+                <div class="table-responsive-sm">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Order ID</th>
+                                <th scope="col">User ID</th>
+                                <th scope="col">Product Name</th>
+                                <th scope="col">Purchase Date</th>
+                                <th scope="col">Current Status</th>
+                                <th scope="col">Update Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% order.forEach(order => { %>
+                            <tr>
+                                <td><%= order.orderId %></td>
+                                <td><%= order.userId %></td>
+                                <td><%= order.productName %></td>
+                                <td><%= new Date(order.purchaseDate).toLocaleDateString() %></td>
+                                <td id="orderstatus-<%= order.orderId %>"><%= order.status %></td>
+                                <td>
+                                    <select class="form-control form-control-sm" onchange="updateOrderStatus('<%= order.orderId %>', this.value)">
+                                        <option value=""><%= order.status %></option>
+                                        <option value="Order Confirmed" <% if (order.status === 'Order Confirmed') { %>selected<% } %>>Order Confirmed</option>
+                                        <option value="Shipped" <% if (order.status === 'Shipped') { %>selected<% } %>>Shipped</option>
+                                        <option value="Out for Delivery" <% if (order.status === 'Out for Delivery') { %>selected<% } %>>Out for Delivery</option>
+                                        <option value="Delivered" <% if (order.status === 'Delivered') { %>selected<% } %>>Delivered</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        async function updateOrderStatus(orderId, status) {
+            const response = await fetch('/admin/updatestatus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ orderId, status }),
+            });
+            const result = await response.json();
+            if (!result.success) {
+                alert(result.message);
+            }
+            if (result.success) {
+                document.getElementById(`orderstatus-${orderId}`).textContent = result.status;
+            }
+        }
+    </script>
+</body>
+</html>

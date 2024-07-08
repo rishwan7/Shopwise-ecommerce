@@ -291,7 +291,7 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                                     <button class="btn btn-fill-out btn-addtocart" type="submit" onclick="addToCart('<%= product._id %>', '<%= userId %>')"  id="addToCart"><i class="icon-basket-loaded"></i> Add to cart</button>
                                 <% } %>
                               
-                                <a class="add_wishlist" href="#"><i class="icon-heart" onclick="addToWishlist('<%= product._id %>', '<%= userId %>')"></i></a>
+                                <a class="add_wishlist"  onclick="addToWishlist('<%= product._id %>', '<%= userId %>')"><i class="icon-heart" ></i></a>
                             </div>
                         </div>
                         <hr />

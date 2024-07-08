@@ -23,6 +23,9 @@ router.get("/updateproduct/:id",productController.getUpdateProduct),
 router.post("/updateproduct/:id",upload.array('productImage',10),productController.postUpdateProduct)
 .get("/coupon",couponController.getCoupon)
 .post("/coupon",couponController.postCouponControl)
+.get("/ordermanage",admin.orderManagement)
+.post("/updatestatus",admin.updateOrderStatus   )
+.post("/cancelorder",admin.cancelOrder)
 
 
 //category-controlroute
@@ -34,6 +37,7 @@ router.get("/addcategory",categoryController.getAddCategory)
 .delete("/deletesubcategory/:id",categoryController.deleteSubcategory)
 .post("/updatecategory/:id",categoryController.postUpdateCategory)
 .post("/updatesubcategory/:id",categoryController.postUPdateSubcategory)
+
 
 //logout
 

@@ -69,32 +69,37 @@
         background-color: #0056b3;
     }
 
-    /* Style for coupon list */
-.coupon-list {
-    margin-bottom: 20px; /* Adjust margin as needed */
+    .coupon-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; /* Center align coupons */
+    margin-top: 20px;
 }
 
 .coupon {
-    background-color: #f5f5f5; /* Background color for each coupon */
-    padding: 10px;
-    border: 1px solid #ddd; /* Border for each coupon */
-    margin-bottom: 10px; /* Margin between coupons */
-    display: inline-block; /* Display coupons in a row */
-    margin-right: 10px; /* Adjust space between coupons */
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 15px;
+    width: 200px;
+    text-align: center; /* Center align coupon content */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.coupon .coupon-code {
-    font-size: 16px; /* Font size for coupon code */
+.coupon-code {
+    font-size: 20px; /* Larger font size for coupon code */
     font-weight: bold;
-    margin-bottom: 5px; /* Margin below coupon code */
+    margin-bottom: 10px;
 }
 
-.coupon .discount {
-    font-size: 14px; /* Font size for discount text */
-    color: #888;
+.discount {
+    margin-top: 5px;
+    color: green;
 }
 
-    
 
 
 </style>
@@ -186,8 +191,7 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 <!-- END SECTION BREADCRUMB -->
 
 <!-- START MAIN CONTENT -->
-<% if (couponcode<=0) { %>
-    
+
 <% if (totalAmount > 3000) { %>
     <div id="coupon-list" class="coupon-list">
         <% couponAvailable.forEach(coupon => { %>
@@ -198,9 +202,6 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
         <% }) %>
     </div>
 <% } %>
- 
-<% } %>
-
 
 
 
@@ -210,31 +211,59 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 <div class="main_content">
     <!-- START SECTION SHOP -->
 
+
+     
+
+
+
+
+
+
+
     <div class="section">
         <div class="container">
             <div class="row">
                 <div class="col-12">
+
+
                     <% if (couponcode) { %>
                         <!-- Applied coupon details -->
-                        <div id="applied-coupon" >
-                            <p style="color: green; text-align: center;">applied coupon: <%= couponcode %> - ₹<%= couponDiscount %></p>
-                            <button style="text-align: center;" class="btn btn-danger btn-sm" type="button" onclick="removeCoupon()">Remove Coupon</button>
+                        <div id="applied-coupon" style="display: flex; align-items: center; flex-direction: row;">
+                            <p style="color: green; margin-bottom: 10px;">Applied coupon: <%= couponcode %> - ₹<%= couponDiscount %></p>
+                            <button class="btn btn-danger btn-sm" type="button" onclick="removeCoupon()">Remove Coupon</button>
                         </div>
                     <% } else { %>
-                        <!-- Coupon input form -->
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Enter Coupon Code.." id="couponenter">
-                            <div class="input-group-append">
-                                <button class="btn btn-fill-out btn-sm" type="button" onclick="couponApply()">Apply Coupon</button>
-                            </div>
+                    <div class="input-group" id="coupon-input">
+                        <input type="text" class="form-control" placeholder="Enter Coupon Code.." id="couponenter">
+                        
+                      
+                        <div class="input-group-append">
+                            <button  id="appllycpn"  class="btn btn-fill-out btn-sm" type="button" onclick="couponApply()">Apply Coupon</button>
                         </div>
-                        <p id="invalidcoupon" style="color: red; text-align: center;"></p>
-                    <% } %>
+                        <% } %>
+
+                        <div class="input-group" id="coupon-input2" >
+                            <input type="text" class="form-control" placeholder="Enter Coupon Code.." id="couponenter2"  style="display: none;">
+                            
+                          
+                            <div class="input-group-append">
+                                <button  style="display: none;"  id="appllycpn2"  class="btn btn-fill-out btn-sm" type="button" onclick="couponApply()">Apply Coupon</button>
+                            </div>
+                        
+                    </div>
+                   
+
+                    <div id="applied-coupon" style="display:none;">
+                        <p style="color: green;">Discount <span id="applied-coupon-code"></span>%</p>
+                        <button  style="margin-right: 40px;" class="btn btn-danger btn-sm" type="button" onclick="removeCoupon()">Remove Coupon</button>
+                        
+                    </div>
+                    <p id="invalidcoupon" style="color: red; text-align: center;"></p>
                 </div>
             </div>
         </div>
     </div>
-    
+</div>
             
 
         
@@ -779,6 +808,9 @@ async function placeOrder() {
         if(result.couponCode){
             document.getElementById("invalidcoupon").textContent=""
             document.getElementById("coupon-list").style.display = 'none';
+            document.getElementById("couponenter").style.display="none"
+              document.getElementById("appllycpn").style.display="none"
+
 
              
             if(document.getElementById("availblecpn")){
@@ -794,6 +826,7 @@ async function placeOrder() {
             // Update the total discount and total amount
 
             document.getElementById("couponname").style.display="block"
+            document.getElementById("coupondiscount").style.display="block"
             document.getElementById("coupondiscount").textContent=result.discountAmount;
             document.getElementById("finaltotal").textContent=`₹${result.finalAmount}`
            
@@ -817,27 +850,61 @@ async function removeCoupon() {
         },
         body: JSON.stringify({})
     })
-    document.getElementById("couponenter").value = '';
+    const result=await response.json()
+
+
+    if(result.remove){
+          
     // Show the coupon list
+    
     document.getElementById("coupon-list").style.display = 'block';
     // Hide the applied coupon section
     document.getElementById("applied-coupon").style.display = 'none';
     document.getElementById("applied-coupon-code").textContent = '';
     document.getElementById("couponname").style.display="none"
 
+    if(document.getElementById("couponenter")){
+        document.getElementById("couponenter").style.display="block"
+           document.getElementById("appllycpn").style.display="block"
+
+    }
+
+    // if(document.getElementById("coupon-input2")){
+    //     document.getElementById("appllycpn2").style.display="block"
+    //      document.getElementById("couponenter2").style.display="block"
+
+
+    // }
+    
     document.getElementById("coupondiscount").style.display="none"
+
+    if(document.getElementById("availblecpn")){
+        document.getElementById("couponrv").style.display="none"
+        document.getElementById("couponrmv").style.display="none"
+    }
+
+   
   
 
     // Optionally, reset the total discount and total amount
     // document.getElementById("totaldiscount").value = '0';
     console.log('Coupon removed.');
 
-    const result=await response.json()
+   
     console.log(result.totalAmount);
     
         console.log(result,"ttttttttttttttttttttttt");
         document.getElementById("finaltotal").textContent=`₹${result.totalAmount}`
  
+
+
+
+    }
+    else{
+        alert("something fishy")
+    }
+
+  
       
 }
 

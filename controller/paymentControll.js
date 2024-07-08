@@ -55,7 +55,7 @@ const getCheckOutPage = async (req, res) => {
                         },
                         total: "$total",                // Include total
                         couponDiscount: "$coupenDiscount",
-                        couponCode:"$couponcode"
+                        couponcode:"$couponcode"
                          // Include couponDiscount
                     }
                 },
@@ -65,7 +65,7 @@ const getCheckOutPage = async (req, res) => {
                         items: { $push: "$$ROOT" },
                         total: { $first: "$total" },          // Ensure total is grouped correctly
                         couponDiscount: { $first: "$couponDiscount" },
-                        couponCode: { $first: "$couponCode" }, // Ensure couponDiscount is grouped correctly
+                        couponcode: { $first: "$couponcode" }, // Ensure couponDiscount is grouped correctly
                         totalAmount: { $sum: "$subtotal" },
                         totalDiscount: { $sum: "$discountAmount" }
                     }
@@ -77,9 +77,9 @@ const getCheckOutPage = async (req, res) => {
                 }
             ]);
 
-            console.log(cartDetails[0].couponCode,"fdhvvvvvvsjdbkbsdbksdbbssdbdsbj");
+            console.log(cartDetails[0].couponcode,"fdhvvvvvvsjdbkbsdbksdbbssdbdsbj");
 
-            const cartDetail = cartDetails[0] || {};
+            const cartDetail = cartDetails[0];
             const totalAmount = cartDetail.totalAmount || 0;
             const couponDiscount = cartDetail.couponDiscount;
             const cartSubtotal = cartDetail.finalTotal || totalAmount;
@@ -88,8 +88,10 @@ const getCheckOutPage = async (req, res) => {
             const finalTotal = cartSubtotal + shippingCharge;
             const couponcode=cartDetails[0].couponCode
 
-            req.session.cartDetails = cartDetails;
-            req.session.totalAmount = cartSubtotal;
+            req.session.cartDetails = cartDetails[0];
+            req.session.totalAmount = finalTotal;
+            req.session.totalDiscount=couponDiscount||0;
+
 
            
               const couponAvailable=await coupons.find({})
@@ -114,7 +116,9 @@ const getCheckOutPage = async (req, res) => {
         res.status(500).json({ error: 'Failed to load checkout page' });
     }
 };
-const postCheckOut = async (req, res) => {zy
+
+
+const postCheckOut = async (req, res) => {
     try {
         const { paymentMethod, deliveryAddress, purchaseDate, status } = req.body;
         const deliveryAddressId = mongoose.Types.ObjectId.createFromHexString(deliveryAddress);
@@ -123,15 +127,18 @@ const postCheckOut = async (req, res) => {zy
         if (paymentMethod === "cod") {
             const newOrder = new orders({
                 userId: req.session.userId,
-                products: cartDetails.map(item => ({
+                products: cartDetails.items.map(item => ({
                     productId: item.productId,
-                    quantity: item.quantity
+                    quantity: item.quantity,
+                    status: status || 'Pending',
                 })),
                 paymentMethod,
-                total: req.session.totalAmount,
-                status: status || 'Pending',
+                totalprice: req.session.totalAmount,
+                
                 address: deliveryAddress,
                 purchaseDate: purchaseDate || new Date(),
+                DiscountviaCoupon:cartDetails.couponDiscount,
+                couponcode:cartDetails.couponcode
             });
 
             await newOrder.save();
@@ -141,16 +148,26 @@ const postCheckOut = async (req, res) => {zy
             req.session.totalAmount = 0;
             return res.status(200).json({ success: true, cod: true, message: "Order placed successfully" });
         } else if (paymentMethod === "onlinePayment") {
-            const lineItems = cartDetails.map(item => ({
+
+            let totalCartPrice = cartDetails.items.reduce((total, item) => total + (item.productPrice * item.quantity), 0);
+            if (totalCartPrice < 500) {
+                totalCartPrice += 99; // Add 99 if totalCartPrice is less than 500
+            }
+            const discountRatio = req.session.totalDiscount/ totalCartPrice;
+
+
+            const lineItems = cartDetails.items.map(item => ({
                 price_data: {
                     currency: 'inr',
                     product_data: {
                         name: item.productName,
                     },
-                    unit_amount: item.productPrice * 100,
+                    unit_amount:  Math.round(item.productPrice * 100 * (1 - discountRatio)),
                 },
                 quantity: item.quantity,
             }));
+
+
 
             const session = await stripe.checkout.sessions.create({
                 payment_method_types: ['card'],
@@ -193,6 +210,7 @@ const verifyPaymentWebhook = async (req, res) => {
             const userId = session.client_reference_id;
             const { deliveryAddress, purchaseDate, status } = session.metadata;
 
+
             const cartDetails = await cart.aggregate([
                 { $match: { userId: mongoose.Types.ObjectId.createFromHexString(userId) } },
                 { $unwind: "$items" },
@@ -221,25 +239,54 @@ const verifyPaymentWebhook = async (req, res) => {
                                 "$items.quantity"
                             ]
                         },
+                        total: "$total",                // Include total
+                        couponDiscount: "$coupenDiscount",
+                        couponCode:"$couponcode"
+                         // Include couponDiscount
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$userId",
+                        items: { $push: "$$ROOT" },
+                        total: { $first: "$total" },          // Ensure total is grouped correctly
+                        couponDiscount: { $first: "$couponDiscount" },
+                        couponcode: { $first: "$couponcode" }, // Ensure couponDiscount is grouped correctly
+                        totalAmount: { $sum: "$subtotal" },
+                        totalDiscount: { $sum: "$discountAmount" }
+                    }
+                },
+                {
+                    $addFields: {
+                        finalTotal: {
+                            $subtract: [
+                                { $add: ["$totalAmount", { $cond: { if: { $lt: ["$totalAmount", 500] }, then: 99, else: 0 } }] },
+                                "$couponDiscount"
+                            ]
+                        }
                     }
                 }
             ]);
 
-            const totalAmount = cartDetails.reduce((acc, item) => acc + item.subtotal, 0);
-            const cartSubtotal = totalAmount < 500 ? totalAmount + 99 : totalAmount;
+            const cartDetail=cartDetails[0]
+            const totalAmount = cartDetail.finalTotal
+            
 
             try {
                 const newOrder = new orders({
                     userId,
-                    products: cartDetails.map(item => ({
+                    products: cartDetail.items.map(item => ({
                         productId: item.productId,
-                        quantity: item.quantity
+                        quantity: item.quantity,
+                        status:"paid"
                     })),
                     paymentMethod: 'onlinePayment',
-                    totalprice: cartSubtotal,
-                    Status: 'Paid',
+                    totalprice: totalAmount,
+                    
                     address: deliveryAddress,
+                    DiscountviaCoupon:cartDetail.couponDiscount,
                     purchaseDate: new Date(purchaseDate),
+                    couponcode:cartDetail.couponcode
                 });
 
                 await newOrder.save();
@@ -258,7 +305,7 @@ const verifyPaymentWebhook = async (req, res) => {
 };
 
 const orderSuccess = (req, res) => {
-    res.render("orderSuccess");
+    res.render("user/orderSuccess");
 };
 
 module.exports = { getCheckOutPage, postCheckOut, orderSuccess, verifyPaymentWebhook };
