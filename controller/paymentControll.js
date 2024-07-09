@@ -93,6 +93,8 @@ const getCheckOutPage = async (req, res) => {
             req.session.totalDiscount=couponDiscount||0;
 
 
+            cartQuantity =req.session.cartQuantity
+
            
               const couponAvailable=await coupons.find({})
 
@@ -108,7 +110,7 @@ const getCheckOutPage = async (req, res) => {
                 userId,
                 couponAvailable: couponslist,
                 couponDiscount,
-                couponcode
+                couponcode,cartQuantity
             });
         }
     } catch (error) {

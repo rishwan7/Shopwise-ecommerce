@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Banner - Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-image: url("../assets/ecommerce background.jpg");
+      background-size: cover;
+      background-repeat: round;
+      background-attachment: fixed;
+    }
+  </style>
+</head>
+<body class="font-sans bg-yellow-200 flex flex-col min-h-screen">
+  <div class="header w-full flex justify-between items-center p-4 bg-yellow-500 text-white">
+    <div class="logo">
+      <img src="../assets/shopmate logo.png" alt="Company Logo" class="h-12">
+    </div>
+    <div class="nav-box flex gap-4">
+      <a href="/admin" class="btn text-white no-underline px-4 py-2 bg-yellow-400 rounded transition duration-300 hover:bg-yellow-300">Back to Home</a>
+      <a href="/admin/logout" class="btn text-white no-underline px-4 py-2 bg-yellow-400 rounded transition duration-300 hover:bg-yellow-300">Logout</a>
+    </div>
+  </div>
+
+  <div class="main-content flex justify-center items-start p-4 w-full max-w-screen-lg mx-auto">
+    <div class="sidebar w-64 bg-transparent p-4 mr-20 rounded shadow">
+      <button onclick="window.location.href='/admin/addcategory'" class="btn w-full bg-yellow-500 text-black text-center py-2 mb-2 rounded hover:bg-yellow-400">Add Category</button>
+      <button onclick="window.location.href='/admin/viewproducts'" class="btn w-full bg-yellow-500 text-black text-center py-2 mb-2 rounded hover:bg-yellow-400">View Products</button>
+      <button onclick="window.location.href='/admin/viewcategories'" class="btn w-full bg-yellow-500 text-black text-center py-2 mb-2 rounded hover:bg-yellow-400">View Categories</button>
+    </div>
+
+    <div class="container bg-white p-6 rounded shadow w-full max-w-lg">
+      <h1 class="text-2xl text-center mb-4">Add Banner - Admin</h1>
+
+      <section>
+      
+        <form action="/admin/banner" method="post" enctype="multipart/form-data" class="space-y-4">
+          <div class="form-group">
+            <label for="bannerName" class="block font-semibold mb-1">Banner Name:</label>
+            <input type="text" id="bannerName" name="bannerName" class="w-full p-2 border border-gray-300 rounded">
+          </div>
+          <div class="form-group">
+            <label for="bannerImage" class="block font-semibold mb-1">Banner Image:</label>
+            <input type="file" id="bannerImage" name="bannerImage" class="w-full p-2 border border-gray-300 rounded">
+          </div>
+          <button type="submit" class="btn w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-400">Add Banner</button>
+        </form>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

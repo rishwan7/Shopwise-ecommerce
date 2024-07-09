@@ -4,11 +4,14 @@ const productController=require("../controller/productcontrol")
 const categoryController=require("../controller/categorycontrol")
 const adminLogout=require("../controller/commoncontrol")
 const couponController=require("../controller/couponController")
+const bannerController=require("../controller/bannerControll")
 const multer=require("multer")
 const router=express.Router()
 const storage=require("../utils/multer")
+const storage2=require("../utils/multer")
 
 const upload = multer({ storage: storage });
+const banner=multer({storage:storage2})
 
 
 router.get("/",admin.getAdminHome)
@@ -37,6 +40,8 @@ router.get("/addcategory",categoryController.getAddCategory)
 .delete("/deletesubcategory/:id",categoryController.deleteSubcategory)
 .post("/updatecategory/:id",categoryController.postUpdateCategory)
 .post("/updatesubcategory/:id",categoryController.postUPdateSubcategory)
+.get("/banner",bannerController.getBanner)
+.post("/banner",banner.single('bannerImage'),bannerController.postBanner)
 
 
 //logout

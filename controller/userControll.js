@@ -9,6 +9,7 @@ const { userdetails } = require("../model/userDb");
 const { default: mongoose } = require("mongoose");
 const { logout } = require("./commoncontrol");
 const {orders}=require("../model/orderDb")
+const {wishlist}=require("../model/wishlistDb")
 const {UserAddress}=require("../model/addressDb")
 
 module.exports = {
@@ -20,6 +21,16 @@ module.exports = {
     // console.log(id);
     req.session.userId='66742001854d67a55ce082b7'
     const userId = req.session.userId;
+    const wislistCount=await wishlist.findOne({userId:mongoose.Types.ObjectId.createFromHexString(userId)})
+    let wishlistQty=0
+    if (wislistCount && wislistCount.items) {
+      wishlistQty=wislistCount.items.length
+      console.log(`Wishlist count: ${wishlistQty}`);
+  } else {
+      console.log('Wishlist count: 0');
+  }
+          
+  req.session.wishlistQty=wishlistQty
    
     
   
@@ -30,6 +41,9 @@ module.exports = {
    const userName=userDetails.userName
 
    const Cart = await cart.findOne({ userId: userId });
+
+
+
 
   
    let cartQuantity = 0;
@@ -45,8 +59,10 @@ module.exports = {
     console.log("user id is ssssss", userId);
     const categories = await category.find({});
     const products = await product.find({}).populate("productCategory");
+
+    req.session.cartQuantity=cartQuantity
     // console.log(products);
-    res.render("user/index", { products, categories, userId,userName,cartQuantity});
+    res.render("user/index", { products, categories, userId,userName,cartQuantity,wishlistQty});
   },
 
 
@@ -107,8 +123,8 @@ module.exports = {
   
 
   console.log(orderDetails);
-
-    res.render("user/my-account",{orderDetails})
+ const cartQuantity= req.session.cartQuantity
+    res.render("user/my-account",{orderDetails,cartQuantity})
 
   },
 
@@ -116,7 +132,10 @@ module.exports = {
 
    getProductDetail: async (req, res) => {
     try {
-      const productId = mongoose.Types.ObjectId.createFromHexString(req.params.id);
+      const productId = req.params.id;
+      if(productId){
+
+      // console.log(req.params);
       req.session.userId = '66742001854d67a55ce082b7';
       const userId = req.session.userId;
   
@@ -126,7 +145,7 @@ module.exports = {
       const userDetails = await userdetails.findOne({ _id: userId });
   
       const products = await product.aggregate([
-        { $match: { _id: productId } },
+        { $match: { _id: mongoose.Types.ObjectId.createFromHexString(productId) } },
         {
           $lookup: {
             from: "categories",
@@ -181,6 +200,10 @@ module.exports = {
         console.log('Cart not found or no items in the cart.');
       }
   
+
+      const wishlistItem = await wishlist.findOne({ userId, 'items.productId': productId });
+      const isInWishlist = !!wishlistItem; // Convert to boolean
+
       console.log("this is", products[0]);
   
       res.render("user/productDetail", {
@@ -188,10 +211,14 @@ module.exports = {
         userId,
         isInCart,
         userDetails,
-        cartQuantity
+        cartQuantity,
+        isInWishlist
       });
+      console.log('end');
+      }
+
     } catch (error) {
-      console.error('Error fetching product details:', error);
+      console.error('Error fetching product details:', error.message);
       res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
   },
@@ -265,9 +292,13 @@ module.exports = {
 
   req.session.orderDetails=orderDetails
 
+  
+  const cartQuantity= req.session.cartQuantity
+
+
 
   console.log("bbbbbbbbbbbbbbbbbbb",orderDetails);
-    res.render("user/orders",{userDetails,orderDetails})
+    res.render("user/orders",{userDetails,orderDetails,cartQuantity})
 
       
     } catch (error) {

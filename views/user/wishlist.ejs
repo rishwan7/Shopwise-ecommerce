@@ -42,6 +42,23 @@
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
 
+<style>
+    .wishlist-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 200px; /* Adjust height as needed */
+        text-align: center;
+    }
+    .wishlist-empty p {
+        margin-bottom: 20px;
+    }
+    .wishlist-empty .btn {
+        padding: 10px 20px;
+    }
+</style>
+
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106310707-1"></script>
 <script>
@@ -141,15 +158,14 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 
 
                     <ul class="navbar-nav">
-                       
+
                         
-
-
-
-                   
-
-
-
+                    <li class="cart_dropdown">
+                        <a class="nav-link cart_trigger" href="/cart">
+                          <i class="linearicons-cart"></i>
+                          <span class="cart_count" id="cart-quantity"> <%= cartQuantity %></span> 
+                        </a>
+                       
                 </ul>
             </nav>
         </div>
@@ -166,12 +182,7 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
             		<h1>Wishlist</h1>
                 </div>
             </div>
-            <div class="col-md-6">
-                <ol class="breadcrumb justify-content-md-end">
-                    <li class="breadcrumb-item"><a href="/index">Home</a></li>
-                    <li class="breadcrumb-item active">Wishlist</li>
-                </ol>
-            </div>
+           
         </div>
     </div><!-- END CONTAINER-->
 </div>
@@ -185,6 +196,7 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 	<div class="container">
         <div class="row">
             <div class="col-12">
+                <% if (wishlistProducts.length > 0) { %>
                 <div class="table-responsive wishlist_table">
                 	<table class="table">
                     	<thead>
@@ -198,21 +210,30 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                             </tr>
                         </thead>
                         <tbody>
-                        	<tr>
-                            	<td class="product-thumbnail"><a href="#"><img src="assets/images/product_img1.jpg" alt="product1"></a></td>
-                                <td class="product-name" data-title="Product"><a href="#">Blue Dress For Woman</a></td>
-                                <td class="product-price" data-title="Price">$45.00</td>
-                              	<td class="product-stock-status" data-title="Stock Status"><span class="badge rounded-pill text-bg-success">In Stock</span></td>
-                                <td class="product-add-to-cart"><a href="#" class="btn btn-fill-out"><i class="icon-basket-loaded"></i> Add to Cart</a></td>
-                                <td class="product-remove" data-title="Remove"><a href="#"><i class="ti-close"></i></a></td>
-                            </tr>
 
-
+                            <% wishlistProducts.forEach(product => { %>
+                                <tr id="prup" >
+                                    <td id="primg" class="product-thumbnail"><a href="#"><img src="productImage/<%= product.productImage[0] %>" alt="<%= product.productImage %>"></a></td>
+                                    <td class="product-name" data-title="Product"><a href="#"> <%= product.productName %> </a></td>
+                                    <td class="product-price" data-title="Price">₹<%= product.productPrice %></td>
+                                      <td class="product-stock-status" data-title="Stock Status"><span class="badge rounded-pill text-bg-success"><% if (product.productStock > 0) { %>
+                                                                In Stock <% } else { %>  Out of Stock <% } %>  </td>
+                                             <td></td>                   
+                                    <td class="product-remove" data-title="Remove"><a  onclick="removeWishlist('<%= product.productId %>','<%= product.userId %>')"><i class="ti-close"></i></a></td>
+                                </tr>
+                             
+                            <% }) %>
 
                           
                         </tbody>
                     </table>
-                </div>
+                </div> <% } else { %>
+                    <div class="wishlist-empty">
+                        <p>Your wishlist is empty. You need to purchase something!</p>
+                        <a href="/index" class="btn btn-primary">Go to Shop</a>
+                    </div>
+                    <% } %>
+                
             </div>
         </div>
     </div>
@@ -346,6 +367,34 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 <!-- END FOOTER -->
 
 <a href="#" class="scrollup" style="display: none;"><i class="ion-ios-arrow-up"></i></a> 
+
+<script>
+    async function removeWishlist(productId,userId){
+        const response=await fetch("/wishlist",{
+            method:"POST",
+            headers:{
+                "Content-type":"application/json"
+            },
+            body:JSON.stringify({productId,userId})
+        })
+
+        const result=await response.json()
+        try {
+            if(result.removed){
+                document.getElementById("prup").style.display="none"
+              
+            alert(result.message)
+        }else{
+            alert(result.message,"else")
+        }
+            
+        } catch (error) {
+            alert(result.message,"catch")
+            
+        }
+        
+    }
+</script>
 
 <!-- Latest jQuery --> 
 <script src="assets/js/jquery-3.7.0.min.js"></script> 

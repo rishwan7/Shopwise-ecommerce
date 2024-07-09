@@ -9,6 +9,7 @@
 <meta name="description" content="Shopwise is Powerful features and You Can Use The Perfect Build this Template For Any eCommerce Website. The template is built for sell Fashion Products, Shoes, Bags, Cosmetics, Clothes, Sunglasses, Furniture, Kids Products, Electronics, Stationery Products and Sporting Goods.">
 <meta name="keywords" content="ecommerce, electronics store, Fashion store, furniture store,  bootstrap 4, clean, minimal, modern, online store, responsive, retail, shopping, ecommerce store">
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"></script>
 <!-- SITE TITLE -->
 <title>Shopwise - eCommerce Bootstrap 5 HTML Template</title>
 <!-- Favicon Icon -->
@@ -42,8 +43,24 @@
 <link rel="stylesheet" href="/assets/css/style.css">
 <link rel="stylesheet" href="/assets/css/responsive.css">
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-9lA87yG5IIXkDxUCBsXsBln2Vy4j+jJEvEZ7tj5a4eGdho0Br0e4/AzJ9nJpbYMWlJQCrOZQdGvCfoJ6ovQhXw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <!-- seet Alert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+
+<!-- Alertify CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+<!-- Alertify Default Theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
+
+<!-- Alertify JavaScript -->
+
+
+
+
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
  
@@ -116,9 +133,9 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 
 
 
-<!-- START SECTION BREADCRUMB -->
+<!-- 
 <div class="breadcrumb_section bg_gray page-title-mini">
-    <div class="container"><!-- STRART CONTAINER -->
+    <div class="container">
         <div class="row align-items-center">
         	<div class="col-md-6">
                 <div class="page-title">
@@ -133,9 +150,9 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                 </ol>
             </div>
         </div>
-    </div><!-- END CONTAINER-->
-</div>
-<!-- END SECTION BREADCRUMB -->
+    </div>   
+</div> -->
+
 
 
 
@@ -291,8 +308,13 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                                     <button class="btn btn-fill-out btn-addtocart" type="submit" onclick="addToCart('<%= product._id %>', '<%= userId %>')"  id="addToCart"><i class="icon-basket-loaded"></i> Add to cart</button>
                                 <% } %>
                               
-                                <a class="add_wishlist"  onclick="addToWishlist('<%= product._id %>', '<%= userId %>')"><i class="icon-heart" ></i></a>
-                            </div>
+
+                                <a class="add_wishlist" onclick="addToWishlist('<%= product._id %>', '<%= userId %>')">
+                                    <i id="wishlist-icon" class="<%= isInWishlist ? 'fas' : 'far' %> fa-heart" style ="<%= isInWishlist ? 'color: red;' : '' %>"></i>
+                                </a>
+                                
+                               
+                            </div >
                         </div>
                         <hr />
 
@@ -327,7 +349,8 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
             
             <div class="row">
                 <div class="col-12">
-                    <div class="large_divider clearfix"></div>
+                    <div class="large_divider clearfix"> </div>
+                    
                 </div>
             </div>
             <div class="row">
@@ -915,8 +938,13 @@ return Swal.fire({
 }
 
 
-
 }
+
+
+
+
+
+
 
 
 
@@ -927,7 +955,8 @@ async function addToWishlist(productId,userId){
       
     };
 
-    const response= await fetch("/wishlist",{method:"POST",headers:{
+    const response= await fetch("/wishlist",{method:"POST",
+    headers:{
         'Content-Type': 'application/json'
     },
     body:JSON.stringify(data)
@@ -939,7 +968,24 @@ const result=await response.json()
 
 
 if(result.success){
-    alert("added to wislist")
+
+    document.getElementById("wishlist-icon").classList.remove("far")
+    document.getElementById("wishlist-icon").classList.add("fas")
+    document.getElementById("wishlist-icon").style.color="red"
+    alertify.success(result.message);
+ 
+ 
+ 
+}else if(result.removed){
+    document.getElementById("wishlist-icon").classList.remove("fas")
+    document.getElementById("wishlist-icon").classList.add("far")
+    document.getElementById("wishlist-icon").style.color=""
+    alertify.warning(result.message);
+
+}
+
+else{
+    alertify.error(result.message);
 }
 
 
@@ -947,6 +993,7 @@ if(result.success){
 
 
 </script>   
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
 <!-- Latest jQuery --> 
 <script src="/assets/js/jquery-3.7.0.min.js"></script> 
