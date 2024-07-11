@@ -5612,14 +5612,14 @@ body > .zoomContainer {
 }
 .filter_price .ui-slider .ui-slider-handle {
 	cursor: pointer;
-	background-color: #fff;
+	background-color: transparent;
 	border-radius: 100%;
 	border: 0;
 	height: 18px;
 	top: -8px;
 	width: 18px;
 	margin: 0;
-	box-shadow: 0 0 10px rgba(0,0,0,0.2);
+	/* box-shadow: 0 0 10px rgba(0,0,0,0.2); */
 }
 .price_range {
 	color: #292b2c;

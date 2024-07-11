@@ -57,7 +57,15 @@
     .wishlist-empty .btn {
         padding: 10px 20px;
     }
-</style>
+</style><!-- Alertify CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+<!-- Alertify Default Theme -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
+
+<!-- Alertify JavaScript -->
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106310707-1"></script>
@@ -203,9 +211,11 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                         	<tr>
                             	<th class="product-thumbnail">&nbsp;</th>
                                 <th class="product-name">Product</th>
-                                <th class="product-price">Price</th>
-                                <th class="product-stock-status">Stock Status</th>
                                 <th class="product-add-to-cart"></th>
+                                <th class="product-price">Price</th>
+                               
+                                <th class="product-stock-status">Stock Status</th>
+                                
                                 <th class="product-remove">Remove</th>
                             </tr>
                         </thead>
@@ -214,11 +224,13 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                             <% wishlistProducts.forEach(product => { %>
                                 <tr id="prup" >
                                     <td id="primg" class="product-thumbnail"><a href="#"><img src="productImage/<%= product.productImage[0] %>" alt="<%= product.productImage %>"></a></td>
-                                    <td class="product-name" data-title="Product"><a href="#"> <%= product.productName %> </a></td>
+                                    <td class="product-name" data-title="Product"><a href="/productdetail/<%= product.productId %>"> <%= product.productName %> </a></td>
+                                    <td> <del>₹<%= product.orginalprice %> </del> </td>
                                     <td class="product-price" data-title="Price">₹<%= product.productPrice %></td>
+                                    
                                       <td class="product-stock-status" data-title="Stock Status"><span class="badge rounded-pill text-bg-success"><% if (product.productStock > 0) { %>
                                                                 In Stock <% } else { %>  Out of Stock <% } %>  </td>
-                                             <td></td>                   
+                                                       
                                     <td class="product-remove" data-title="Remove"><a  onclick="removeWishlist('<%= product.productId %>','<%= product.userId %>')"><i class="ti-close"></i></a></td>
                                 </tr>
                              
@@ -383,13 +395,13 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
             if(result.removed){
                 document.getElementById("prup").style.display="none"
               
-            alert(result.message)
+                alertify.warning(result.message);
         }else{
-            alert(result.message,"else")
+            alertify.error(result.message);
         }
             
         } catch (error) {
-            alert(result.message,"catch")
+            alertify.error(result.message);
             
         }
         

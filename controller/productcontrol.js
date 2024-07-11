@@ -90,19 +90,26 @@ module.exports = {
     try {
       const categoryId = req.params.categoryId;
       // console.log("this is cat id:",categoryId);
+      const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 7; // Number of products per page
+        const skip = (page - 1) * limit;
+
         let products;
 
         if (categoryId) {
 
-            products = await product.find({ productCategory: categoryId }).populate('productCategory').populate('productSubCategory');
+            products = await product.find({ productCategory: categoryId }).populate('productCategory').populate('productSubCategory').skip(skip) .limit(limit);
             console.log("this is",products);
         } else {
-            products = await product.find().populate('productCategory').populate('productSubCategory');
+            products = await product.find().populate('productCategory').populate('productSubCategory') .skip(skip)
+            .limit(limit);
         }
 
         const categories = await category.find();
+        const totalProducts = await product.countDocuments(categoryId ? { productCategory: categoryId } : {});
+        const totalPages = Math.ceil(totalProducts / limit);
       // console.log(products);
-      res.render("admin/viewproducts", { products,categories });
+      res.render("admin/viewproducts", { products,categories ,currentPage: page,totalPages, limit});
     } catch (error) {
       console.error(error);
       req.session.errorMessage = "Error fetching products.";

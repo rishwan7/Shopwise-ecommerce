@@ -4,7 +4,8 @@ const signupSchema=mongoose.Schema({
     userName:{type:String},
     userEmail :{type:String},
    userPhone:{type:Number},
-   userPassword:{type:String}
+   userPassword:{type:String},
+   userStatus:{type:String, default:false}
 })
 
 const userdetails=mongoose.model("userdetails",signupSchema)

@@ -192,195 +192,17 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                             <i class="linearicons-menu"></i><span>All Categories </span>
                         </button>
                         <div id="navCatContent" class="nav_cat navbar nav collapse">
-                            <ul> 
+                            
+                            <% categories.forEach(category => { %>
+                                 
                                 <li class="dropdown dropdown-mega-menu">
-                                    <a class="dropdown-item nav-link dropdown-toggler" href="#" data-bs-toggle="dropdown"><i class="flaticon-woman"></i> <span>Woman's</span></a>
+                                    <a class="dropdown-item nav-link dropdown-toggler"  href="/shop-sidebar/<%= category._id %>" > <span> <%= category.categoryName %>  </span></a>
                                     <div class="dropdown-menu">
-                                        <ul class="mega-menu d-lg-flex">
-                                            <li class="mega-menu-col col-lg-7">
-                                                <ul class="d-lg-flex">
-                                                    <li class="mega-menu-col col-lg-6">
-                                                        <ul> 
-                                                            <li class="dropdown-header">Featured Item</li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Vestibulum sed</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec porttitor</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec vitae facilisis</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Curabitur tempus</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Vivamus in tortor</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec vitae ante ante</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Etiam ac rutrum</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Quisque condimentum</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="mega-menu-col col-lg-6">
-                                                        <ul>
-                                                            <li class="dropdown-header">Popular Item</li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Curabitur laoreet</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Vivamus in tortor</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec vitae facilisis</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Quisque condimentum</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Etiam ac rutrum</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec vitae ante ante</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec porttitor</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Curabitur tempus</a></li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li class="mega-menu-col col-lg-5">
-                                                <div class="header-banner2">
-                                                    <img src="assets/images/menu_banner1.jpg" alt="menu_banner1">
-                                                    <div class="banne_info">
-                                                        <h6>10% Off</h6>
-                                                        <h4>New Arrival</h4>
-                                                        <a href="#">Shop now</a>
-                                                    </div>
-                                                </div>
-                                                <div class="header-banner2">
-                                                    <img src="assets/images/menu_banner2.jpg" alt="menu_banner2">
-                                                    <div class="banne_info">
-                                                        <h6>15% Off</h6>
-                                                        <h4>Men's Fashion</h4>
-                                                        <a href="#">Shop now</a>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                      
                                     </div>
                                 </li>
-                                <li class="dropdown dropdown-mega-menu">
-                                    <a class="dropdown-item nav-link dropdown-toggler" href="#" data-bs-toggle="dropdown"><i class="flaticon-boss"></i> <span>Men's</span></a>
-                                    <div class="dropdown-menu">
-                                        <ul class="mega-menu d-lg-flex">
-                                            <li class="mega-menu-col col-lg-7">
-                                                <ul class="d-lg-flex">
-                                                    <li class="mega-menu-col col-lg-6">
-                                                        <ul> 
-                                                            <li class="dropdown-header">Featured Item</li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Vestibulum sed</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec porttitor</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec vitae facilisis</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Curabitur tempus</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Vivamus in tortor</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec vitae ante ante</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Etiam ac rutrum</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="mega-menu-col col-lg-6">
-                                                        <ul>
-                                                            <li class="dropdown-header">Popular Item</li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Curabitur laoreet</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Vivamus in tortor</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec vitae facilisis</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Quisque condimentum</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Etiam ac rutrum</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec vitae ante ante</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec porttitor</a></li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li class="mega-menu-col col-lg-5">
-                                                <div class="header-banner2">
-                                                    <a href="#"><img src="assets/images/menu_banner4.jpg" alt="menu_banner4"></a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="dropdown dropdown-mega-menu">
-                                    <a class="dropdown-item nav-link dropdown-toggler" href="#" data-bs-toggle="dropdown"><i class="flaticon-friendship"></i> <span>Kid's</span></a>
-                                    <div class="dropdown-menu">
-                                        <ul class="mega-menu d-lg-flex">
-                                            <li class="mega-menu-col col-lg-7">
-                                                <ul class="d-lg-flex">
-                                                    <li class="mega-menu-col col-lg-6">
-                                                        <ul> 
-                                                            <li class="dropdown-header">Featured Item</li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Vestibulum sed</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec porttitor</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec vitae facilisis</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Curabitur tempus</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Vivamus in tortor</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec vitae ante ante</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Etiam ac rutrum</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="mega-menu-col col-lg-6">
-                                                        <ul>
-                                                            <li class="dropdown-header">Popular Item</li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Curabitur laoreet</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Vivamus in tortor</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec vitae facilisis</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Quisque condimentum</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Etiam ac rutrum</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec vitae ante ante</a></li>
-                                                            <li><a class="dropdown-item nav-link nav_item" href="#">Donec porttitor</a></li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li class="mega-menu-col col-lg-5">
-                                                <div class="header-banner2">
-                                                    <a href="#"><img src="assets/images/menu_banner5.jpg" alt="menu_banner5"></a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="dropdown dropdown-mega-menu">
-                                    <a class="dropdown-item nav-link dropdown-toggler" href="#" data-bs-toggle="dropdown"><i class="flaticon-sunglasses"></i> <span>Accessories</span></a>
-                                    <div class="dropdown-menu">
-                                        <ul class="mega-menu d-lg-flex">
-                                            <li class="mega-menu-col col-lg-4">
-                                                <ul> 
-                                                    <li class="dropdown-header">Woman's</li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="shop-list-left-sidebar.html">Vestibulum sed</a></li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="shop-left-sidebar.html">Donec porttitor</a></li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="shop-right-sidebar.html">Donec vitae facilisis</a></li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="shop-list.html">Curabitur tempus</a></li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="shop-load-more.html">Vivamus in tortor</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="mega-menu-col col-lg-4">
-                                                <ul>
-                                                    <li class="dropdown-header">Men's</li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="shop-cart.html">Donec vitae ante ante</a></li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="checkout.html">Etiam ac rutrum</a></li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="wishlist.html">Quisque condimentum</a></li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="compare.html">Curabitur laoreet</a></li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="order-completed.html">Vivamus in tortor</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="mega-menu-col col-lg-4">
-                                                <ul>
-                                                    <li class="dropdown-header">Kid's</li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="shop-product-detail.html">Donec vitae facilisis</a></li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="shop-product-detail-left-sidebar.html">Quisque condimentum</a></li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="shop-product-detail-right-sidebar.html">Etiam ac rutrum</a></li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="shop-product-detail-thumbnails-left.html">Donec vitae ante ante</a></li>
-                                                    <li><a class="dropdown-item nav-link nav_item" href="shop-product-detail-thumbnails-left.html">Donec porttitor</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li><a class="dropdown-item nav-link nav_item" href="coming-soon.html"><i class="flaticon-jacket"></i> <span>Clothing</span></a></li>
-                                <li><a class="dropdown-item nav-link nav_item" href="404.html"><i class="flaticon-sneakers"></i> <span>Shoes</span></a></li>
-                                <li><a class="dropdown-item nav-link nav_item" href="login.html"><i class="flaticon-watch"></i> <span>Watches</span></a></li>
-                                <li><a class="dropdown-item nav-link nav_item" href="register.html"><i class="flaticon-necklace"></i> <span>Jewellery</span></a></li>
-                                <li><a class="dropdown-item nav-link nav_item" href="coming-soon.html"><i class="flaticon-herbal"></i> <span>Health & Beauty</span></a></li>
-                                <li><a class="dropdown-item nav-link nav_item" href="404.html"><i class="flaticon-ball"></i> <span>Sports</span></a></li>
-                                <li>
-                                	<ul class="more_slide_open">
-                                    	<li><a class="dropdown-item nav-link nav_item" href="login.html"><i class="flaticon-pijamas"></i> <span>Sleepwear</span></a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="register.html"><i class="flaticon-scarf"></i> <span>Seasonal Wear</span></a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="404.html"><i class="flaticon-vintage"></i> <span>Ethinic Wear</span></a></li>
-                                        <li><a class="dropdown-item nav-link nav_item" href="coming-soon.html"><i class="flaticon-pregnant"></i> <span>Baby Clothing</span></a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                            <div class="more_categories">More Categories</div>
+                            <% }) %>
+                           
                         </div>
                     </div>
                 </div>
@@ -2100,19 +1922,15 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
         <div class="product">
             <span class="pr_flash bg-success">Sale</span>
             <div class="product_img">
+               
                 <img src="/productImage/<%= product.productImage[0] %>" alt="<%= product.productName %>">
-                <div class="product_action_box">
-                    <ul class="list_none pr_action_btn">
-                        <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
+          
 
-                        <li><a href="#"><i class="icon-heart"></i></a></li>
-                    </ul>
-                </div>
             </div>
             <div class="product_info">
                 <h6 class="product_title"><a href="/productdetail/<%= product._id %>" ><%= product.productName %></a></h6>
                 <div class="product_price">
-                    <span class="price">₹<%= product.productPrice %></span>
+                    <span class="price">₹<%= product.productPrice %></span>  
                     <% if (product.offerPrice) { %>
                     <del>₹<%= product.offerPrice %></del>
                     <% } %>
@@ -2273,6 +2091,7 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 
 
 <!-- END SECTION SHOP -->
+ 
 
 <!-- START SECTION BANNER --> 
 <div class="section pb_20 small_pt">
@@ -3213,6 +3032,33 @@ document.getElementById('userDropdown').addEventListener('change', function() {
             window.location.href='/wishlist';
             
         }
+
+        async function addToWishlist(productId, userId) {
+    try {
+        console.log(productId, userId, "hhhhhhhhhhhhhh");
+        const response = await fetch("/wishlist", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ productId, userId })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            alert(result.message + " added");
+        } else if (result.removed) {
+            alert(result.message + " removed");
+        } else {
+            alert(result.message);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+    }
+}
+
   
 </script>
 

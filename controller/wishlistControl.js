@@ -26,6 +26,7 @@ if(userId){
                         productStock:"$productDetails.productStock",
                         productImage: "$productDetails.productImage",
                         productPrice: "$productDetails.offerPrice",
+                        orginalprice:"$productDetails.productPrice"
                           }
                 }
         ])
@@ -47,11 +48,15 @@ if(userId){
 const postWishlist=async(req,res)=>{
 
       const{productId,userId}=req.body
+      console.log(req.body);
+      console.log("started");
+      
 
   
       try {
+        
         // Check if the product is already in the wishlist
-        let wishlistItem = await wishlist.findOne({ userId });
+        let wishlistItem = await wishlist.findOne({ userId});
 
         if (!wishlistItem) {
             // If wishlist doesn't exist, create a new one with the product

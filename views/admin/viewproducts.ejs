@@ -49,6 +49,9 @@
             <th class="w-1/6 p-2 md:p-4 border-b-2 border-gray-200 bg-gray-50 text-left text-xs md:text-sm leading-4 font-medium text-gray-600 uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
+
+
+
         <tbody class="bg-white">
           <% products.forEach(product => { %>
           <tr class="flex flex-col md:table-row">
@@ -80,6 +83,21 @@
       </table>
     </div>
   </div>
+
+  <!-- Pagination Controls -->
+<div class="pagination mt-4 flex justify-center">
+  <% if (currentPage > 1) { %>
+    <a href="?page=<%= currentPage - 1 %>&limit=<%= limit %>" class="px-4 py-2 mx-1 bg-gray-200 rounded hover:bg-gray-300">Previous</a>
+  <% } %>
+
+  <% for (let i = 1; i <= totalPages; i++) { %>
+    <a href="?page=<%= i %>&limit=<%= limit %>" class="px-4 py-2 mx-1 <%= currentPage === i ? 'bg-blue-500 text-white' : 'bg-gray-200' %> rounded hover:bg-gray-300"><%= i %></a>
+  <% } %>
+
+  <% if (currentPage < totalPages) { %>
+    <a href="?page=<%= currentPage + 1 %>&limit=<%= limit %>" class="px-4 py-2 mx-1 bg-gray-200 rounded hover:bg-gray-300">Next</a>
+  <% } %>
+</div>
 
   <script>
     document.querySelectorAll(".btn-update").forEach((button) => {

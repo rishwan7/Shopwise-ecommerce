@@ -7,8 +7,8 @@ const couponController=require("../controller/couponController")
 const bannerController=require("../controller/bannerControll")
 const multer=require("multer")
 const router=express.Router()
-const storage=require("../utils/multer")
-const storage2=require("../utils/multer")
+const {storage,storage2}=require("../utils/multer")
+
 
 const upload = multer({ storage: storage });
 const banner=multer({storage:storage2})
