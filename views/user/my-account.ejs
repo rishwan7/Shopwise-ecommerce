@@ -541,33 +541,28 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 
                   	
 					<div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
-                    	<div class="row">
-                        	<div class="col-lg-6">
-                                <div class="card mb-3 mb-lg-0">
-                                    <div class="card-header">
-                                        <h3>Billing Address</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <address>House #15<br>Road #1<br>Block #C <br>Angali <br> Vedora <br>1212</address>
-                                        <p>New York</p>
-                                        <a href="#" class="btn btn-fill-out">Edit</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3>Shipping Address</h3>
-                                    </div>
-                                    <div class="card-body">
-                                        <address>House #15<br>Road #1<br>Block #C <br>Angali <br> Vedora <br>1212</address>
-                                        <p>New York</p>
-                                        <a href="#" class="btn btn-fill-out">Edit</a>
+                       
+                         
+                            <div class="row">
+                                <% useraddress.forEach(address => { %>
+                                <div class="col-lg-6">
+                                    <div class="card mb-3 mb-lg-0">
+                                        <div class="card-header">
+                                            <h3>Billing Address</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <address>FirstName:<%= address.firstName %> <%= address.lastName %><br>address:<%= address.address %> <br> address2:<%= address.address2 %> <br>City:<%= address.city %> <br>state:<%= address.state %> <br>  Pin code :<%= address.postalCode %><br>phone number:<%= address.phone %></address>
+                                           
+                                            <a href="#" class="btn btn-fill-out">Edit</a>
+                                        </div>
                                     </div>
                                 </div>
+                                <% }) %>
                             </div>
-                        </div>
+                        
 					</div>
+
+
                     <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
 						<div class="card">
                         	<div class="card-header">

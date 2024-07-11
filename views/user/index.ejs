@@ -40,6 +40,52 @@
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
 
+
+<style>
+    .product_search_form {
+        position: relative;
+        margin-bottom: 20px; /* Add margin to create space between results and search bar */
+    }
+
+    .results-container {
+        position: absolute;
+        top: calc(100% + 10px); /* Position results container below search bar */
+        left: 0;
+        z-index: 1000; /* Ensure results appear above other content */
+        width: 100%;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for visual separation */
+        display: none; /* Hide initially */
+    }
+
+    .productDiv {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+        background-color: #f9f9f9;
+        width: 100%;
+        height: 5%;
+        text-align: center;
+    }
+
+    .productDiv img {
+        width: 50px; /* Adjust image width as needed */
+        height: auto; /* Maintain aspect ratio */
+        margin-right: 10px; /* Add space between image and text */
+    }
+
+    .productDiv span {
+        font-size: 14px;
+        color: #333;
+        flex-grow: 1; /* Allow text to expand to fill remaining space */
+        text-align: left; /* Align text to the left */
+    }
+</style>
+
+
+
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106310707-1"></script>
 <script>
@@ -161,7 +207,7 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                     <span>123-456-7689</span>
                 </div>
                 <div class="product_search_form">
-                    <form>
+                    <form  id="searchForm">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="custom_select">
@@ -175,10 +221,11 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                                     </select>
                                 </div>
                             </div>
-                            <input class="form-control" placeholder="Search Product..." required=""  type="text">
+                            <input class="form-control" placeholder="Search Product..." id="searchInput"   type="text">
                             <button type="submit" class="search_btn"><i class="linearicons-magnifier"></i></button>
                         </div>
                     </form>
+                    <div id="results" class="results-container"></div>
                 </div>
             </div>
         </div>
@@ -362,7 +409,7 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                             </ul>
                         </div>
                         <ul class="navbar-nav attr-nav align-items-center">
-                        	<li><a href="#" class="nav-link"><i class="linearicons-user"></i></a></li>
+                        	<li><a href="/myaccount" class="nav-link"><i class="linearicons-user"></i></a></li>
                             <li><a href="#" class="nav-link"  onclick="redirectToWishlist()"><i class="linearicons-heart"></i><span class="wishlist_count"> <%= wishlistQty %> </span></a></li>
 
 
@@ -3057,6 +3104,67 @@ document.getElementById('userDropdown').addEventListener('change', function() {
         console.error("Error:", error);
         alert("An error occurred. Please try again.");
     }
+}
+
+
+
+
+
+let debounceTimeout;
+const debounceDelay = 300; // 300ms delay for debouncing
+document.getElementById('searchForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    performSearch();
+});
+
+document.getElementById('searchInput').addEventListener('input', () => {
+    const query = document.getElementById('searchInput').value.trim();
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+        if (query.length > 0) {
+            performSearch(query);
+        } else {
+            hideResults();
+        }
+    }, debounceDelay);
+});
+
+async function performSearch(query) {
+    try {
+        const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        displayResults(data);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function displayResults(data) {
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = '';
+    
+    // Display results only if there are products
+    if (data.length > 0) {
+        resultsDiv.style.display = 'block'; // Show results container
+        data.forEach(product => {
+            const productDiv = document.createElement('div');
+            productDiv.className = 'productDiv';
+            productDiv.innerHTML = `
+                <a href="/productdetail/${product._id}" style="text-decoration: none; color: inherit;">
+                    <img src="/productImage/${product.productImage[0]}" alt="${product.productName}">
+                    <span>${product.productName}</span>
+                </a>
+            `;
+            resultsDiv.appendChild(productDiv);
+        });
+    } else {
+        hideResults(); // Hide results container if no products
+    }
+}
+
+function hideResults() {
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.style.display = 'none'; // Hide results container
 }
 
   

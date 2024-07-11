@@ -39,6 +39,7 @@ router.get("/login",userDataController.getLoginpage)
 .get("/shop-sidebar/:id",pageController.shopLeftSideBar)
 .post("/subcategoryproduct",pageController.filteringViaSubcategory)
 .post("/filter-by-price",pageController.filterByPrice)
+.get("/search",pageController.searchProduct)
 //cart
 router.get("/cart",cartControll.getCartPage)
 .post("/cart",cartControll.postCartPage)

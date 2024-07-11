@@ -124,11 +124,20 @@ module.exports = {
       },
     ]);
 
+    const addresses = await UserAddress.aggregate([
+      { $match: { userId:mongoose.Types.ObjectId.createFromHexString(userId) } }, // Match documents with the given userId
+      { $unwind: '$addresses' }, // Deconstruct the addresses array
+      { $replaceRoot: { newRoot: '$addresses' } } // Replace the root with addresses array
+  ]);
+
+      console.log(addresses);
+    
+
     // Return or process orderDetails as needed
 
-    console.log(orderDetails);
+    // console.log(orderDetails);
     const cartQuantity = req.session.cartQuantity;
-    res.render("user/my-account", { orderDetails, cartQuantity });
+    res.render("user/my-account", { orderDetails, cartQuantity,useraddress:addresses });
   },
 
   //product details page
@@ -499,5 +508,25 @@ filterByPrice:async(req,res)=>{
   } catch (error) {
       res.json({ success: false, message: 'Error fetching products' });
   }
+},
+searchProduct:async(req,res)=>{
+  const { query } = req.query;
+  console.log(query);
+
+    // Construct regex for case-insensitive search
+    const regex = new RegExp(query, 'i');
+    
+
+    // Build the search criteria
+    const searchCriteria = {
+        productName: { $regex: regex }
+    };
+
+    try {
+        const results = await product.find(searchCriteria);
+        res.json(results);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
 }
 };
