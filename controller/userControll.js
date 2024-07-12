@@ -11,6 +11,7 @@ const { logout } = require("./commoncontrol");
 const { orders } = require("../model/orderDb");
 const { wishlist } = require("../model/wishlistDb");
 const { UserAddress } = require("../model/addressDb");
+const banner = require('../model/bannerDb') 
 
 module.exports = {
   //home page
@@ -20,6 +21,7 @@ module.exports = {
       req.session.userId = "66742001854d67a55ce082b7"; // Set userId in session (assuming this is set correctly)
 
       const userId = req.session.userId;
+      const banners = await banner.find({}).limit(3)
 
       // Fetch wishlist count
       const wishlistCount = await wishlist.findOne({
@@ -60,6 +62,7 @@ module.exports = {
         userName,
         cartQuantity,
         wishlistQty,
+        banners
       });
     } catch (error) {
       console.error("Error fetching data:", error);

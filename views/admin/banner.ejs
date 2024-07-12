@@ -36,18 +36,38 @@
       <h1 class="text-2xl text-center mb-4">Add Banner - Admin</h1>
 
       <section>
+
+       
+         
+          <form action="/admin/banner" method="post" enctype="multipart/form-data" class="space-y-4">
+            <div class="form-group">
+              <label for="bannerName" class="block font-semibold mb-1">Banner Name:</label>
+              <input type="text" id="bannerName" name="bannerName" class="w-full p-2 border border-gray-300 rounded">
+            </div>
+
+            <div class="form-group">
+              <label for="offertext" class="block font-semibold mb-1">Offer Text</label>
+              <input type="text" id="offertext" name="offertext" class="w-full p-2 border border-gray-300 rounded">
+            </div>
+          
+            <div class="form-group">
+              <label for="bannerCategory" class="block font-semibold mb-1">Banner Category</label>
+              <select id="bannerCategory" name="bannerCategory" class="w-full p-2 border border-gray-300 rounded">
+                <% categories.forEach(category => { %>
+                <option value="<%= category._id %> "><%= category.categoryName %></option>
+                <% }) %>
+              </select>
+              
+            </div>
+           
+            <div class="form-group">
+              <label for="bannerImage" class="block font-semibold mb-1">Banner Image:</label>
+              <input type="file" id="bannerImage" name="bannerImage" class="w-full p-2 border border-gray-300 rounded" accept=".jpg,.png">
+            </div>
+            <button type="submit" class="btn w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-400">Add Banner</button>
+          </form>
+  
       
-        <form action="/admin/banner" method="post" enctype="multipart/form-data" class="space-y-4">
-          <div class="form-group">
-            <label for="bannerName" class="block font-semibold mb-1">Banner Name:</label>
-            <input type="text" id="bannerName" name="bannerName" class="w-full p-2 border border-gray-300 rounded">
-          </div>
-          <div class="form-group">
-            <label for="bannerImage" class="block font-semibold mb-1">Banner Image:</label>
-            <input type="file" id="bannerImage" name="bannerImage" class="w-full p-2 border border-gray-300 rounded">
-          </div>
-          <button type="submit" class="btn w-full bg-yellow-500 text-white py-2 rounded hover:bg-yellow-400">Add Banner</button>
-        </form>
       </section>
     </div>
   </div>
