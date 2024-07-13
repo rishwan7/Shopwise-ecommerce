@@ -6,7 +6,6 @@ const { logout } = require("./commoncontrol")
 const {userdetails}=require("../model/userDb")
 
    const getCartPage=async(req,res)=>{
-    req.session.userId = '66742001854d67a55ce082b7'
     const userId=req.session.userId
     console.log(userId,"this is user iD");
 
@@ -129,7 +128,10 @@ console.log("cart details is",cartDetails);
     
             await cartItems.save();
             await Products.save();
-            return res.json({ success: true, message: "Item added to cart" });
+            const totalCartQuantity = cartItems.items.length
+           
+            return res.json({ success: true, message: "Item added to cart",totalCartQuantity });
+
     
         } catch (error) {
             console.error("Error adding item to cart:", error);
@@ -140,7 +142,6 @@ console.log("cart details is",cartDetails);
     const updateCartQuantity = async (req, res) => {
         let { productId, quantity,type } = req.body;
         console.log(productId, quantity, "product details");
-        req.session.userId = '66742001854d67a55ce082b7';
         const userId = req.session.userId; 
 
         if(quantity<=0){
@@ -256,7 +257,7 @@ console.log("cart details is",cartDetails);
 
     const deleteCart = async (req, res) => {
         const { productId } = req.body;
-        req.session.userId = '66742001854d67a55ce082b7'; // Assuming you manage userId in session
+  // Assuming you manage userId in session
         const userId = req.session.userId;
     
         try {
@@ -288,7 +289,12 @@ console.log("cart details is",cartDetails);
             userCart.items.splice(itemIndex, 1);
             userCart.total -= removedItem.quantity * Product.offerPrice;
             await userCart.save();
-            await cart.deleteMany({ userId });
+            
+            const remainingItems = userCart.items.length;
+            if (remainingItems === 0) {
+                // Delete the cart document if no items are left
+                await cart.deleteOne({ userId });
+            }
            
     
             // Recalculate cart details

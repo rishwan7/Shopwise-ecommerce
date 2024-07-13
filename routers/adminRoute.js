@@ -29,6 +29,8 @@ router.post("/updateproduct/:id",upload.array('productImage',10),productControll
 .get("/ordermanage",admin.orderManagement)
 .post("/updatestatus",admin.updateOrderStatus   )
 .post("/cancelorder",admin.cancelOrder)
+.post("/productCounts",admin.getProductDetails)
+.post("/monthlySalesData",admin.salesByDate)
 
 
 //category-controlroute

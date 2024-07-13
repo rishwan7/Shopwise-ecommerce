@@ -12,7 +12,7 @@ const{coupons}=require("../model/couponDb")
 const getCheckOutPage = async (req, res) => {
     try {
         
-        req.session.userId = '66742001854d67a55ce082b7'; // For testing purposes
+      
         const userId = req.session.userId;
         const userDetails = await userdetails.findById(userId);
         const userAddresses = await UserAddress.findOne({ userId });
@@ -77,16 +77,16 @@ const getCheckOutPage = async (req, res) => {
                 }
             ]);
 
-            console.log(cartDetails[0].couponcode,"fdhvvvvvvsjdbkbsdbksdbbssdbdsbj");
+            console.log(cartDetails[0],"hhhhhhhhhh");
 
             const cartDetail = cartDetails[0];
             const totalAmount = cartDetail.totalAmount || 0;
             const couponDiscount = cartDetail.couponDiscount;
-            const cartSubtotal = cartDetail.finalTotal || totalAmount;
+            const cartSubtotal = cartDetail.finalTotal
             const totalDiscount = cartDetail.totalDiscount || 0;
             const shippingCharge = totalAmount < 500 ? 99 : 0;
             const finalTotal = cartSubtotal + shippingCharge;
-            const couponcode=cartDetails[0].couponCode
+            const couponcode=cartDetails[0].couponcode
 
             req.session.cartDetails = cartDetails[0];
             req.session.totalAmount = finalTotal;
@@ -98,6 +98,17 @@ const getCheckOutPage = async (req, res) => {
            
               const couponAvailable=await coupons.find({})
 
+              const userDetails = await userdetails.findOne({ _id: userId });
+              const userName = userDetails ? userDetails.userName : "";
+
+              let isInUser = false;
+              if (userId) {
+                const userDetails = await userdetails.findOne({ _id: userId });
+                if (userDetails) {
+                  isInUser = true;
+                }
+              }
+
            
             res.render("user/checkout", {
                 userDetails,
@@ -108,6 +119,8 @@ const getCheckOutPage = async (req, res) => {
                 totalDiscount,
                 userAddresses,
                 userId,
+                userName,
+                isInUser,
                 couponAvailable: couponslist,
                 couponDiscount,
                 couponcode,cartQuantity

@@ -51,53 +51,57 @@ const postWishlist=async(req,res)=>{
       console.log(req.body);
       console.log("started");
       
+if(!userId){
 
+    
+        try {
+          
+          // Check if the product is already in the wishlist
+          let wishlistItem = await wishlist.findOne({ userId});
   
-      try {
-        
-        // Check if the product is already in the wishlist
-        let wishlistItem = await wishlist.findOne({ userId});
-
-        if (!wishlistItem) {
-            // If wishlist doesn't exist, create a new one with the product
-            wishlistItem = new wishlist({
-                userId,
-                items: [{ productId }]
-            });
-            await wishlistItem.save();
-            console.log("added");
-            return res.json({ success: true, message: 'Added to your Wishlist' });
-        }
-
-        // Check if productId is already in the wishlist items
-        const isProductInWishlist = wishlistItem.items.some(item => item.productId.equals(productId));
-
-        if (isProductInWishlist) {
-            // If productId is found, remove it from the wishlist
-            wishlistItem.items = wishlistItem.items.filter(item => !item.productId.equals(productId));
-            await wishlistItem.save();
-            console.log("removed");
-
-            if (wishlistItem.items.length <= 0) {
-                await wishlist.findOneAndDelete({ userId }); // Delete wishlist if empty
-                console.log("Wishlist deleted because it became empty.");
-            }
-
-            return res.json({removed:true, message: 'Removed from your Wishlist' });
-
-           
-        } else {
-            // If productId is not found, add it to the wishlist
-            wishlistItem.items.push({ productId });
-            await wishlistItem.save();
-            console.log("added");
-            return res.json({ success: true, message: 'Added to your Wishlist' });
-        }
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
+          if (!wishlistItem) {
+              // If wishlist doesn't exist, create a new one with the product
+              wishlistItem = new wishlist({
+                  userId,
+                  items: [{ productId }]
+              });
+              await wishlistItem.save();
+              console.log("added");
+              return res.json({ success: true, message: 'Added to your Wishlist' });
+          }
+  
+          // Check if productId is already in the wishlist items
+          const isProductInWishlist = wishlistItem.items.some(item => item.productId.equals(productId));
+  
+          if (isProductInWishlist) {
+              // If productId is found, remove it from the wishlist
+              wishlistItem.items = wishlistItem.items.filter(item => !item.productId.equals(productId));
+              await wishlistItem.save();
+              console.log("removed");
+  
+              if (wishlistItem.items.length <= 0) {
+                  await wishlist.findOneAndDelete({ userId }); // Delete wishlist if empty
+                  console.log("Wishlist deleted because it became empty.");
+              }
+  
+              return res.json({removed:true, message: 'Removed from your Wishlist' });
+  
+             
+          } else {
+              // If productId is not found, add it to the wishlist
+              wishlistItem.items.push({ productId });
+              await wishlistItem.save();
+              console.log("added");
+              return res.json({ success: true, message: 'Added to your Wishlist' });
+          }
+  
+      } catch (error) {
+          console.error(error);
+          res.status(500).json({ success: false, message: 'Internal server error' });
+      }
+}else{
+    res.json({success:false,message:"If you want to add wislist login and try agan"})
+}
     
       
 

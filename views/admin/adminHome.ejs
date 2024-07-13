@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -79,6 +79,7 @@
     </header>
     
     <div class="container">
+        <button onclick="window.location.href='/admin/dashboard'">Dashboard</button>
         <button onclick="window.location.href='/admin/addproduct'">Add Product</button>
         <button onclick="window.location.href='/admin/addcategory'">Add Category</button>
         <button onclick="window.location.href='/admin/viewproducts'">View Product</button>
@@ -86,8 +87,319 @@
         <button onclick="window.location.href='/admin/viewusers'">View User</button>
         <button onclick="window.location.href='/admin/viewdetails'">View Detail</button>
         <button onclick="window.location.href='/admin/coupon'">Add coupon </button>
-        <button>Add banner</button>
+        <button onclick="window.location.href='/admin/banner'">Add banner</button>
+        <button onclick="window.location.href='/admin/ordermanage'">Orders</button>
+       
     </div>
 
+</body>
+</html> -->
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+        }
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            background: #343a40;
+            color: #fff;
+            transition: all 0.3s;
+        }
+        #sidebar .nav-link {
+            color: #fff;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .card {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar" class="bg-dark">
+        <h2 class="text-center py-4">Admin Menu</h2>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/addproduct">Add Product</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Edit Product</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Add Category</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/viewproducts'">View Product</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">View User</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Add Coupon</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Add Banner</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">View Banner</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">View Orders</a>
+            </li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1 class="my-4">Admin Dashboard</h1>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Sales</h5>
+                        <p class="card-text" id="total-sales">₹<%= totalSales %></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Users</h5>
+                        <p class="card-text" id="total-users"> <%= userCount %> </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card text-white bg-warning">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Products</h5>
+                        <p class="card-text" id="total-products"> <%= count %> </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card text-white bg-danger">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Profit</h5>
+                        <p class="card-text" id="total-profit">₹<%= profit %></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card text-white bg-secondary">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Canceled Products</h5>
+                        <p class="card-text" id="total-canceled-products"> <%= canceledCount %> </p>
+                    </div>
+                </div>
+            </div>
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title">Discount Via Coupon</h5>
+                    <p class="card-text" id="total-profit">₹<%= couponDiscount %></p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Sales Chart</h5>
+                        <canvas id="sales-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Category-Based Product Distribution</h5>
+                        <canvas id="product-category-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Users Joined Every Month</h5>
+                        <canvas id="users-joined-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Dummy data for the sake of example
+    
+
+        // Sales Line Chart
+// Function to update sales chart data
+async function updateSalesChart() {
+    try {
+        const response = await fetch('/admin/monthlySalesData', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch monthly sales data');
+        }
+
+        const { labels, salesValues } = await response.json();
+        console.log(labels,salesValues);
+
+        // Update chart data
+        salesChart.data.labels = labels;
+        salesChart.data.datasets[0].data = salesValues;
+
+        // Update chart options if needed
+        // salesChart.options.scales.y.min = Math.min(...salesValues); // Example update
+
+        // Update the chart
+        salesChart.update();
+    } catch (error) {
+        console.error('Error updating sales chart:', error);
+    }
+}
+
+// Initial chart setup for sales
+const salesCtx = document.getElementById('sales-chart').getContext('2d');
+const salesChart = new Chart(salesCtx, {
+    type: 'line',
+    data: {
+        labels: [], // Initially empty, will be updated after fetching data
+        datasets: [{
+            label: 'Sales',
+            data: [], // Initially empty, will be updated after fetching data
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// Example: Call updateSalesChart() to update the chart with fetched data
+updateSalesChart();
+
+
+        // Category-Based Product Distribution Doughnut Chart
+        async function fetchProductCategoryCounts() {
+            try {
+                const response = await fetch('/admin/productCounts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch product counts');
+                }
+
+                const data = await response.json();
+                console.log(data);
+                return data;
+            } catch (error) {
+                console.error('Error fetching product counts:', error);
+                return null;
+            }
+        }
+
+        // Function to update the Chart.js doughnut chart with fetched data
+        async function updateProductCategoryChart() {
+            const productCategoryCtx = document.getElementById('product-category-chart').getContext('2d');
+
+            // Fetch product category counts from server
+            const productCount = await fetchProductCategoryCounts();
+            if (!productCount) {
+                return; // Handle error or retry logic if needed
+            }
+
+            // Extract labels (category names) and data (product counts) from productCount
+            const labels = productCount.map(category => category.categoryName);
+            const data = productCount.map(category => category.productCount);
+
+            // Chart.js configuration
+            const productCategoryChart = new Chart(productCategoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Products',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        // Call the function to update chart when the page loads or as needed
+        updateProductCategoryChart();
+        // Users Joined Every Month Candle Chart
+        const usersJoinedCtx = document.getElementById('users-joined-chart').getContext('2d');
+        const usersJoinedChart = new Chart(usersJoinedCtx, {
+            type: 'bar',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                    label: 'Users Joined',
+                    data: [50, 60, 70, 80, 90, 100, 110],
+                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

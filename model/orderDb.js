@@ -15,8 +15,10 @@ const orderSchema=mongoose.Schema({
          purchaseDate:String,
          couponcode:{type:String,default:null},
          DiscountviaCoupon:{type:Number,default:0},
+         
        
-})
+},{timestamps: true})
 
 const orders = mongoose.model("orders",orderSchema)
-module.exports ={ orders}
+
+module.exports ={orders}

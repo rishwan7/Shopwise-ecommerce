@@ -19,19 +19,23 @@
                            
 
                            
-                            <% if (userDetails._id) { %>
-                                <select id="userDropdown">
-                                    <option value=""><%= userDetails.userName %></option> <!-- Display user's name -->
-                                    <option value="logout">Logout</option> <!-- Option for logout -->
-                                </select>
-
-
+                            <% if (isInUser) { %>
+                                <!-- Display user's name and logout option if user is logged in -->
+                                <li class="dropdown">
+                                    <a href="#" id="userDropdown" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="ti-user"></i>
+                                        <%= userName  %>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                        <li><a class="dropdown-item" href="/myaccount">Profile</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                                    </ul>
+                                </li>
                             <% } else { %>
-
-                                
-                                <li><a href="/login"><i class="ti-user"></i><span>Login</span></a></li> <!-- Login link -->
+                                <!-- Display login link if user is not logged in -->
+                                <li><a href="/login"><i class="ti-user"></i><span>Login</span></a></li>
                             <% } %>
-
                             
 						</ul>
                     </div>
@@ -304,40 +308,3 @@
 <!-- END HEADER -->
 
 
-
-<script>
-    
-document.getElementById('userDropdown').addEventListener('change', function() {
-        var selectedOption = this.value;
-        if (selectedOption === 'logout') {
-            window.location.href = '/logout'; // Redirect to logout route
-        }
-    });
-
-
-    async function fetchCartQuantity() {
-            try {
-                const response = await fetch('/cartqty', {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success) {
-                        document.getElementById('cart-quantity').innerText = `Number of items in the cart: ${data.cartQuantity}`;
-                    } else {
-                        console.error('Failed to fetch cart quantity:', data.message);
-                    }
-                } else {
-                    console.error('Failed to fetch cart quantity: HTTP error', response.status);
-                }
-            } catch (error) {
-                console.error('There was a problem with the fetch operation:', error);
-            }
-        }
-
-        // Call the function on page load
-        window.onload = fetchCartQuantity;
-</script>

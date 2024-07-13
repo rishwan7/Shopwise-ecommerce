@@ -96,12 +96,11 @@ console.log("this is cart details",cartDetails);
 };
 
 const removeDiscountCoupon=async(req,res)=>{
-  console.log("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
+
 
 
     const userId=mongoose.Types.ObjectId.createFromHexString(req.session.userId)
-    console.log(userId,"issssssssssssssssssssss");
-
+  
     const result = await cart.findOneAndUpdate(
       { userId: userId },
       { $set: { coupenDiscount: 0 ,couponcode:null} },

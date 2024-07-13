@@ -117,7 +117,7 @@ const postSignup= async (req, res) => {
     const errors = req.session.error;
     req.session.error = "";
 
-    res.render("userlogin", { errors });
+    res.render("user/userlogin", { errors });
   }
 
   const  postLogin= async (req, res) => {

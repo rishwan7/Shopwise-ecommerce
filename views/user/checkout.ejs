@@ -225,41 +225,41 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
             <div class="row">
                 <div class="col-12">
 
-
-                    <% if (couponcode) { %>
-                        <!-- Applied coupon details -->
-                        <div id="applied-coupon" style="display: flex; align-items: center; flex-direction: row;">
-                            <p style="color: green; margin-bottom: 10px;">Applied coupon: <%= couponcode %> - ₹<%= couponDiscount %></p>
-                            <button class="btn btn-danger btn-sm" type="button" onclick="removeCoupon()">Remove Coupon</button>
-                        </div>
-                    <% } else { %>
-                    <div class="input-group" id="coupon-input">
-                        <input type="text" class="form-control" placeholder="Enter Coupon Code.." id="couponenter">
-                        
-                      
-                        <div class="input-group-append">
-                            <button  id="appllycpn"  class="btn btn-fill-out btn-sm" type="button" onclick="couponApply()">Apply Coupon</button>
-                        </div>
-                        <% } %>
-
-                        <div class="input-group" id="coupon-input2" >
-                            <input type="text" class="form-control" placeholder="Enter Coupon Code.." id="couponenter2"  style="display: none;">
-                            
-                          
-                            <div class="input-group-append">
-                                <button  style="display: none;"  id="appllycpn2"  class="btn btn-fill-out btn-sm" type="button" onclick="couponApply()">Apply Coupon</button>
+                    <div>
+                        <% if (couponcode) { %>
+                            <!-- Applied coupon details -->
+                            <div id="applied-coupon" style="display: flex; align-items: center; flex-direction: row;">
+                                <p style="color: green; margin-bottom: 10px;">Applied coupon: <%= couponcode %>  ₹<%= couponDiscount %> </p>
+                                <button class="btn btn-danger btn-sm" type="button" onclick="removeCoupon()">Remove Coupon</button>
                             </div>
-                        
+                        <% } else { %>
+                            <!-- Coupon input form -->
+                            <div class="input-group" id="coupon-input">
+                                <input type="text" class="form-control" placeholder="Enter Coupon Code.." id="couponenter">
+                                <div class="input-group-append">
+                                    <button id="appllycpn" class="btn btn-fill-out btn-sm" type="button" onclick="couponApply()">Apply Coupon</button>
+                                </div>
+                            </div>
+                        <% } %>
+                    
+                        <!-- Hidden second coupon input (if needed) -->
+                        <div class="input-group" id="coupon-input2" style="display: none;">
+                            <input type="text" class="form-control" placeholder="Enter Coupon Code.." id="couponenter2">
+                            <div class="input-group-append">
+                                <button id="appllycpn2" class="btn btn-fill-out btn-sm" type="button" onclick="couponApply()">Apply Coupon</button>
+                            </div>
+                        </div>
+                    
+                        <!-- Applied coupon details hidden by default -->
+                        <div id="applied-coupon" style="display: none;">
+                            <p style="color: green;">Discount <span id="applied-coupon-code"></span>%</p>
+                            <button style="margin-right: 40px;" class="btn btn-danger btn-sm" type="button" onclick="removeCoupon()">Remove Coupon</button>
+                        </div>
+                    
+                        <p id="invalidcoupon" style="color: red; text-align: center;"></p>
                     </div>
-                   
 
-                    <div id="applied-coupon" style="display:none;">
-                        <p style="color: green;">Discount <span id="applied-coupon-code"></span>%</p>
-                        <button  style="margin-right: 40px;" class="btn btn-danger btn-sm" type="button" onclick="removeCoupon()">Remove Coupon</button>
-                        
-                    </div>
-                    <p id="invalidcoupon" style="color: red; text-align: center;"></p>
-                </div>
+
             </div>
         </div>
     </div>
@@ -656,30 +656,36 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 
 
     function addAddress() {
-        const addressForm = document.getElementById('addressForm2');
-        const formData = new FormData(addressForm);
-        const userId = document.getElementById('userId').value;
-        formData.append('userId', userId);
+    const fname = document.getElementById('fname').value;
+    const lname = document.getElementById('lname').value;
+    const billing_address = document.getElementById('billing_address').value;
+    const billing_address2 = document.getElementById('billing_address2').value;
+    const city = document.getElementById('city').value;
+    const state = document.getElementById('state').value;
+    const zipcode = document.getElementById('zipcode').value;
+    const phone = document.getElementById('phone').value;
+    const userId = document.getElementById('userId').value;
 
-        fetch('/address', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            if (data.success) {
+    fetch('/address', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ fname, lname, billing_address, billing_address2, city, state, zipcode, phone, userId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (data.success) {
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Your address has been saved",
+                showConfirmButton: false,
+                timer: 1500
+            });
 
-                Swal.fire({
-  position: "top-end",
-  icon: "success",
-  title: "Your work has been saved",
-  showConfirmButton: false,
-  timer: 1500
-});
-
-         
-const newAddress = data.address;
+            const newAddress = data.address;
             const newAddressDiv = document.createElement('div');
             newAddressDiv.classList.add('single-address');
             newAddressDiv.id = `address-${newAddress._id}`;
@@ -866,6 +872,7 @@ async function removeCoupon() {
     if(document.getElementById("couponenter")){
         document.getElementById("couponenter").style.display="block"
            document.getElementById("appllycpn").style.display="block"
+           
 
     }
 
@@ -875,6 +882,7 @@ async function removeCoupon() {
 
 
     // }
+document.getElementById("coupon-input2").style.display="block"
     
     document.getElementById("coupondiscount").style.display="none"
 

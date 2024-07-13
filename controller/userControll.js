@@ -11,7 +11,7 @@ const { logout } = require("./commoncontrol");
 const { orders } = require("../model/orderDb");
 const { wishlist } = require("../model/wishlistDb");
 const { UserAddress } = require("../model/addressDb");
-const banner = require('../model/bannerDb') 
+const banner = require("../model/bannerDb");
 
 module.exports = {
   //home page
@@ -21,7 +21,7 @@ module.exports = {
       req.session.userId = "66742001854d67a55ce082b7"; // Set userId in session (assuming this is set correctly)
 
       const userId = req.session.userId;
-      const banners = await banner.find({}).limit(3)
+      const banners = await banner.find({});
 
       // Fetch wishlist count
       const wishlistCount = await wishlist.findOne({
@@ -46,13 +46,11 @@ module.exports = {
       const userName = userDetails ? userDetails.userName : "";
       console.log("User name:", userName);
 
-     
       // Fetch categories
       const categories = await category.find({});
 
       // Fetch products with populated productCategory
       const products = await product.find({}).populate("productCategory");
-      
 
       // Render the index view with fetched data
       res.render("user/index", {
@@ -62,7 +60,7 @@ module.exports = {
         userName,
         cartQuantity,
         wishlistQty,
-        banners
+        banners,
       });
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -128,19 +126,24 @@ module.exports = {
     ]);
 
     const addresses = await UserAddress.aggregate([
-      { $match: { userId:mongoose.Types.ObjectId.createFromHexString(userId) } }, // Match documents with the given userId
-      { $unwind: '$addresses' }, // Deconstruct the addresses array
-      { $replaceRoot: { newRoot: '$addresses' } } // Replace the root with addresses array
-  ]);
+      {
+        $match: { userId: mongoose.Types.ObjectId.createFromHexString(userId) },
+      }, // Match documents with the given userId
+      { $unwind: "$addresses" }, // Deconstruct the addresses array
+      { $replaceRoot: { newRoot: "$addresses" } }, // Replace the root with addresses array
+    ]);
 
-      console.log(addresses);
-    
+    console.log(addresses);
 
     // Return or process orderDetails as needed
 
     // console.log(orderDetails);
     const cartQuantity = req.session.cartQuantity;
-    res.render("user/my-account", { orderDetails, cartQuantity,useraddress:addresses });
+    res.render("user/my-account", {
+      orderDetails,
+      cartQuantity,
+      useraddress: addresses,
+    });
   },
 
   //product details page
@@ -148,15 +151,15 @@ module.exports = {
   getProductDetail: async (req, res) => {
     try {
       const productId = req.params.id;
+
+      
       if (productId) {
         // console.log(req.params);
-        req.session.userId = "66742001854d67a55ce082b7";
+
         const userId = req.session.userId;
 
         console.log(userId, "this userid");
         console.log("Converted productId:", productId);
-
-        const userDetails = await userdetails.findOne({ _id: userId });
 
         const products = await product.aggregate([
           {
@@ -186,6 +189,7 @@ module.exports = {
             $addFields: {
               category: "$categoryDetails.categoryName",
               subcategory: "$subcategoryDetails.subcategoryName",
+              categoryId:"$categoryDetails._id"
             },
           },
           {
@@ -199,6 +203,8 @@ module.exports = {
           },
         ]);
 
+       
+
         let isInCart = false;
         if (userId) {
           const userCart = await cart.findOne({
@@ -209,6 +215,19 @@ module.exports = {
             isInCart = true;
           }
         }
+
+        const userDetails = await userdetails.findOne({ _id: userId });
+        const userName = userDetails ? userDetails.userName : "";
+
+        let isInUser = false;
+        if (userId) {
+          const userDetails = await userdetails.findOne({ _id: userId });
+          if (userDetails) {
+            isInUser = true;
+          }
+        }
+
+        
 
         const Cart = await cart.findOne({ userId: userId });
 
@@ -228,12 +247,23 @@ module.exports = {
         const isInWishlist = !!wishlistItem; // Convert to boolean
 
         console.log("this is", products[0]);
+         
+       const categoryId=products[0].categoryId
+       let relatedItems=""
+       if(categoryId){
+        relatedItems=await product.find({productCategory:categoryId}).limit(6)
+        console.log(relatedItems,"reeeeeeeeeeeeeeeeeeeeeee");
 
+       } 
+       
         res.render("user/productDetail", {
           productDetails: products,
           userId,
           isInCart,
+          relatedItems,
+          isInUser,
           userDetails,
+          userName,
           cartQuantity,
           isInWishlist,
         });
@@ -253,7 +283,6 @@ module.exports = {
     res.send("posted");
   },
 
- 
   getOrders: async (req, res) => {
     const userId = req.session.userId;
     const userDetails = await userdetails.findById(userId);
@@ -385,7 +414,7 @@ module.exports = {
       },
     ]);
 
-    console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", orderDetail[0].orderId);
+  
     const order = orderDetail[0];
     const address = order.address;
 
@@ -424,112 +453,125 @@ module.exports = {
     res.render("user/orderDetail", { userDetails, order, useraddress });
   },
 
-  getShopList:async(req,res)=>{
-
-
+  getShopList: async (req, res) => {
     try {
       const categoryId = req.params.id;
       console.log("Category ID:", categoryId);
 
       // Pagination configuration
-      const page = parseInt(req.query.page) || 1;  // Current page number, default to 1
-      const limit = 5;  // Number of products per page
-      const skip = (page - 1) * limit;  // Calculate skip based on page number
+      const page = parseInt(req.query.page) || 1; // Current page number, default to 1
+      const limit = 5; // Number of products per page
+      const skip = (page - 1) * limit; // Calculate skip based on page number
 
       // Query products based on categoryId, populate related fields
-      const products = await product.find({ productCategory: categoryId })
-                                    .populate('productCategory')
-                                    .populate('productSubCategory')
-                                    .skip(skip)
-                                    .limit(limit);
+      const products = await product
+        .find({ productCategory: categoryId })
+        .populate("productCategory")
+        .populate("productSubCategory")
+        .skip(skip)
+        .limit(limit);
 
       console.log("Products found:", products);
 
       // Example: Calculate total pages based on total products count
-      const totalProductsCount = await product.countDocuments({ productCategory: categoryId });
+      const totalProductsCount = await product.countDocuments({
+        productCategory: categoryId,
+      });
       const totalPages = Math.ceil(totalProductsCount / limit);
 
       // Render shop-list view with products, categoryId, currentPage, and totalPages
-      res.render("user/shop-list", { products, categoryId, currentPage: page, totalPages });
-  } catch (error) {
+      res.render("user/shop-list", {
+        products,
+        categoryId,
+        currentPage: page,
+        totalPages,
+      });
+    } catch (error) {
       console.error("Error fetching products:", error);
       res.status(500).send("Error fetching products. Please try again later.");
-  }
-},
-shopLeftSideBar:async(req,res)=>{
-  const categoryId=req.params.id
+    }
+  },
+  shopLeftSideBar: async (req, res) => {
+    const categoryId = req.params.id;
 
-  req.session.categoryId=categoryId
+    req.session.categoryId = categoryId;
 
+    const page = parseInt(req.query.page) || 1; // Current page number, default to 1
+    const limit = 5; // Number of products per page
+    const skip = (page - 1) * limit; // Calculate skip based on page number
 
-  const page = parseInt(req.query.page) || 1;  // Current page number, default to 1
-      const limit = 5;  // Number of products per page
-      const skip = (page - 1) * limit;  // Calculate skip based on page number
+    const products = await product
+      .find({ productCategory: categoryId })
+      .populate("productCategory")
+      .populate("productSubCategory")
+      .skip(skip)
+      .limit(limit);
 
-  const products = await product.find({productCategory:categoryId})
-  .populate('productCategory')
-  .populate('productSubCategory')
-  .skip(skip)
-  .limit(limit);
+    const subcategories = await subcategory.find({ category: categoryId });
 
-  
+    const totalProductsCount = await product.countDocuments({
+      productCategory: categoryId,
+    });
+    const totalPages = Math.ceil(totalProductsCount / limit);
 
-    const subcategories=await subcategory.find({category:categoryId})
- 
+    res.render("user/shop-left-sidebar", {
+      products,
+      currentPage: page,
+      totalPages,
+      categoryId,
+      subcategories,
+    });
+  },
+  filteringViaSubcategory: async (req, res) => {
+    const { subcategoryIds } = req.body;
+    console.log(req.body);
 
-  const totalProductsCount = await product.countDocuments({ productCategory: categoryId });
-  const totalPages = Math.ceil(totalProductsCount / limit);
+    try {
+      const products = await product
+        .find({ productSubCategory: { $in: subcategoryIds } })
+        .populate("productCategory")
+        .populate("productSubCategory");
 
-  res.render("user/shop-left-sidebar",{products,currentPage: page, totalPages,categoryId,subcategories})
-},
-filteringViaSubcategory: async(req,res)=>{
-  const{subcategoryIds}=req.body
-  console.log(req.body);
-  
-  try {
-    const products = await product.find({ productSubCategory: { $in: subcategoryIds } })
-      .populate('productCategory')
-      .populate('productSubCategory');
+      res.json({ success: true, products });
+    } catch (error) {
+      res.json({ success: false, error: error.message });
+    }
+  },
 
-    res.json({ success: true, products });
-  } catch (error) {
-    res.json({ success: false, error: error.message });
-  }
-},
+  filterByPrice: async (req, res) => {
+    const { minPrice, maxPrice } = req.body;
+    console.log(req.body);
+    console.log(req.session.categoryId);
+    const categoryId = req.session.categoryId;
 
-filterByPrice:async(req,res)=>{
-  const { minPrice, maxPrice } = req.body;
-  console.log(req.body);
-  console.log(req.session.categoryId);
-  const categoryId=req.session.categoryId
-
-  try {
-      const products = await product.find({  offerPrice: { $gte: minPrice, $lte: maxPrice },productCategory:categoryId
+    try {
+      const products = await product.find({
+        offerPrice: { $gte: minPrice, $lte: maxPrice },
+        productCategory: categoryId,
       });
 
       res.json({ success: true, products });
-  } catch (error) {
-      res.json({ success: false, message: 'Error fetching products' });
-  }
-},
-searchProduct:async(req,res)=>{
-  const { query } = req.query;
-  console.log(query);
+    } catch (error) {
+      res.json({ success: false, message: "Error fetching products" });
+    }
+  },
+  searchProduct: async (req, res) => {
+    const { query } = req.query;
+    console.log(query);
 
     // Construct regex for case-insensitive search
-    const regex = new RegExp(query, 'i');
-    
+    const regex = new RegExp(query, "i");
 
     // Build the search criteria
     const searchCriteria = {
-        productName: { $regex: regex }
+      productName: { $regex: regex },
     };
 
     try {
-        const results = await product.find(searchCriteria);
-        res.json(results);
+      const results = await product.find(searchCriteria);
+      res.json(results);
     } catch (err) {
-        res.status(500).send(err.message);
+      res.status(500).send(err.message);
     }
-}
+  },
 };

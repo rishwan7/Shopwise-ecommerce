@@ -1,13 +1,77 @@
 const express = require("express");
 const {orders}=require("../model/orderDb")
 const{product}=require("../model/adminDb")
+const{userdetails}=require("../model/userDb")
 
 
 
 module.exports={ 
-    getAdminHome:(req,res)=>{
-        res.render("admin/adminHome")
+    getAdminHome:async(req,res)=>{
+
+        
+        const productDetails=await product.find({})
+        const count=productDetails.length
+        console.log(count);
+        const userCount =  await userdetails.countDocuments({});
+        console.log("Total users:", userCount);
+        const canceledProductsCount = await orders.aggregate([
+            { $unwind: "$products" },
+            { $match: { "products.status": "canceled" } },
+            { $count: "canceledCount" }
+          ]);
+          canceledCount= canceledProductsCount.length > 0 ? canceledProductsCount[0].canceledCount : 0;
+          console.log(canceledProductsCount);
+
+          const totalSalesData = await orders.aggregate([
+            { $group: { _id: null, totalSales: { $sum: "$totalprice" } } }
+          ]);
+      
+          const totalSales = totalSalesData.length > 0 ? totalSalesData[0].totalSales : 0;
+          console.log(totalSales);
+
+          const profitData = await orders.aggregate([
+            { $unwind: "$products" }, // Unwind the products array
+            { $match: { "products.status": "Delivered" } }, // Match products with status "Delivered"
+            {
+              $lookup: {
+                from: "products", // The collection to join with
+                localField: "products.productId", // Field from the orders collection
+                foreignField: "_id", // Field from the products collection
+                as: "productDetails" // Name for the output array
+              }
+            },
+            { $unwind: "$productDetails" }, // Unwind the productDetails array
+            {
+              $group: {
+                _id: null,
+                totalProfit: { $sum: { $multiply: ["$productDetails.offerPrice", 0.4] } } // Calculate total profit (40% of product price)
+              }
+            }
+          ]);
+          let profit=0
+          if(profit){
+
+               profit=profitData[0].totalProfit
+          }
+          
+          const discount = await orders.aggregate([
+            {
+              $group: {
+                _id: null, // Grouping all documents into a single group
+                discount: { $sum: "$DiscountviaCoupon" } // Summing up the 'DiscountviaCoupon' field
+              }
+            }
+          ]);
+          
+      couponDiscount=discount.length>0?discount[0].discount:0;
+       
+          
+        res.render("admin/adminHome",{count,userCount,canceledCount,totalSales,profit,couponDiscount})
     },
+   
+       
+  
+
     orderManagement: async(req,res)=>{
        
     const order = await orders.aggregate([
@@ -115,13 +179,82 @@ module.exports={
         res.status(500).json({ success: false, message: 'Server error' });
         
     }
+    
+    },
 
-   
+    //category based productshowing (on doghnut chart)on admin side
+    getProductDetails:async(req,res)=>{
+        try {
+            const productCount = await product.aggregate([
+                {
+                    $group: {
+                        _id: '$productCategory',
+                        productCount: { $sum: 1 }
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'categories',
+                        localField: '_id',
+                        foreignField: '_id',
+                        as: 'categoryDetails'
+                    }
+                },
+                { $unwind: '$categoryDetails' },
+                {
+                    $project: {
+                        _id: 0,
+                        categoryName: '$categoryDetails.categoryName',
+                        productCount: 1
+                    }
+                }
+            ]);
+    
+            res.json(productCount);
+        } catch (err) {
+            console.error("Error aggregating product counts by category:", err);
+            res.status(500).json({ error: 'Internal server error' });
+        }
 
+    },
+ 
+  salesByDate:async(req,res)=>{
+    try {
+        // Fetch date-wise sales data
+        const salesData = await orders.aggregate([
+            {
+                $match: {
+                    createdAt: {
+                        $gte: new Date(new Date().getFullYear(), 0, 1), // Start of the current year
+                        $lt: new Date(new Date().getFullYear() + 1, 0, 1) // Start of next year
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                    totalSales: { $sum: "$totalprice" }
+                }
+            },
+            {
+                $sort: { '_id': 1 } // Sort by date
+            }
+        ]);
 
-
-       
+        // Prepare data for response
+        const data = {
+            labels: salesData.map(entry => entry._id),
+            salesValues: salesData.map(entry => entry.totalSales)
+        };
+console.log(data);
+        res.json(data); // Send data as JSON response
+    } catch (error) {
+        console.error('Error fetching date-wise sales data:', error);
+        res.status(500).json({ error: 'Failed to fetch date-wise sales data' });
     }
+  }
+
+
     
 }
 
