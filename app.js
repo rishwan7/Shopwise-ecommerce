@@ -40,7 +40,7 @@ app.use(
 const conectDB=async()=>{
   try{
 
-    await mongoose.connect('mongodb+srv://rishwan063:dFb9esF0Kp96Kd3D@rishwan.ceaa1kd.mongodb.net/e-commerce')
+    await mongoose.connect(`mongodb+srv://rishwan063:${process.env.ATLAS_PASSWORD}@rishwan.ceaa1kd.mongodb.net/e-commerce`)
     console.log(`the db is conect with ${mongoose.connection.host}`);
   }catch(error){
     console.error('Error connecting to the database:', error);
