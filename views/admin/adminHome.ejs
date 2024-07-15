@@ -139,29 +139,31 @@
             <li class="nav-item">
                 <a class="nav-link" href="/admin/addproduct">Add Product</a>
             </li>
+          
+           
             <li class="nav-item">
-                <a class="nav-link" href="#">Edit Product</a>
+                <a class="nav-link" href="/admin/viewproducts">View Product & update</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Add Category</a>
+                <a class="nav-link" href="/admin/addcategory'">Add categories & subcategories</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/admin/viewproducts'">View Product</a>
+                <a class="nav-link" href="/admin/viewcategories'">View categories & subcategories</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">View User</a>
+                <a class="nav-link" href="/admin/viewusers">View User</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Add Coupon</a>
+                <a class="nav-link" href="/admin/coupon">Add Coupon</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Add Banner</a>
+                <a class="nav-link" href="/admin/banner">Add Banner</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">View Banner</a>
+                <a class="nav-link" href="/admin/viewbanner">View Banner</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">View Orders</a>
+                <a class="nav-link" href="/admin/ordermanage">View Orders</a>
             </li>
         </ul>
     </div>
@@ -379,27 +381,58 @@ updateSalesChart();
         // Call the function to update chart when the page loads or as needed
         updateProductCategoryChart();
         // Users Joined Every Month Candle Chart
-        const usersJoinedCtx = document.getElementById('users-joined-chart').getContext('2d');
-        const usersJoinedChart = new Chart(usersJoinedCtx, {
-            type: 'bar',
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [{
-                    label: 'Users Joined',
-                    data: [50, 60, 70, 80, 90, 100, 110],
-                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                    borderColor: 'rgba(255, 159, 64, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+        async function fetchUserJoined(usersJoinedChart) {
+    try {
+        const response = await fetch("/admin/userjoined", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
             }
         });
+
+        const { labels, userCounts } = await response.json();
+        console.log(labels, userCounts);
+
+        // Update chart data
+        usersJoinedChart.data.labels = labels;
+        usersJoinedChart.data.datasets[0].data = userCounts;
+
+        usersJoinedChart.update();
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function updateUserCount() {
+    const usersJoinedCtx = document.getElementById('users-joined-chart').getContext('2d');
+
+    const usersJoinedChart = new Chart(usersJoinedCtx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Users Joined',
+                data: [],
+                backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                borderColor: 'rgba(255, 159, 64, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    await fetchUserJoined(usersJoinedChart);
+}
+
+// Call the updateUserCount function to initialize and fetch data
+updateUserCount();
+
     </script>
 </body>
 </html>

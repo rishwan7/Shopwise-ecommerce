@@ -11,7 +11,7 @@ const userAddressSchema=mongoose.Schema({
     state:{type:String},
     postalCode:{type:Number},
     phone:{type:Number}
-})
+},{timestamps:true})
 const useraddressSchema = new Schema({
     userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     addresses: [userAddressSchema]

@@ -6,7 +6,7 @@ const signupSchema=mongoose.Schema({
    userPhone:{type:Number},
    userPassword:{type:String},
    userStatus:{type:String, default:'active'}
-})
+},{timestamps:true})
 
 const userdetails=mongoose.model("userdetails",signupSchema)
 module.exports={userdetails}

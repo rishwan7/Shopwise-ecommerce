@@ -162,6 +162,7 @@
                 class="w-full p-2 border border-gray-300 rounded"
               >
                 <% categories.forEach(category => { %>
+                  <option value=""></option>
                 <option value="<%= category._id %>">
                   <%= category.categoryName %>
                 </option>
@@ -181,6 +182,7 @@
                 class="w-full p-2 border border-gray-300 rounded"
               >
                 <% subcategories.forEach(function(subcategory) { %>
+                  <option value=""></option>
                 <option value="<%= subcategory %>"><%= subcategory %></option>
                 <% }); %>
               </select>
@@ -221,7 +223,7 @@
         const categoryDropdown = document.getElementById("productCategory");
         const subcategoryDropdown = document.getElementById("productSubCategory");
         const productSizeSection=document.querySelector(".productSize")
-        const categoriesToShowSizes = ["men","ladies"];
+        const categoriesToShowSizes = ["men","Womans"];
         
         categoryDropdown.addEventListener("change", function() {
 

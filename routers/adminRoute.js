@@ -29,8 +29,11 @@ router.post("/updateproduct/:id",upload.array('productImage',10),productControll
 .get("/ordermanage",admin.orderManagement)
 .post("/updatestatus",admin.updateOrderStatus   )
 .post("/cancelorder",admin.cancelOrder)
+
+//chartdatas
 .post("/productCounts",admin.getProductDetails)
 .post("/monthlySalesData",admin.salesByDate)
+.post("/userjoined",admin.userJoinedCount)
 
 
 //category-controlroute
@@ -44,6 +47,8 @@ router.get("/addcategory",categoryController.getAddCategory)
 .post("/updatesubcategory/:id",categoryController.postUPdateSubcategory)
 .get("/banner",bannerController.getBanner)
 .post("/banner",banner.single('bannerImage'),bannerController.postBanner)
+.get("/viewbanner",admin.getViewBanner)
+.get("/viewusers",admin.getViewUsers)
 
 
 //logout

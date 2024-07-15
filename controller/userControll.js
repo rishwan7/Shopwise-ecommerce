@@ -50,7 +50,17 @@ module.exports = {
       const categories = await category.find({});
 
       // Fetch products with populated productCategory
-      const products = await product.find({}).populate("productCategory");
+      const products = await product.find({}).populate("productCategory").limit(10);
+
+      const featuredItems = await product.aggregate([
+        {
+          $match: {
+            percentageDifference: { $gt: 30 },
+          },
+        },
+        
+      ]);
+      // console.log("featured items",featuredItems);
 
       // Render the index view with fetched data
       res.render("user/index", {
@@ -61,6 +71,7 @@ module.exports = {
         cartQuantity,
         wishlistQty,
         banners,
+        featuredItems
       });
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -497,7 +508,7 @@ module.exports = {
     req.session.categoryId = categoryId;
 
     const page = parseInt(req.query.page) || 1; // Current page number, default to 1
-    const limit = 5; // Number of products per page
+    const limit = 6; // Number of products per page
     const skip = (page - 1) * limit; // Calculate skip based on page number
 
     const products = await product

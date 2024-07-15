@@ -1,7 +1,8 @@
 const express = require("express");
 const {orders}=require("../model/orderDb")
-const{product}=require("../model/adminDb")
-const{userdetails}=require("../model/userDb")
+const{product, category}=require("../model/adminDb")
+const{userdetails}=require("../model/userDb");
+const banner = require("../model/bannerDb");
 
 
 
@@ -48,8 +49,9 @@ module.exports={
               }
             }
           ]);
-          let profit=0
-          if(profit){
+          console.log("proffut",profitData);
+          let profit=0;
+          if(profitData){
 
                profit=profitData[0].totalProfit
           }
@@ -252,8 +254,66 @@ console.log(data);
         console.error('Error fetching date-wise sales data:', error);
         res.status(500).json({ error: 'Failed to fetch date-wise sales data' });
     }
-  }
+  },
+  userJoinedCount: async (req, res) => {
+    console.log("okkkkk");
 
+
+
+    try {
+        const currentDate = new Date();
+        const currentMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const nextMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+
+        console.log("Date Range:", currentMonthStart, "to", nextMonthStart);
+
+        const userData = await userdetails.aggregate([
+            {
+                $match: {
+                    createdAt: {
+                        $gte: currentMonthStart, // Start of the current month
+                        $lt: nextMonthStart // Start of next month
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { '_id': 1 } // Sort by date
+            }
+        ]);
+
+        console.log("Aggregated User Data:", userData);
+
+        // Prepare data for response
+        const data = {
+            labels: userData.map(entry => entry._id),
+            userCounts: userData.map(entry => entry.count)
+        };
+
+        console.log("Prepared Data:", data);
+        res.json(data); // Send data as JSON response
+    } catch (error) {
+        console.error('Error fetching date-wise user joined data:', error);
+        res.status(500).json({ error: 'Failed to fetch date-wise user joined data' });
+    }
+
+},
+getViewBanner:async(req,res)=>{
+    const banners=await banner.find({}).populate("category")
+    console.log(banners);
+    res.render("admin/viewbanner",{banners})
+
+},
+getViewUsers:async(req,res)=>{
+    const users=await userdetails.find({})
+    console.log(users);
+    res.render("admin/viewusers",{users})
+}
 
     
 }

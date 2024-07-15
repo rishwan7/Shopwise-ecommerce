@@ -20,7 +20,7 @@ const sendOtpEmail = (toEmail, otp) => {
     from: process.env.EMAIL_USER,
     to: toEmail,
     subject: 'Password Reset OTP',
-    text: `Your OTP for password reset is: ${otp}. This OTP is valid for a limited time. Please use it to reset your password.`,
+    text: `Your OTP  is: ${otp}. This OTP is valid for a limited time.`,
   };
 
   return transporter.sendMail(mailOptions);

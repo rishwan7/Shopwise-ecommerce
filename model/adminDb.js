@@ -37,17 +37,17 @@ const ProductSchema = new mongoose.Schema({
   productSize: {
     type: [String],
   },
-});
+},{timestamps:true});
 
 const categorySchema = new mongoose.Schema({
   categoryName: { type: String, required: true },
-});
+},{timestamps:true});
 
 const subcategorySchema = new mongoose.Schema({
   subcategoryName: { type: String, required: true },
 
-  category: { type: mongoose.Schema.Types.ObjectId, ref: "categories"},
-});
+  category: { type: mongoose.Schema.Types.ObjectId},
+},{timestamps:true});
 
 const product = mongoose.model("products", ProductSchema);
 

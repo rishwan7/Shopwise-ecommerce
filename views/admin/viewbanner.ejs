@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banners</title>
+    <!-- Add your CSS links or styles here -->
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .banner-image {
+            max-width: 100px;
+            max-height: 100px;
+        }
+        .btn-container {
+            display: flex;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Banners</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Banner Name</th>
+                    <th>Offer Text</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% banners.forEach(banner => { %>
+                    <tr>
+                        <td><img src="/bannerImage/<%= banner.bannerImage %>" alt="<%= banner.bannerName %>" class="banner-image"></td>
+                        <td><%= banner.bannerName %></td>
+                        <td><%= banner.offerText %></td>
+                        <td><%= banner.category.categoryName %></td>
+                        <td class="btn-container">
+                            <form action="/updateBanner/<%= banner._id %>" method="POST">
+                                <button type="submit">Update</button>
+                            </form>
+                            <form action="/deleteBanner/<%= banner._id %>" method="POST">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <!-- Add your script tags or script files here -->
+</body>
+</html>

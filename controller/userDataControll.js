@@ -44,17 +44,29 @@ const postSignup= async (req, res) => {
     }
 
     if (Object.keys(req.session.error).length > 0) {
-      return res.redirect("/signup");
       console.log("error fetched");
+      return res.redirect("/signup");
+      
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     req.session.otp = otp;
     req.session.signupDetails = { names, email, password, phonenumber };
 
-    res.redirect("/otpvalidation");
 
-    await twilio.sendOtp(phonenumber, otp);
+    // twilio otp generation was turned of due to the trial version has send otp to limited numbers
+
+    // const otpSent = await twilio.sendOtp(phonenumber, otp);
+    // if (!otpSent) {
+    //   req.session.error = 'Failed to send OTP please try anothor mobile number.';
+    //   return res.redirect('/signup');
+    // }
+
+   
+      await mailer.sendOtpEmail(email, otp);
+      
+    // Redirect to OTP validation page after sending OTP
+    res.redirect('/otpvalidation');
   }
   const getSignupOtp= (req, res) => {
     const usermob = req.session.signupDetails;
@@ -62,51 +74,66 @@ const postSignup= async (req, res) => {
     res.render("user/signupotp", { error, usermob });
   }
   const  postSignupOtp= async (req, res) => {
-    if (!req.session.signupDetails) {
-      req.session.error = "Session expired. Please sign up again";
-      return res.redirect("/otpvalidation");
-    }
-    const { otp } = req.body;
-    const { names, email, password, phonenumber } = req.session.signupDetails;
-    console.log(req.session.otp);
-    if (req.session.otp === otp) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const details = new userdetails({
-       userName: names,
-       userEmail :email,
-       userPhone: phonenumber,
-        userPassword: hashedPassword,
-      });
 
-      console.log(details);
-      await details.save();
-      req.session.userId = details._id;
-      console.log(req.session.userId);
-      res.redirect("/login");
-    } else {
-      req.session.error = "inavalid otp please try again";
-      res.redirect("/otpvalidation");
+    try{
+
+
+      if (!req.session.signupDetails) {
+        req.session.error = "Session expired. Please sign up again";
+        return res.redirect("/otpvalidation");
+      }
+      const { otp } = req.body;
+      const { names, email, password, phonenumber } = req.session.signupDetails;
+      console.log(req.session.otp);
+      if (req.session.otp === otp) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const details = new userdetails({
+         userName: names,
+         userEmail :email,
+         userPhone: phonenumber,
+          userPassword: hashedPassword,
+        });
+  
+        console.log(details);
+        await details.save();
+        req.session.userId = details._id;
+        console.log(req.session.userId);
+        res.redirect("/login");
+      } else {
+        req.session.error = "inavalid otp please try again";
+        res.redirect("/otpvalidation");
+      }
+    }catch(error){
+      onsole.error('Signup error:', error.message);
+    req.session.error = error.message;
+    res.redirect('/signup');
     }
   }
   const resendOtp= async (req, res) => {
     try {
       if (!req.session.signupDetails) {
-        return res.json({
+         res.json({
           success: false,
           message: "Session expired. Please sign up again",
         });
+
+        return res.redirect("/signup")
+      
       }
 
-      const { phonenumber } = req.session.signupDetails;
+      const { email } = req.session.signupDetails;
 
       // Generate a new OTP
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       req.session.otp = otp;
+      console.log(otp);
 
       // Send the new OTP
-      await twilio.sendOtp(phonenumber, otp);
-
-      res.json({ success: true, message: "OTP Resent Successfully" });
+      
+        await mailer.sendOtpEmail(email, otp);
+         
+      
+    
     } catch (error) {
       console.error("Error resending OTP:", error);
       res.json({ success: false });
@@ -155,7 +182,9 @@ const postSignup= async (req, res) => {
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       req.session.forgotOtp = otp;
       req.session.userId = usersData._id;
-      req.session.email=usersData.email
+      req.session.email=usersData.userEmail
+      console.log(req.session.email);
+
       console.log(req.session.forgotOtp);
      
 
@@ -197,6 +226,7 @@ const postSignup= async (req, res) => {
   const forgotResendOtp=async(req,res)=>{
     const email=req.session.email
     console.log(email);
+ 
 
     try{  if(email){
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -204,7 +234,7 @@ const postSignup= async (req, res) => {
       console.log("done",otp);
       return res.json({
         success: true,
-        message: `OTP sented to  ${email}`,
+        message: `OTP resented to  ${email}`,
       });
 
 

@@ -37,15 +37,16 @@ app.use(
 // });
 // const upload = multer({ storage: storage });
 
-mongoose
-  .connect("mongodb://localhost:27017/e-commerce")
-  .then(() => {
-    console.log("conected");
-  })
-  .catch((err) => {
-    console.error(err);
-  });
- 
+const conectDB=async()=>{
+  try{
+
+    await mongoose.connect('mongodb+srv://rishwan063:dFb9esF0Kp96Kd3D@rishwan.ceaa1kd.mongodb.net/e-commerce')
+    console.log(`the db is conect with ${mongoose.connection.host}`);
+  }catch(error){
+    console.error('Error connecting to the database:', error);
+  }
+}
+ conectDB()
 
 app.use("/admin", adminRouter);
 app.use("/",userRouter)

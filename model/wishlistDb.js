@@ -10,7 +10,7 @@ const wishlistSchema = mongoose.Schema({
     ],
    
 
-});
+},{timestamps:true});
 
 const wishlist=mongoose.model("wishlist",wishlistSchema)
 
