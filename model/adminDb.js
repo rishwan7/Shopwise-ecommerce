@@ -54,4 +54,16 @@ const product = mongoose.model("products", ProductSchema);
 const category = mongoose.model("categories", categorySchema);
 const subcategory = mongoose.model("subcategories", subcategorySchema);
 
-module.exports = { product, category, subcategory };
+
+
+//adminDb
+
+const adminSchema=new mongoose.Schema({
+  userName:{type:String},
+  userEmail:{type:String},
+  userPassword:{type:String}
+})
+
+const adminDetails=mongoose.model("adminDetails",adminSchema)
+
+module.exports = { product, category, subcategory ,adminDetails};

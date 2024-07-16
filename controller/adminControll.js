@@ -338,8 +338,10 @@ unBlockUser:async(req,res)=>{
     } catch (error) {
         
     }
+},
+adminSignup:(req,res)=>{
+    
 }
-
     
 }
 

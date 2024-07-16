@@ -46,7 +46,9 @@ module.exports = {
   
       // Fetch categories
       const categories = await category.find({});
-  
+
+      const bannerses = await banner.find({}).limit(2).skip(1);
+     
       // Fetch products with populated productCategory
       const products = await product.find({}).populate("productCategory").limit(10);
   
@@ -57,12 +59,13 @@ module.exports = {
             percentageDifference: { $gt: 30 },
           },
         },
-      ]);
+      ]).limit(20);
   
       // Render the index view with fetched data
       res.render("user/index", {
         products,
         categories,
+        bannerses,
         userId,
         userName,
         cartQuantity,
@@ -485,6 +488,7 @@ module.exports = {
   },
 
   getShopList: async (req, res) => {
+    const userId=req.session.userId
     try {
       const categoryId = req.params.id;
       console.log("Category ID:", categoryId);
@@ -510,9 +514,37 @@ module.exports = {
       });
       const totalPages = Math.ceil(totalProductsCount / limit);
 
+      
+    let isInUser = false;
+    let cartQuantity = 0;
+
+    if(userId){
+      
+      const userDetails = await userdetails.findOne({ _id: userId });
+      if (userDetails) {
+        isInUser = true;
+      }
+    
+  
+    
+    const Cart = await cart.findOne({ userId: userId });
+  
+  
+  
+    if (Cart && Cart.items) {
+      cartQuantity = Cart.items.length;
+      console.log(`Number of items in the cart: ${cartQuantity}`);
+    } else {
+      console.log("Cart not found or no items in the cart.");
+    }
+    }
+   
+
       // Render shop-list view with products, categoryId, currentPage, and totalPages
       res.render("user/shop-list", {
         products,
+        isInUser,
+        cartQuantity,
         categoryId,
         currentPage: page,
         totalPages,
