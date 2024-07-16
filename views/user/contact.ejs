@@ -33,8 +33,6 @@
 <link rel="stylesheet" href="assets/owlcarousel/css/owl.theme.default.min.css">
 <!-- Magnific Popup CSS -->
 <link rel="stylesheet" href="assets/css/magnific-popup.css">
-<!-- jquery-ui CSS -->
-<link rel="stylesheet" href="assets/css/jquery-ui.css">
 <!-- Slick CSS -->
 <link rel="stylesheet" href="assets/css/slick.css">
 <link rel="stylesheet" href="assets/css/slick-theme.css">
@@ -101,16 +99,8 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 </div>
 <!-- END LOADER -->
 
-
-
-<!-- START HEADER -->
-
+ 
 <%- include('../layout/header',) %>
-
-
-
-
-
 
 <!-- START SECTION BREADCRUMB -->
 <div class="breadcrumb_section bg_gray page-title-mini">
@@ -118,10 +108,10 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
         <div class="row align-items-center">
         	<div class="col-md-6">
                 <div class="page-title">
-            		<h1>My Account</h1>
+            		<h1>Contact</h1>
                 </div>
             </div>
-           
+            
         </div>
     </div><!-- END CONTAINER-->
 </div>
@@ -130,166 +120,92 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 <!-- START MAIN CONTENT -->
 <div class="main_content">
 
-<!-- START SECTION SHOP -->
-<div class="section">
+<!-- START SECTION CONTACT -->
+<div class="section pb_70">
 	<div class="container">
         <div class="row">
-            <div class="col-lg-3 col-md-4">
-                <div class="dashboard_menu">
-                    <ul class="nav nav-tabs flex-column" role="tablist">
-                      <li class="nav-item">
-                        <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="false"><i class="ti-layout-grid2"></i>Dashboard</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="ti-shopping-cart-full"></i>Orders</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="ti-location-pin"></i>My Address</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="ti-id-badge"></i>Account details</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="/logout"><i class="ti-lock"></i>Logout</a>
-                      </li>
-                    </ul>
+            <div class="col-xl-4 col-md-6">
+            	<div class="contact_wrap contact_style3">
+                    <div class="contact_icon">
+                        <i class="linearicons-map2"></i>
+                    </div>
+                    <div class="contact_text">
+                        <span>Address</span>
+                        <p>Hilite Business Park ,Calict,Kerala</p>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-9 col-md-8">
-                <div class="tab-content dashboard_content">
-                  	<div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-                    	<div class="card">
-                        	<div class="card-header">
-                                <h3>Dashboard</h3>
-                            </div>
-                            <div class="card-body">
-                    			<p>From your account dashboard. you can easily check &amp; view your <a href="javascript:;" onclick="$('#orders-tab').trigger('click')">recent orders</a>, manage your <a href="javascript:;" onclick="$('#address-tab').trigger('click')">shipping and billing addresses</a> and <a href="javascript:;" onclick="$('#account-detail-tab').trigger('click')">edit your password and account details.</a></p>
-                            </div>
-                        </div>
-                  	</div>
-
-
-
-                    
-                        <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3>Orders</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Order</th>
-                                                    <th>Date</th>
-                                                    <th>product</th>
-                                                    <th>Status</th>
-                                                    <th>Total</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% orderDetails.forEach(order => { %>
-                                                <tr>
-                                                    <td>#1234</td>
-                                                    <td> <%= order.purchaseDate %> </td>
-                                                    <td> <%= order.productName %> </td>
-                                                    <td>  <%= order.status %>  </td>
-                                                    <td>  ₹<%= order.totalprice %>  </td>
-                                                    <td><a href="orderdetails/<%= order.ids %>" class="btn btn-fill-out btn-sm">View</a></td>
-                                                </tr>
-
-
-                                                <% }) %>
-
-                                                   
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                          </div>
-
-
-                     
-                   
-
-                  	
-					<div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
-                       
-                         
-                            <div class="row">
-                                <% useraddress.forEach(address => { %>
-                                <div class="col-lg-6">
-                                    <div class="card mb-3 mb-lg-0">
-                                        <div class="card-header">
-                                            <h3>Billing Address</h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <address>FirstName:<%= address.firstName %> <%= address.lastName %><br>address:<%= address.address %> <br> address2:<%= address.address2 %> <br>City:<%= address.city %> <br>state:<%= address.state %> <br>  Pin code :<%= address.postalCode %><br>phone number:<%= address.phone %></address>
-                                           
-                                            <a href="#" class="btn btn-fill-out">Edit</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <% }) %>
-                            </div>
-                        
-					</div>
-
-
-                    <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
-						<div class="card">
-                        	<div class="card-header">
-                                <h3>Account Details</h3>
-                            </div>
-                            <div class="card-body">
-                    			<p>Already have an account? <a href="#">Log in instead!</a></p>
-                                <form method="post" name="enq">
-                                    <div class="row">
-                                        <div class="form-group col-md-6 mb-3">
-                                        	<label>First Name <span class="required">*</span></label>
-                                            <input required="" class="form-control" name="name" type="text">
-                                         </div>
-                                         <div class="form-group col-md-6 mb-3">
-                                        	<label>Last Name <span class="required">*</span></label>
-                                            <input required="" class="form-control" name="phone">
-                                        </div>
-                                        <div class="form-group col-md-12 mb-3">
-                                        	<label>Display Name <span class="required">*</span></label>
-                                            <input required="" class="form-control" name="dname" type="text">
-                                        </div>
-                                        <div class="form-group col-md-12 mb-3">
-                                        	<label>Email Address <span class="required">*</span></label>
-                                            <input required="" class="form-control" name="email" type="email">
-                                        </div>
-                                        <div class="form-group col-md-12 mb-3">
-                                        	<label>Current Password <span class="required">*</span></label>
-                                            <input required="" class="form-control" name="password" type="password">
-                                        </div>
-                                        <div class="form-group col-md-12 mb-3">
-                                        	<label>New Password <span class="required">*</span></label>
-                                            <input required="" class="form-control" name="npassword" type="password">
-                                        </div>
-                                        <div class="form-group col-md-12 mb-3">
-                                        	<label>Confirm Password <span class="required">*</span></label>
-                                            <input required="" class="form-control" name="cpassword" type="password">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <button type="submit" class="btn btn-fill-out" name="submit" value="Submit">Save</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+            <div class="col-xl-4 col-md-6">
+            	<div class="contact_wrap contact_style3">
+                    <div class="contact_icon">
+                        <i class="linearicons-envelope-open"></i>
+                    </div>
+                    <div class="contact_text">
+                        <span>Email Address</span>
+                        <a href="mailto:rishwan063@gmail.com">rishwan063@gmail.com </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-md-6">
+            	<div class="contact_wrap contact_style3">
+                    <div class="contact_icon">
+                        <i class="linearicons-tablet2"></i>
+                    </div>
+                    <div class="contact_text">
+                        <span>Phone</span>
+                        <p>+91 799 477 6519</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<!-- END SECTION SHOP -->
+<!-- END SECTION CONTACT -->
+
+<!-- START SECTION CONTACT -->
+<div class="section pt-0">
+	<div class="container">
+    	<div class="row">
+        	<div class="col-lg-6">
+            	<div class="heading_s1">
+                	<h2>Get In touch</h2>
+                </div>
+                <p class="leads">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus blandit massa enim. Nullam id varius nunc id varius nunc.</p>
+                <div class="field_form">
+                    <form method="post" name="enq"  action="https://formspree.io/f/mqkrodna">
+                        <div class="row">
+                            <div class="form-group col-md-6 mb-3">
+                                <input required placeholder="Enter Name *" id="first-name" class="form-control" name="name" type="text">
+                             </div>
+                            <div class="form-group col-md-6 mb-3">
+                                <input required placeholder="Enter Email *" id="email" class="form-control" name="email" type="email">
+                            </div>
+                            <div class="form-group col-md-6 mb-3">
+                                <input required placeholder="Enter Phone No. *" id="phone" class="form-control" name="phone">
+                            </div>
+                            <div class="form-group col-md-6 mb-3">
+                                <input placeholder="Enter Subject" id="subject" class="form-control" name="subject">
+                            </div>
+                            <div class="form-group col-md-12 mb-3">
+                                <textarea required placeholder="Message *" id="description" class="form-control" name="message" rows="4"></textarea>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <button type="submit" title="Submit Your Message!" class="btn btn-fill-out" id="submitButton" name="submit" value="Submit">Send Message</button>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <div id="alert-msg" class="alert-msg text-center"></div>
+                            </div>
+                        </div>
+                    </form>		
+                </div>
+            </div>
+            <div class="col-lg-6 pt-2 pt-lg-0 mt-4 mt-lg-0">
+            	<div id="map" class="contact_map2" data-zoom="12" data-latitude="11.254632" data-longitude="75.824642" data-icon="assets/images/marker.png"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END SECTION CONTACT -->
 
 <!-- START SECTION SUBSCRIBE NEWSLETTER -->
 <div class="section bg_default small_pt small_pb">
@@ -421,8 +337,6 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 
 <!-- Latest jQuery --> 
 <script src="assets/js/jquery-3.7.0.min.js"></script> 
-<!-- jquery-ui --> 
-<script src="assets/js/jquery-ui.js"></script>
 <!-- popper min js -->
 <script src="assets/js/popper.min.js"></script>
 <!-- Latest compiled and minified Bootstrap --> 
@@ -447,6 +361,8 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 <script src="assets/js/slick.min.js"></script>
 <!-- elevatezoom js -->
 <script src="assets/js/jquery.elevatezoom.js"></script>
+<!-- Google Map Js -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7TypZFTl4Z3gVtikNOdGSfNTpnmq-ahQ&amp;callback=initMap"></script>
 <!-- scripts js --> 
 <script src="assets/js/scripts.js"></script>
 

@@ -50,6 +50,9 @@ const conectDB=async()=>{
 
 app.use("/admin", adminRouter);
 app.use("/",userRouter)
+app.get("*",(req,res)=>{
+  res.redirect("/404")
+})
 
 
 app.listen(3000, () => {

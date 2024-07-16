@@ -9,6 +9,12 @@ const {userdetails}=require("../model/userDb")
     const userId=req.session.userId
     console.log(userId,"this is user iD");
 
+     // Redirect to login if userId is not set in session
+     if (!userId) {
+        return res.redirect('/login'); // Adjust the path as per your application's routes
+    }
+
+
     const userDetails=await userdetails.findById(userId)
    
 

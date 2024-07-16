@@ -12,6 +12,10 @@ const{coupons}=require("../model/couponDb")
 const getCheckOutPage = async (req, res) => {
     try {
         
+
+        if(!userId){
+            return res.redirect("/")
+        }
       
         const userId = req.session.userId;
         const userDetails = await userdetails.findById(userId);
@@ -20,7 +24,7 @@ const getCheckOutPage = async (req, res) => {
         let appliedCoupon=await cart.findOne({})
         console.log(couponslist);
         
-     
+       
 
         if (userId) {
 

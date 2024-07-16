@@ -8,6 +8,7 @@ const path=require("path")
 const userLogout=require("../controller/commoncontrol")
 const paymentController=require("../controller/paymentControll")
 const couponController=require("../controller/couponController")
+const checkBlockedUser=require("../middleware/auth")
 router.use(express.static(path.join(__dirname,"../public/clint")))
 
 
@@ -40,6 +41,8 @@ router.get("/login",userDataController.getLoginpage)
 .post("/subcategoryproduct",pageController.filteringViaSubcategory)
 .post("/filter-by-price",pageController.filterByPrice)
 .get("/search",pageController.searchProduct)
+.get("/contact",pageController.contactPage)
+.get("/404",pageController.fourNotFour)
 //cart
 router.get("/cart",cartControll.getCartPage)
 .post("/cart",cartControll.postCartPage)

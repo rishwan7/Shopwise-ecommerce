@@ -49,6 +49,8 @@ router.get("/addcategory",categoryController.getAddCategory)
 .post("/banner",banner.single('bannerImage'),bannerController.postBanner)
 .get("/viewbanner",admin.getViewBanner)
 .get("/viewusers",admin.getViewUsers)
+.post("/blockuser",admin.blockUser)
+.post("/unblockuser",admin.unBlockUser)
 
 
 //logout

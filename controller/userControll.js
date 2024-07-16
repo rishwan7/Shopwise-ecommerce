@@ -18,50 +18,47 @@ module.exports = {
   getindex: async (req, res) => {
     // const id=req.query.id
     try {
-      req.session.userId = "66742001854d67a55ce082b7"; // Set userId in session (assuming this is set correctly)
-
       const userId = req.session.userId;
+  
+      // Fetch banners
       const banners = await banner.find({});
-
-      // Fetch wishlist count
-      const wishlistCount = await wishlist.findOne({
-        userId: mongoose.Types.ObjectId.createFromHexString(userId),
-      });
-      const wishlistQty =
-        wishlistCount && wishlistCount.items ? wishlistCount.items.length : 0;
-      console.log(`Wishlist count: ${wishlistQty}`);
-
-      req.session.wishlistQty = wishlistQty;
-
-      // Fetch cart details
-      const cartDetails = await cart.findOne({ userId });
-      const cartQuantity =
-        cartDetails && cartDetails.items ? cartDetails.items.length : 0;
-      console.log(`Number of items in the cart: ${cartQuantity}`);
-
-      req.session.cartQuantity = cartQuantity;
-
-      // Fetch user details
-      const userDetails = await userdetails.findOne({ _id: userId });
-      const userName = userDetails ? userDetails.userName : "";
-      console.log("User name:", userName);
-
+  
+      // Initialize variables for wishlist and cart quantities
+      let wishlistQty = 0;
+      let cartQuantity = 0;
+      let userName = "";
+  
+      if (userId) {
+        // Fetch wishlist count
+        const wishlistCount = await wishlist.findOne({
+          userId: mongoose.Types.ObjectId.createFromHexString(userId),
+        });
+        wishlistQty = wishlistCount && wishlistCount.items ? wishlistCount.items.length : 0;
+  
+        // Fetch cart details
+        const cartDetails = await cart.findOne({ userId });
+        cartQuantity = cartDetails && cartDetails.items ? cartDetails.items.length : 0;
+  
+        // Fetch user details
+        const userDetails = await userdetails.findOne({ _id: userId });
+        userName = userDetails ? userDetails.userName : "";
+      }
+  
       // Fetch categories
       const categories = await category.find({});
-
+  
       // Fetch products with populated productCategory
       const products = await product.find({}).populate("productCategory").limit(10);
-
+  
+      // Fetch featured items with a percentageDifference greater than 30
       const featuredItems = await product.aggregate([
         {
           $match: {
             percentageDifference: { $gt: 30 },
           },
         },
-        
       ]);
-      // console.log("featured items",featuredItems);
-
+  
       // Render the index view with fetched data
       res.render("user/index", {
         products,
@@ -71,7 +68,7 @@ module.exports = {
         cartQuantity,
         wishlistQty,
         banners,
-        featuredItems
+        featuredItems,
       });
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -81,6 +78,10 @@ module.exports = {
 
   getMyAccount: async (req, res) => {
     const userId = req.session.userId;
+
+    if(!userId){
+      return res.redirect("/login")
+    }
     console.log(userId);
 
     // const orderDetails=await orders.find({userId:mongoose.Types.ObjectId.createFromHexString(userId)})
@@ -217,39 +218,52 @@ module.exports = {
        
 
         let isInCart = false;
-        if (userId) {
-          const userCart = await cart.findOne({
-            userId,
-            "items.productId": productId,
-          });
-          if (userCart) {
-            isInCart = true;
-          }
+        let isInUser = false;
+        let cartQuantity = 0;
+
+        if(userId){
+        
+            const userCart = await cart.findOne({
+              userId,
+              "items.productId": productId,
+            });
+            if (userCart) {
+              isInCart = true;
+            }
+
+           
+              const userDetails = await userdetails.findOne({ _id: userId });
+              if (userDetails) {
+                isInUser = true;
+              }
+           
+              const Cart = await cart.findOne({ userId: userId });
+
+ 
+
+              if (Cart && Cart.items) {
+                cartQuantity = Cart.items.length;
+                console.log(`Number of items in the cart: ${cartQuantity}`);
+              } else {
+                console.log("Cart not found or no items in the cart.");
+              }
+
+
         }
+
+
+
+
 
         const userDetails = await userdetails.findOne({ _id: userId });
         const userName = userDetails ? userDetails.userName : "";
 
-        let isInUser = false;
-        if (userId) {
-          const userDetails = await userdetails.findOne({ _id: userId });
-          if (userDetails) {
-            isInUser = true;
-          }
-        }
+    
+      
 
         
 
-        const Cart = await cart.findOne({ userId: userId });
-
-        let cartQuantity = 0;
-
-        if (Cart && Cart.items) {
-          cartQuantity = Cart.items.length;
-          console.log(`Number of items in the cart: ${cartQuantity}`);
-        } else {
-          console.log("Cart not found or no items in the cart.");
-        }
+      
 
         const wishlistItem = await wishlist.findOne({
           userId,
@@ -289,9 +303,15 @@ module.exports = {
   },
 
   postProductReview: (req, res) => {
-    const { rating, userName, userEmail, message } = req.body;
-    console.log(rating, userName, userEmail, message);
-    res.send("posted");
+    const userId=req.session.userId
+    if(userId){
+
+      const { rating, userName, userEmail, message } = req.body;
+      console.log(rating, userName, userEmail, message);
+      res.send("posted");
+    }else{
+      res.json({})
+    }
   },
 
   getOrders: async (req, res) => {
@@ -503,6 +523,7 @@ module.exports = {
     }
   },
   shopLeftSideBar: async (req, res) => {
+    const userId=req.session.userId
     const categoryId = req.params.id;
 
     req.session.categoryId = categoryId;
@@ -525,11 +546,39 @@ module.exports = {
     });
     const totalPages = Math.ceil(totalProductsCount / limit);
 
+    
+    let isInUser = false;
+    let cartQuantity = 0;
+
+    if(userId){
+      
+      const userDetails = await userdetails.findOne({ _id: userId });
+      if (userDetails) {
+        isInUser = true;
+      }
+    
+  
+    
+    const Cart = await cart.findOne({ userId: userId });
+  
+  
+  
+    if (Cart && Cart.items) {
+      cartQuantity = Cart.items.length;
+      console.log(`Number of items in the cart: ${cartQuantity}`);
+    } else {
+      console.log("Cart not found or no items in the cart.");
+    }
+    }
+   
+
     res.render("user/shop-left-sidebar", {
       products,
       currentPage: page,
       totalPages,
       categoryId,
+      isInUser,
+      cartQuantity,
       subcategories,
     });
   },
@@ -585,4 +634,66 @@ module.exports = {
       res.status(500).send(err.message);
     }
   },
+
+  contactPage:async(req,res)=>{
+
+const userId=req.session.userId
+
+
+    let isInUser = false;
+    let cartQuantity = 0;
+
+    if(userId){
+      
+      const userDetails = await userdetails.findOne({ _id: userId });
+      if (userDetails) {
+        isInUser = true;
+      }
+    
+  
+    
+    const Cart = await cart.findOne({ userId: userId });
+  
+  
+  
+    if (Cart && Cart.items) {
+      cartQuantity = Cart.items.length;
+      console.log(`Number of items in the cart: ${cartQuantity}`);
+    } else {
+      console.log("Cart not found or no items in the cart.");
+    }
+    }
+   
+
+    res.render("user/contact",{isInUser,cartQuantity})
+  },
+  fourNotFour:async(req,res)=>{
+
+    const userId=req.session.userId
+    let isInUser = false;
+    let cartQuantity = 0;
+
+    if(userId){
+      
+      const userDetails = await userdetails.findOne({ _id: userId });
+      if (userDetails) {
+        isInUser = true;
+      }
+    
+  
+    
+    const Cart = await cart.findOne({ userId: userId });
+  
+  
+  
+    if (Cart && Cart.items) {
+      cartQuantity = Cart.items.length;
+      console.log(`Number of items in the cart: ${cartQuantity}`);
+    } else {
+      console.log("Cart not found or no items in the cart.");
+    }
+    }
+   
+ res.render("user/404",{isInUser,cartQuantity})
+  }
 };

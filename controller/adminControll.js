@@ -311,8 +311,33 @@ getViewBanner:async(req,res)=>{
 },
 getViewUsers:async(req,res)=>{
     const users=await userdetails.find({})
-    console.log(users);
+    // console.log(users);
     res.render("admin/viewusers",{users})
+},
+blockUser:async(req,res)=>{
+    const{userId}=req.body
+    console.log(userId);
+try{
+
+
+    const blocking=await userdetails.findOneAndUpdate({_id:userId},{userStatus:"block"})
+    console.log(blocking);
+    return res.json({success:true})
+}catch(error){
+    return res.json({success:false,message:"internal server down"})
+}
+
+},
+unBlockUser:async(req,res)=>{
+    const{userId}=req.body
+    try {
+        const unblock=await userdetails.findOneAndUpdate({_id:userId},{userStatus:"active"})
+        return res.json({success:true})
+        return res.json({success:false,message:"internal server down"})
+        
+    } catch (error) {
+        
+    }
 }
 
     

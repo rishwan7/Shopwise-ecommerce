@@ -42,9 +42,13 @@
                         <td><%= user.userName %></td>
                         <td><%= user.userEmail %></td>
                         <td>
-                            <form action="/blockUser/<%= user._id %>" method="POST">
-                                <button type="submit">Block</button>
-                            </form>
+                            <% if (user.userStatus === 'active') { %>
+                                <button id="block-btn-<%= user._id %>" style="color: red;" type="button" onclick="blockUser('<%= user._id %>')">Block</button>
+                                <button id="unblock-btn-<%= user._id %>" style="color: green; display: none;" type="button" onclick="unBlockUser('<%= user._id %>')">Unblock</button>
+                            <% } else { %>
+                                <button id="block-btn-<%= user._id %>" style="color: red; display: none;" type="button" onclick="blockUser('<%= user._id %>')">Block</button>
+                                <button id="unblock-btn-<%= user._id %>" style="color: green;" type="button" onclick="unBlockUser('<%= user._id %>')">Unblock</button>
+                            <% } %>
                         </td>
                     </tr>
                 <% }) %>
@@ -52,5 +56,52 @@
         </table>
     </div>
     <!-- Add your script tags or script files here -->
+    <script>
+        async function blockUser(userId) {
+            try {
+                const response = await fetch("/admin/blockuser", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ userId })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+               
+                    document.getElementById(`unblock-btn-${userId}`).style.display = "inline-block";
+                    document.getElementById(`block-btn-${userId}`).style.display = "none";
+                } else {
+                    alert("Failed to block user");
+                }
+            } catch (error) {
+                console.error("Error blocking user:", error);
+            }
+        }
+
+        async function unBlockUser(userId) {
+            try {
+                const response = await fetch("/admin/unblockuser", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ userId })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                   
+                    document.getElementById(`unblock-btn-${userId}`).style.display = "none";
+                    document.getElementById(`block-btn-${userId}`).style.display = "inline-block";
+                } else {
+                    alert("Failed to unblock user");
+                }
+            } catch (error) {
+                console.error("Error unblocking user:", error);
+            }
+        }
+    </script>
 </body>
 </html>

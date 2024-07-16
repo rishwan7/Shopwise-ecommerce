@@ -163,6 +163,15 @@ const postSignup= async (req, res) => {
       }
     }
 
+    
+    if(usersData){
+      req.session.userStatus=usersData.userStatus
+
+      if(usersData.userStatus==="block"){
+      req.session.error.blockerr='Your account is blocked. Please contact support.'
+    }
+    }
+
     if (Object.keys(req.session.error).length > 0) {
       return res.redirect("/login");
     }
