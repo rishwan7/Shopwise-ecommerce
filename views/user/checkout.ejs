@@ -272,9 +272,96 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                 <div class="heading_s1">
                     <h4>Billing Details</h4>
                 </div>
+
+                <form method="post" id="addressUpdate" style="display: none">
+                    <div class="form-group mb-3">
+                      <input
+                        type="text"
+                        required
+                        class="form-control"
+                        id="fname"
+                        name="fname"
+                        placeholder="First name *"
+                      />
+                    </div>
+                    <div class="form-group mb-3">
+                      <input
+                        type="text"
+                        required
+                        class="form-control"
+                        id="lname"
+                        name="lname"
+                        placeholder="Last name *"
+                      />
+                    </div>
+                    <div class="form-group mb-3">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="billing_address"
+                        name="billing_address"
+                        required
+                        placeholder="Address *"
+                      />
+                    </div>
+                    <div class="form-group mb-3">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="billing_address2"
+                        name="billing_address2"
+                        placeholder="Address line 2"
+                      />
+                    </div>
+                    <div class="form-group mb-3">
+                      <input
+                        class="form-control"
+                        required
+                        type="text"
+                        id="city"
+                        name="city"
+                        placeholder="City *"
+                      />
+                    </div>
+                    <div class="form-group mb-3">
+                      <input
+                        class="form-control"
+                        required
+                        type="text"
+                        id="state"
+                        name="state"
+                        placeholder="State *"
+                      />
+                    </div>
+                    <div class="form-group mb-3">
+                      <input
+                        class="form-control"
+                        required
+                        type="text"
+                        id="zipcode"
+                        name="zipcode"
+                        placeholder="Postcode *"
+                      />
+                    </div>
+                    <div class="form-group mb-3">
+                      <input
+                        class="form-control"
+                        required
+                        type="text"
+                        id="phone"
+                        name="phone"
+                        placeholder="Phone *"
+                      />
+                    </div>
+                    <a  class="btn btn-fill-out btn-block" onclick="cancelAddress()">Cancel</a>
+                    <button class="btn btn-fill-out btn-block">
+                      Update Address
+                    </button>
+                  
+                  </form>
         
                 <% if (userAddresses && userAddresses.addresses.length > 0) { %>
-                    <div class="address-box">
+                    <div class="address-box" id="addresslist">
                         <% userAddresses.addresses.slice(0, 3).forEach((address, index) => { %>
                             <div class="single-address">
                                 <input type="radio" name="selectedAddress" id="address<%= index %>" value="<%= address._id %>">
@@ -284,9 +371,10 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                                     <span class="phone"><%= address.phone %></span>
                                     <p><%= address.address %>, <%= address.address2 %>, <%= address.city %>, <%= address.state %>, <%= address.postalCode %></p>
                                 </label>
-                                <button class="btn btn-edit" onclick="editAddress('<%= address._id %>')">Edit</button>
+                                <button class="btn btn-edit" onclick="editAddress('<%= address._id %>', '<%= address.firstName %>', '<%= address.lastName %>', '<%= address.address %>', '<%= address.address2 %>', '<%= address.city %>', '<%= address.state %>', '<%= address.postalCode %>', '<%= address.phone %>')">Edit</button>
                             </div>
                         <% }); %>
+                        
         
                         <% if (userAddresses.addresses.length > 3) { %>
                             <button class="btn btn-link" onclick="showMoreAddresses()">Show More Addresses</button>
@@ -352,7 +440,7 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                                     <span class="phone"><%= address.phone %></span>
                                     <p><%= address.address %>, <%= address.address2 %>, <%= address.city %>, <%= address.state %>, <%= address.postalCode %></p>
                                 </label>
-                                <button class="btn btn-edit" onclick="editAddress('<%= address._id %>')">Edit</button>
+                                <button class="btn btn-edit" onclick="editAddress('<%= address._id %>', '<%= address.firstName %>', '<%= address.lastName %>', '<%= address.address %>', '<%= address.address2 %>', '<%= address.city %>', '<%= address.state %>', '<%= address.postalCode %>', '<%= address.phone %>')">Edit</button>
                             </div>
                         <% }); %>
                     </div>
@@ -601,6 +689,8 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                 <button class="btn btn-edit" onclick="editAddress('${newAddress._id}')">Edit</button>
             `;
 
+
+            location.reload()
             const moreAddresses = document.getElementById('moreAddresses');
             if (moreAddresses) {
                 moreAddresses.appendChild(newAddressDiv);
@@ -651,7 +741,7 @@ async function placeOrder() {
     const paymentMethod = paymentMethodElement.value;
     console.log(selectedAddress);
     const finalAmount= document.getElementById("finaltotal").value
-    console.log("valueeeeeeeeeee",finalAmount);
+    
 
     // const orderData = {
     //     paymentMethod,
@@ -809,13 +899,102 @@ document.getElementById("coupon-input2").style.display="block"
 
     }
     else{
-        alert("something fishy")
+        alert("error occured")
     }
 
   
       
 }
 
+async function editAddress( addressId,
+    firstName,
+    lastName,
+    address,
+    address2,
+    city,
+    state,
+    postalCode,
+    phone){
+console.log(addressId,firstName,lastName,phone,address,address2,city,postalCode,state);
+
+    document.getElementById("addresslist").style.display="none"
+
+    document.getElementById("fname").value = firstName;
+    document.getElementById("lname").value = lastName;
+    document.getElementById("billing_address").value = address;
+    document.getElementById("billing_address2").value = address2;
+    document.getElementById("city").value = city;
+    document.getElementById("state").value = state;
+    document.getElementById("zipcode").value = postalCode;
+    document.getElementById("phone").value = phone;
+    document.getElementById("addressUpdate").style.display="block"
+
+    document
+      .getElementById("addressUpdate")
+      .addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+       
+       addressId;
+        const firstName= document.getElementById("fname").value;
+        const  lastName= document.getElementById("lname").value;
+        const  address= document.getElementById("billing_address").value;
+         const address2= document.getElementById("billing_address2").value;
+         const city= document.getElementById("city").value;
+        const  state= document.getElementById("state").value;
+        const  postalCode= document.getElementById("zipcode").value;
+        const  phone=document.getElementById("phone").value;
+      
+
+        const response=await fetch("/updateaddress",{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({addressId,firstName,lastName,address,address2,city,state,postalCode,phone})
+
+            
+        })
+
+        try {
+          const result = await response.json();
+          if (result.success) {
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: result.message,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            document.getElementById("addresslist").style.display = "block";
+            document.getElementById("addressUpdate").style.display = "none";
+            setTimeout(() => {
+              location.reload();
+  }, 1500);
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error while updating",
+              text: result.message,
+            });
+          }
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Internal Server Error",
+            text: result.message,
+          });
+        }
+
+    })
+
+
+}
+
+function cancelAddress(){
+    document.getElementById("addresslist").style.display = "block";
+    document.getElementById("addressUpdate").style.display="none"
+}
 
     
 

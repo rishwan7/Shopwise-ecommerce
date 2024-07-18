@@ -100,22 +100,38 @@ const getCheckOutPage = async (req, res) => {
             req.session.totalDiscount=couponDiscount||0;
 
 
-            cartQuantity =req.session.cartQuantity
+           
 
            
               const couponAvailable=await coupons.find({})
 
-              const userDetails = await userdetails.findOne({ _id: userId });
-              const userName = userDetails ? userDetails.userName : "";
-
               let isInUser = false;
-              if (userId) {
-                const userDetails = await userdetails.findOne({ _id: userId });
-                if (userDetails) {
-                  isInUser = true;
-                }
-              }
-
+              let cartQuantity = 0;
+              let userName = "";
+          
+            
+                 if(userId){
+          
+                   const userDetails = await userdetails.findOne({ _id: userId });
+                   userName = userDetails ? userDetails.userName : "";
+                   if (userDetails) {
+                     isInUser = true;
+                   }
+                
+                   const Cart = await cart.findOne({ userId: userId });
+          
+          
+          
+                   if (Cart && Cart.items) {
+                     cartQuantity = Cart.items.length;
+                     console.log(`Number of items in the cart: ${cartQuantity}`);
+                   } else {
+                     console.log("Cart not found or no items in the cart.");
+                   }
+                 }
+      if(cartQuantity<=0){
+        return res.redirect("/index")
+      }
            
             res.render("user/checkout", {
                 userDetails,

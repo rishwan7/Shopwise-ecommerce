@@ -328,7 +328,8 @@ console.log("cart details is",cartDetails);
                     }
                 }
             ]);
-    
+           const cartItems=cartDetails.length
+        
             // Calculate total amount
             let totalAmount = cartDetails.reduce((acc, item) => acc + item.subtotal, 0);
             let cartSubtotal = totalAmount;
@@ -345,6 +346,7 @@ console.log("cart details is",cartDetails);
                 success: true,
                 totalAmount,
                 cartSubtotal,
+                cartItems,
                 shippingCharge
             });
         } catch (error) {

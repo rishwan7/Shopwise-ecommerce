@@ -351,8 +351,70 @@ const postUserAddress = async (req, res) => {
   }
 };
 
+const addressUpdate=async (req,res)=>{
+  const userId=req.session.userId
+  const { addressId, firstName, lastName, address, address2, city, state, postalCode, phone } = req.body;
+  console.log(addressId);
+  try {
+    const addressupdate = await UserAddress.updateOne(
+        { userId: mongoose.Types.ObjectId.createFromHexString(userId), "addresses._id": mongoose.Types.ObjectId.createFromHexString(addressId) },
+        {
+            $set: {
+                "addresses.$.firstName": firstName,
+                "addresses.$.lastName": lastName,
+                "addresses.$.address": address,
+                "addresses.$.address2": address2,
+                "addresses.$.city": city,
+                "addresses.$.state": state,
+                "addresses.$.postalCode": postalCode,
+                "addresses.$.phone": phone
+            }
+        }
+    );
+
+    console.log(addressupdate);
+    console.log(addressId);
+
+    if (addressupdate.nModified === 0) {
+        return res.status(404).json({ success: false, message: "Address not found or not updated" });
+    }
+
+    res.json({ success: true, message: "Address updated" });
+} catch (error) {
+    console.error('Error updating address:', error);
+    res.status(500).json({ success: false, message: "Failed to update address", error });
+}
+
+};
+
+const deleteAddress=async (req,res)=>{
+  const userId = req.session.userId;
+  const { addressId } = req.body; // Assuming addressId is sent as a URL parameter
+
+  try {
+      const result = await UserAddress.updateOne(
+          { userId: mongoose.Types.ObjectId.createFromHexString(userId) },
+          { $pull: { addresses: { _id: mongoose.Types.ObjectId.createFromHexString(addressId) } } }
+      );
+
+      if (result.nModified > 0) {
+          res.json({ success: true, message: "Address deleted successfully" });
+      } else {
+          res.status(404).json({ success: false, message: "Address not found or not deleted" });
+      }
+  } catch (error) {
+      console.error('Error deleting address:', error);
+      res.status(500).json({ success: false, message: "Failed to delete address", error });
+  }
+};
 
 
-  module.exports={getsignupage,getLoginpage,getSignupOtp,changePassword,forgotPassword,forgotResendOtp,postLogin,postSignup,postSignupOtp,forgotOtp,resendOtp,postUserAddress}
+
+
+
+
+
+
+  module.exports={getsignupage,getLoginpage,getSignupOtp,changePassword,forgotPassword,forgotResendOtp,postLogin,postSignup,postSignupOtp,forgotOtp,resendOtp,postUserAddress,addressUpdate,deleteAddress}
 
 

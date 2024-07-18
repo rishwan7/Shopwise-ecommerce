@@ -1553,12 +1553,13 @@ button:focus:not(:focus-visible) {
 	color: #333 !important;
 }
 .cart_list img {
-	border: 1px solid #ddd
+	border: 1px solid #ddd;
 	background-color: #ffffff;
 	float: left;
 	margin-right: 10px;
 	max-width: 80px;
 }
+
 .cart_list a {
 	font-size: 14px;
 	vertical-align: top;

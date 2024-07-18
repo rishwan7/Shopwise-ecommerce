@@ -43,6 +43,8 @@ router.get("/login",userDataController.getLoginpage)
 .get("/search",pageController.searchProduct)
 .get("/contact",pageController.contactPage)
 .get("/404",pageController.fourNotFour)
+.post("/updateaddress",userDataController.addressUpdate)
+.post("/deleteaddress",userDataController.deleteAddress)
 //cart
 router.get("/cart",cartControll.getCartPage)
 .post("/cart",cartControll.postCartPage)

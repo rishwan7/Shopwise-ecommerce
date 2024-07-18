@@ -54,6 +54,28 @@
 .remove-btn i {
     color: #000; 
 }
+.empty-cart-message {
+        text-align: center; /* Center align the text */
+        margin-top: 20px; /* Add some top margin for spacing */
+    }
+
+    .empty-cart-message button {
+        margin-top: 10px; /* Optional: Add margin to the button for spacing */
+    }
+    .shop-again-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Button text color */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.shop-again-button:hover {
+    background-color: #0056b3; /* Button hover background color */
+}
 </style>
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -280,13 +302,13 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
     
           
                 
-                <div class="col-12">
+                <div class="col-12"  id="cartTable">
                     <div class="border p-3 p-md-4">
                         <div class="heading_s1 mb-3">
                             <h6>Cart Totals</h6>
                         </div>
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table" >
                                 <tbody>
                                     <tr>
                                         <td class="cart_total_label">Cart Subtotal</td>
@@ -303,7 +325,7 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                                 </tbody>
                             </table>
                         </div>
-                        <a  href="/checkout" class="btn btn-fill-out">Proceed To CheckOut</a>
+                        <a  href="/checkout"  class="btn btn-fill-out">Proceed To CheckOut</a>
                     </div>
                 </div>
     
@@ -314,8 +336,9 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
     <!-- END SECTION SHOP -->
     
     <% } else { %>
-        <div class="cart-no-stock" style="width: fit-content; height: fit-content; display: flex; justify-content: center;">
-            <h2>No items in your cart</h2>
+        <div class="empty-cart-message">
+            <p>Your cart is empty.</p>
+            <button onclick="window.location.href='/index'" class="shop-again-button">Shop Again</button>
         </div>
     <% } %>
     
@@ -479,6 +502,7 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
               
                 const itemRow = document.getElementById(`removecart-${productId}`).closest('tr');
                 itemRow.parentNode.removeChild(itemRow);
+               
 
                 // Update cart totals and other relevant information
                 document.querySelector('.sub-total').textContent = ` ₹${data.cartSubtotal}`; 
@@ -489,6 +513,15 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                     document.getElementById('shipping-charge').textContent = `₹${data.shippingCharge}`;
                 } else {
                     document.getElementById('shipping-charge').textContent = 'Free Shipping';
+                }
+                    if (data.cartItems === 0) {
+                        document.getElementById("cartTable").style.display="none"
+                    const cartTable = document.querySelector('.shop_cart_table table');
+                     cartTable.innerHTML = `
+                    <div class="empty-cart-message">
+                        <p>Your cart is empty.</p>
+                        <button onclick="shopagain()"  class="shop-again-button">Shop Again</button>
+                    </div>`;
                 }
             } else {
                 alert('Failed to remove item from cart: ' + data.message);
@@ -505,6 +538,11 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
     
     
             }
+
+            function shopagain() {
+    
+    window.location.href = "/index";
+}
 </script>
 
 

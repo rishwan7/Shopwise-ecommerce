@@ -80,6 +80,7 @@ module.exports = {
   },
 
   getMyAccount: async (req, res) => {
+    req.session.userId='66742001854d67a55ce082b7'
     const userId = req.session.userId;
 
     if(!userId){
