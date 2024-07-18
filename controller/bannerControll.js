@@ -5,6 +5,11 @@ const{category}=require("../model/adminDb")
 
 
 const getBanner=async (req,res)=>{
+    const adminId=req.session.adminId
+    if(!adminId){
+        return res.redirect("/admin/login")
+    }
+
     const categories = await category.find({});
     res.render("admin/banner",{categories})
 }
@@ -35,7 +40,36 @@ console.log("done");
     }
 };
 
+const updateBanner=async (req,res)=>{
+    const bannerId=req.params.id
+    console.log(bannerId);
+  const banners=await banner.findOne({_id:bannerId})
+  const existCategory=await category.findOne({_id:banners.category})
+
+  const categories=await category.find({})
+  console.log("cattttttttttttttt",existCategory);
+   
+    res.render("admin/updatebanner",{banner:banners,categories,existCategory:existCategory.categoryName})
+};
+
+const postUpdateBanner=async(req,res)=>{
+    const bannerId = req.params.id;
+    const { bannerName, offerText, category } = req.body;
+    const bannerImage = req.file ? req.file.filename : null;
+    console.log(bannerId,bannerName,offerText);
+    console.log(bannerImage);
+    console.log(req.body);
+}
+
+const deleteBanner=async (req,res)=>{
+    const id=req.params.id
+    console.log(id);
+
+    await banner.findByIdAndDelete({_id:id})
+    res.redirect("admin/viewbanner")
+}
 
 
 
-module.exports={getBanner,postBanner}
+
+module.exports={getBanner,postBanner,updateBanner,postUpdateBanner,deleteBanner}

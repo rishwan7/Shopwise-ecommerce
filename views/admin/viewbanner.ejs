@@ -50,10 +50,10 @@
                         <td><%= banner.offerText %></td>
                         <td><%= banner.category.categoryName %></td>
                         <td class="btn-container">
-                            <form action="/updateBanner/<%= banner._id %>" method="POST">
-                                <button type="submit">Update</button>
-                            </form>
-                            <form action="/deleteBanner/<%= banner._id %>" method="POST">
+                          
+                                <a href="/admin/updatebanner/<%= banner._id %>">Update</a>
+                          
+                            <form action="/admin/deletebanner/<%= banner._id %>" method="post">
                                 <button type="submit">Delete</button>
                             </form>
                         </td>
@@ -65,3 +65,6 @@
     <!-- Add your script tags or script files here -->
 </body>
 </html>
+<script>
+    
+</script>

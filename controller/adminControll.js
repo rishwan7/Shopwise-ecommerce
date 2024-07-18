@@ -1,6 +1,6 @@
 const express = require("express");
 const {orders}=require("../model/orderDb")
-const{product, category}=require("../model/adminDb")
+const{product, category,adminDetails}=require("../model/adminDb")
 const{userdetails}=require("../model/userDb");
 const banner = require("../model/bannerDb");
 
@@ -9,26 +9,34 @@ const banner = require("../model/bannerDb");
 module.exports={ 
     getAdminHome:async(req,res)=>{
 
-        
+        const adminId=req.session.adminId
+        console.log(adminId);
+
+       
+      
+        if(!adminId){
+            return res.redirect("/admin/login")
+        }
+       
         const productDetails=await product.find({})
         const count=productDetails.length
-        console.log(count);
+       
         const userCount =  await userdetails.countDocuments({});
-        console.log("Total users:", userCount);
+       
         const canceledProductsCount = await orders.aggregate([
             { $unwind: "$products" },
             { $match: { "products.status": "canceled" } },
             { $count: "canceledCount" }
           ]);
           canceledCount= canceledProductsCount.length > 0 ? canceledProductsCount[0].canceledCount : 0;
-          console.log(canceledProductsCount);
+          
 
           const totalSalesData = await orders.aggregate([
             { $group: { _id: null, totalSales: { $sum: "$totalprice" } } }
           ]);
       
           const totalSales = totalSalesData.length > 0 ? totalSalesData[0].totalSales : 0;
-          console.log(totalSales);
+      
 
           const profitData = await orders.aggregate([
             { $unwind: "$products" }, // Unwind the products array
@@ -49,7 +57,7 @@ module.exports={
               }
             }
           ]);
-          console.log("proffut",profitData);
+        //   console.log("proffut",profitData);
           let profit=0;
           if(profitData){
 
@@ -75,6 +83,11 @@ module.exports={
   
 
     orderManagement: async(req,res)=>{
+        const adminId=req.session.adminId
+        if(!adminId){
+            return res.redirect("/admin/login")
+        }
+
        
     const order = await orders.aggregate([
        
@@ -152,7 +165,7 @@ module.exports={
     cancelOrder:async(req,res)=>{
      
     const{orderId}=req.body
-    console.log(orderId,"hhhhhhhhhhhhhhhh");
+   
 
     try {
         const order = await orders.findOneAndUpdate(
@@ -186,6 +199,8 @@ module.exports={
 
     //category based productshowing (on doghnut chart)on admin side
     getProductDetails:async(req,res)=>{
+       
+
         try {
             const productCount = await product.aggregate([
                 {
@@ -256,7 +271,7 @@ console.log(data);
     }
   },
   userJoinedCount: async (req, res) => {
-    console.log("okkkkk");
+  
 
 
 
@@ -304,12 +319,22 @@ console.log(data);
 
 },
 getViewBanner:async(req,res)=>{
+    const adminId=req.session.adminId
+    if(!adminId){
+        return res.redirect("/admin/login")
+    }
+
     const banners=await banner.find({}).populate("category")
     console.log(banners);
     res.render("admin/viewbanner",{banners})
 
 },
 getViewUsers:async(req,res)=>{
+    const adminId=req.session.adminId
+    if(!adminId){
+        return res.redirect("/admin/login")
+    }
+
     const users=await userdetails.find({})
     // console.log(users);
     res.render("admin/viewusers",{users})
@@ -340,8 +365,74 @@ unBlockUser:async(req,res)=>{
     }
 },
 adminSignup:(req,res)=>{
+    const errors = req.session.error;
+    req.session.error = "";
+    res.render("admin/signup",{errors})
     
+},
+postAdminSignup:async(req,res)=>{
+    const{userName,userEmail,userPassword,confirmPassword}=req.body
+
+    const existUser = await userdetails.findOne({ userEmail: userEmail });
+    const isValidPassword = (password) => {
+        const passwordRegex =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/;
+        return passwordRegex.test(password);
+      };
+  
+      if (!isValidPassword(userPassword)) {
+        console.log("password error");
+        req.session.error = "password must in a correct format";
+      }
+      if (userPassword != confirmPassword) {
+        console.log("password mismatch");
+        req.session.error = "password  mismatch";
+      }
+  
+      if (existUser) {
+        req.session.error = "this user already exist";
+      }
+  
+      if (Object.keys(req.session.error).length > 0) {
+        console.log("error fetched");
+        return res.redirect("/signup");
+        
+      }
+
+      const details=new adminDetails({
+        userName:userName,
+        userEmail:userEmail,
+        userPassword:userPassword
+
+      })
+
+      await details.save()
+      res.send("okk")
+
+},
+adminLogin: (req, res) => {
+    const errors = req.session.error;
+    req.session.error = ""; // Clear the error after retrieving it
+    res.render("admin/login", { errors });
+},
+
+postAdminLogin: async (req, res) => {
+    const { email, password } = req.body;
+    const detailsCheck = await adminDetails.findOne({ userEmail: email });
+    req.session.adminId=detailsCheck._id
+
+    if (!detailsCheck) {
+        req.session.error = "Incorrect Email";
+        return res.redirect("/admin/login");
+    } else if (password !== detailsCheck.userPassword) {
+        req.session.error = "Incorrect Password";
+        return res.redirect("/admin/login");
+    } else {
+        req.session.admin = detailsCheck; // Assuming you set session for admin
+        return res.redirect("/admin");
+    }
 }
+
     
 }
 

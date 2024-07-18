@@ -9,6 +9,11 @@ module.exports = {
   //get the new product add page
 
   getAddProduct: async (req, res) => {
+    const adminId=req.session.adminId
+    if(!adminId){
+        return res.redirect("/admin/login")
+    }
+
     const errorMessage = req.session.errorMessage;
     req.session.errorMessage = "";
 
@@ -87,6 +92,11 @@ module.exports = {
   //view on the listed product on admin
 
   getViewProducts: async (req, res) => {
+    const adminId=req.session.adminId
+    if(!adminId){
+        return res.redirect("/admin/login")
+    }
+
     try {
       const categoryId = req.params.categoryId;
       // console.log("this is cat id:",categoryId);
@@ -137,6 +147,11 @@ module.exports = {
   //get the update page
 
   getUpdateProduct: async (req, res) => {
+    const adminId=req.session.adminId
+    if(!adminId){
+        return res.redirect("/admin/login")
+    }
+
     const productId = req.params.id;
     // console.log(`this is product id: ${productId}`);
     const productToUpdate = await product.findById(productId);

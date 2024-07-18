@@ -4,6 +4,11 @@ const { Session } = require("express-session");
 
 module.exports = {
   getAddCategory: async (req, res) => {
+    const adminId=req.session.adminId
+    if(!adminId){
+        return res.redirect("/admin/login")
+    }
+
     const errorMessage = req.session.errorMessage;
     req.session.errorMessage = "";
     const sucessmessage = req.session.successMessage;

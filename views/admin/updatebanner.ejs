@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Banner</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Update Banner</h2>
+        <form action="/admin/updatebanner/<%= banner._id %>" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="bannerName">Banner Name</label>
+                <input type="text" class="form-control" id="bannerName" name="bannerName"  value="<%= banner.bannerName %>" required>
+            </div>
+            <div class="form-group">
+                <label for="offerText">Offer Text</label>
+                <input type="text" class="form-control" id="offerText" name="offerText" value="<%= banner.offerText %>" required>
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select class="form-control" id="category" name="category" required>
+                    <option value="<%= banner.category %>"><%= existCategory%></option>
+                    <% categories.forEach(category => { %>
+                     
+                        <option value="<%= category._id %>"><%= category.categoryName %></option>
+                    <% }) %>
+                   
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="bannerImage">Banner Image</label>
+                <input type="file" class="form-control-file" id="bannerImage" name="bannerImage">
+                <% if (banner.bannerImage) { %>
+                    <img src="/bannerImage/<%= banner.bannerImage %>" alt="Banner Image" class="img-thumbnail mt-2" width="200">
+                <% } %>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Banner</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+<script>
+  const bannerForm = document.getElementById("bannerForm");
+
+bannerForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const bannerId = '<%= banner._id %>'; // Extract banner ID for the URL
+
+    const bannerName = document.getElementById("bannerName").value;
+    const offerText = document.getElementById("offerText").value;
+    const category = document.getElementById("category").value;
+    const bannerImage = document.getElementById("bannerImage").files[0]; // Use files[0] for file input
+
+    const formData = new FormData();
+    formData.append('bannerName', bannerName);
+    formData.append('offerText', offerText);
+    formData.append('category', category);
+    formData.append('bannerImage', bannerImage);
+
+    try {
+        const response = await fetch(`/admin/updatebanner/${bannerId}`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            alert("Banner updated successfully");
+        } else {
+            alert("Failed to update banner");
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert("An error occurred while updating the banner");
+    }
+});
+</script>

@@ -18,17 +18,24 @@ router.get("/",admin.getAdminHome)
 
 //product-control route
 
+
+
 router.get("/addproduct",productController.getAddProduct)
-.post("/addproduct",upload.array('productImage',10),productController.postAddProduct)
-router.get('/viewproducts/:categoryId?',productController.getViewProducts)
-router.delete('/deleteproduct/:id', productController.deleteProduct);
-router.get("/updateproduct/:id",productController.getUpdateProduct),
-router.post("/updateproduct/:id",upload.array('productImage',10),productController.postUpdateProduct)
+.get("/signup",admin.adminSignup)
+.post("/signup",admin.postAdminSignup)
+.get("/login",admin.adminLogin)
+.post("/login",admin.postAdminLogin)
+.post("/addproduct",upload.array('productImage',10),productController.postAddProduct)   
+.get('/viewproducts/:categoryId?',productController.getViewProducts)
+.delete('/deleteproduct/:id', productController.deleteProduct)
+.get("/updateproduct/:id",productController.getUpdateProduct)
+.post("/updateproduct/:id",upload.array('productImage',10),productController.postUpdateProduct)
 .get("/coupon",couponController.getCoupon)
 .post("/coupon",couponController.postCouponControl)
 .get("/ordermanage",admin.orderManagement)
 .post("/updatestatus",admin.updateOrderStatus   )
 .post("/cancelorder",admin.cancelOrder)
+
 
 //chartdatas
 .post("/productCounts",admin.getProductDetails)
@@ -51,6 +58,9 @@ router.get("/addcategory",categoryController.getAddCategory)
 .get("/viewusers",admin.getViewUsers)
 .post("/blockuser",admin.blockUser)
 .post("/unblockuser",admin.unBlockUser)
+.get("/updatebanner/:id",bannerController.updateBanner)
+.post("/updatebanner/:id",bannerController.postUpdateBanner)
+.post("/deletebanner/:id",bannerController.deleteBanner   )
 
 
 //logout

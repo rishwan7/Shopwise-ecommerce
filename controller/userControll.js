@@ -47,7 +47,7 @@ module.exports = {
       // Fetch categories
       const categories = await category.find({});
 
-      const bannerses = await banner.find({}).limit(2).skip(1);
+      const bannerses = await banner.find({}).limit(2)
      
       // Fetch products with populated productCategory
       const products = await product.find({}).populate("productCategory").limit(10);
@@ -92,53 +92,58 @@ module.exports = {
 
     const orderDetails = await orders.aggregate([
       {
-        $match: { userId: mongoose.Types.ObjectId.createFromHexString(userId) },
+          $match: {
+              userId: mongoose.Types.ObjectId.createFromHexString(userId),
+          },
       },
       { $unwind: "$products" },
       {
-        $lookup: {
-          from: "products",
-          localField: "products.productId",
-          foreignField: "_id",
-          as: "productDetails",
-        },
+          $lookup: {
+              from: "products",
+              localField: "products.productId",
+              foreignField: "_id",
+              as: "productDetails",
+          },
       },
       { $unwind: "$productDetails" },
       {
-        $project: {
-          _id: 0,
-          userId: 1,
-          ids: "$products._id",
-          status: "$products.status",
-          productId: "$products.productId",
-          productName: "$productDetails.productName",
-          productImage: "$productDetails.productImage",
-          productPrice: "$productDetails.offerPrice",
-          price: "$productDetails.productPrice",
-          quantity: "$products.quantity",
-          subtotal: {
-            $multiply: ["$products.quantity", "$productDetails.offerPrice"],
-          },
-          discountAmount: {
-            $multiply: [
-              {
-                $subtract: [
-                  "$productDetails.productPrice",
-                  "$productDetails.offerPrice",
-                ],
+          $project: {
+              _id: 0,
+              userId: 1,
+              ids: "$products._id",
+              orderId: "$products._id",
+              productId: "$products.productId",
+              status: "$products.status",
+              productName: "$productDetails.productName",
+              productImage: "$productDetails.productImage",
+              productPrice: "$productDetails.offerPrice",
+              price: "$productDetails.productPrice",
+              quantity: "$products.quantity",
+              subtotal: {
+                  $multiply: ["$products.quantity", "$productDetails.offerPrice"],
               },
-              "$products.quantity",
-            ],
+              discountAmount: {
+                  $multiply: [
+                      {
+                          $subtract: [
+                              "$productDetails.productPrice",
+                              "$productDetails.offerPrice",
+                          ],
+                      },
+                      "$products.quantity",
+                  ],
+              },
+              totalprice: "$totalprice",
+              address: "$address",
+              paymentMethod: "$paymentMethod",
+              purchaseDate: "$purchaseDate",
+              couponcode: "$couponcode",
+              DiscountviaCoupon: "$DiscountviaCoupon",
           },
-          totalprice: "$totalprice",
-          address: "$address",
-          paymentMethod: "$paymentMethod",
-          purchaseDate: "$purchaseDate",
-          couponcode: "$couponcode",
-          DiscountviaCoupon: "$DiscountviaCoupon",
-        },
       },
-    ]);
+      { $sort: { purchaseDate: -1 } } // Sort by purchaseDate in descending order (new to old)
+  ]);
+  
 
     const addresses = await UserAddress.aggregate([
       {
@@ -150,13 +155,45 @@ module.exports = {
 
     console.log(addresses);
 
+
+
+   
+    let isInUser = false;
+    let cartQuantity = 0;
+    let userName = "";
+
+  
+       if(userId){
+
+         const userDetails = await userdetails.findOne({ _id: userId });
+         userName = userDetails ? userDetails.userName : "";
+         if (userDetails) {
+           isInUser = true;
+         }
+      
+         const Cart = await cart.findOne({ userId: userId });
+
+
+
+         if (Cart && Cart.items) {
+           cartQuantity = Cart.items.length;
+           console.log(`Number of items in the cart: ${cartQuantity}`);
+         } else {
+           console.log("Cart not found or no items in the cart.");
+         }
+       }
+
+    
+
     // Return or process orderDetails as needed
 
     // console.log(orderDetails);
-    const cartQuantity = req.session.cartQuantity;
+ 
     res.render("user/my-account", {
       orderDetails,
       cartQuantity,
+      isInUser,
+      userName,
       useraddress: addresses,
     });
   },
@@ -321,70 +358,101 @@ module.exports = {
     const userId = req.session.userId;
     const userDetails = await userdetails.findById(userId);
 
+    if(!userId){
+      return res.redirect("/login")
+    }
+
     console.log(userId);
     console.log("ordes", userId);
     // const ordersCollection= await orders.find({userId:userId})
     try {
       const orderDetails = await orders.aggregate([
         {
-          $match: {
-            userId: mongoose.Types.ObjectId.createFromHexString(userId),
-          },
+            $match: {
+                userId: mongoose.Types.ObjectId.createFromHexString(userId),
+            },
         },
         { $unwind: "$products" },
         {
-          $lookup: {
-            from: "products",
-            localField: "products.productId",
-            foreignField: "_id",
-            as: "productDetails",
-          },
+            $lookup: {
+                from: "products",
+                localField: "products.productId",
+                foreignField: "_id",
+                as: "productDetails",
+            },
         },
         { $unwind: "$productDetails" },
         {
-          $project: {
-            _id: 0,
-
-            userId: 1,
-            ids: "$products._id",
-            orderId: "$products._id",
-            productId: "$products.productId",
-            status: "$products.status",
-            productName: "$productDetails.productName",
-            productImage: "$productDetails.productImage",
-            productPrice: "$productDetails.offerPrice",
-            price: "$productDetails.productPrice",
-            quantity: "$products.quantity",
-            subtotal: {
-              $multiply: ["$products.quantity", "$productDetails.offerPrice"],
-            },
-            discountAmount: {
-              $multiply: [
-                {
-                  $subtract: [
-                    "$productDetails.productPrice",
-                    "$productDetails.offerPrice",
-                  ],
+            $project: {
+                _id: 0,
+                userId: 1,
+                ids: "$products._id",
+                orderId: "$products._id",
+                productId: "$products.productId",
+                status: "$products.status",
+                productName: "$productDetails.productName",
+                productImage: "$productDetails.productImage",
+                productPrice: "$productDetails.offerPrice",
+                price: "$productDetails.productPrice",
+                quantity: "$products.quantity",
+                subtotal: {
+                    $multiply: ["$products.quantity", "$productDetails.offerPrice"],
                 },
-                "$products.quantity",
-              ],
+                discountAmount: {
+                    $multiply: [
+                        {
+                            $subtract: [
+                                "$productDetails.productPrice",
+                                "$productDetails.offerPrice",
+                            ],
+                        },
+                        "$products.quantity",
+                    ],
+                },
+                totalprice: "$totalprice",
+                address: "$address",
+                paymentMethod: "$paymentMethod",
+                purchaseDate: "$purchaseDate",
+                couponcode: "$couponcode",
+                DiscountviaCoupon: "$DiscountviaCoupon",
             },
-            totalprice: "$totalprice",
-            address: "$address",
-            paymentMethod: "$paymentMethod",
-            purchaseDate: "$purchaseDate",
-            couponcode: "$couponcode",
-            DiscountviaCoupon: "$DiscountviaCoupon",
-          },
         },
-      ]);
+        { $sort: { purchaseDate: -1 } } // Sort by purchaseDate in descending order (new to old)
+    ]);
+    
 
       req.session.orderDetails = orderDetails;
 
-      const cartQuantity = req.session.cartQuantity;
+      
 
       console.log("bbbbbbbbbbbbbbbbbbb", orderDetails);
-      res.render("user/orders", { userDetails, orderDetails, cartQuantity });
+
+      let isInUser = false;
+      let cartQuantity = 0;
+      let userName = "";
+  
+    
+         if(userId){
+  
+           const userDetails = await userdetails.findOne({ _id: userId });
+           userName = userDetails ? userDetails.userName : "";
+           if (userDetails) {
+             isInUser = true;
+           }
+        
+           const Cart = await cart.findOne({ userId: userId });
+  
+  
+  
+           if (Cart && Cart.items) {
+             cartQuantity = Cart.items.length;
+             console.log(`Number of items in the cart: ${cartQuantity}`);
+           } else {
+             console.log("Cart not found or no items in the cart.");
+           }
+         }
+
+      res.render("user/orders", { userDetails, orderDetails, cartQuantity ,isInUser,userName});
     } catch (error) {
       console.error(error);
     }
@@ -517,10 +585,12 @@ module.exports = {
       
     let isInUser = false;
     let cartQuantity = 0;
+    let userName = "";
 
     if(userId){
       
       const userDetails = await userdetails.findOne({ _id: userId });
+      userName = userDetails ? userDetails.userName : "";
       if (userDetails) {
         isInUser = true;
       }
@@ -546,6 +616,7 @@ module.exports = {
         isInUser,
         cartQuantity,
         categoryId,
+        userName,
         currentPage: page,
         totalPages,
       });
@@ -581,10 +652,12 @@ module.exports = {
     
     let isInUser = false;
     let cartQuantity = 0;
+    let userName = "";
 
     if(userId){
       
       const userDetails = await userdetails.findOne({ _id: userId });
+      userName = userDetails ? userDetails.userName : "";
       if (userDetails) {
         isInUser = true;
       }
@@ -610,6 +683,7 @@ module.exports = {
       totalPages,
       categoryId,
       isInUser,
+      userName,
       cartQuantity,
       subcategories,
     });

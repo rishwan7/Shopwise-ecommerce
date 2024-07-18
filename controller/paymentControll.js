@@ -326,8 +326,38 @@ const verifyPaymentWebhook = async (req, res) => {
     }
 };
 
-const orderSuccess = (req, res) => {
-    res.render("user/orderSuccess");
+const orderSuccess =async (req, res) => {
+    const userId=req.session.userId
+    if(!userId){
+        return res.redirect("/login")
+    }
+
+    
+    let isInUser = false;
+    let cartQuantity = 0;
+    let userName = "";
+
+  
+       if(userId){
+
+         const userDetails = await userdetails.findOne({ _id: userId });
+         userName = userDetails ? userDetails.userName : "";
+         if (userDetails) {
+           isInUser = true;
+         }
+      
+         const Cart = await cart.findOne({ userId: userId });
+
+
+
+         if (Cart && Cart.items) {
+           cartQuantity = Cart.items.length;
+           console.log(`Number of items in the cart: ${cartQuantity}`);
+         } else {
+           console.log("Cart not found or no items in the cart.");
+         }
+       }
+    res.render("user/orderSuccess",{cartQuantity,userName,isInUser});
 };
 
 module.exports = { getCheckOutPage, postCheckOut, orderSuccess, verifyPaymentWebhook };
