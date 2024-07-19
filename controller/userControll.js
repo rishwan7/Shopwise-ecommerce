@@ -47,7 +47,7 @@ module.exports = {
       // Fetch categories
       const categories = await category.find({});
 
-      const bannerses = await banner.find({}).limit(2)
+      const bannerses = await banner.find({}).skip(2).limit(2)
      
       // Fetch products with populated productCategory
       const products = await product.find({}).populate("productCategory").limit(10);
@@ -80,7 +80,7 @@ module.exports = {
   },
 
   getMyAccount: async (req, res) => {
-    req.session.userId='66742001854d67a55ce082b7'
+
     const userId = req.session.userId;
 
     if(!userId){
@@ -154,7 +154,7 @@ module.exports = {
       { $replaceRoot: { newRoot: "$addresses" } }, // Replace the root with addresses array
     ]);
 
-    console.log(addresses);
+    // console.log(addresses);
 
 
 
@@ -312,13 +312,13 @@ module.exports = {
         });
         const isInWishlist = !!wishlistItem; // Convert to boolean
 
-        console.log("this is", products[0]);
+        // console.log("this is", products[0]);
          
        const categoryId=products[0].categoryId
        let relatedItems=""
        if(categoryId){
         relatedItems=await product.find({productCategory:categoryId}).limit(6)
-        console.log(relatedItems,"reeeeeeeeeeeeeeeeeeeeeee");
+        // console.log(relatedItems,"reeeeeeeeeeeeeeeeeeeeeee");
 
        } 
        
@@ -426,7 +426,7 @@ module.exports = {
 
       
 
-      console.log("bbbbbbbbbbbbbbbbbbb", orderDetails);
+      // console.log("bbbbbbbbbbbbbbbbbbb", orderDetails);
 
       let isInUser = false;
       let cartQuantity = 0;
@@ -575,7 +575,7 @@ module.exports = {
         .skip(skip)
         .limit(limit);
 
-      console.log("Products found:", products);
+      // console.log("Products found:", products);
 
       // Example: Calculate total pages based on total products count
       const totalProductsCount = await product.countDocuments({
@@ -691,7 +691,7 @@ module.exports = {
   },
   filteringViaSubcategory: async (req, res) => {
     const { subcategoryIds } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
 
     try {
       const products = await product

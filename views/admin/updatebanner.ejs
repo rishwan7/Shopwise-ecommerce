@@ -9,7 +9,7 @@
 <body>
     <div class="container mt-5">
         <h2>Update Banner</h2>
-        <form action="/admin/updatebanner/<%= banner._id %>" method="POST" enctype="multipart/form-data">
+        <form  id="updateBannerForm" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="bannerName">Banner Name</label>
                 <input type="text" class="form-control" id="bannerName" name="bannerName"  value="<%= banner.bannerName %>" required>
@@ -36,7 +36,7 @@
                     <img src="/bannerImage/<%= banner.bannerImage %>" alt="Banner Image" class="img-thumbnail mt-2" width="200">
                 <% } %>
             </div>
-            <button type="submit" class="btn btn-primary">Update Banner</button>
+            <a class="btn btn-primary"  onclick="updateBanner('<%= banner._id %>')" >Update Banner</a> 
         </form>
     </div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
@@ -47,38 +47,45 @@
 
 
 <script>
-  const bannerForm = document.getElementById("bannerForm");
+ 
 
-bannerForm.addEventListener("submit", async function(event) {
-    event.preventDefault();
-
-    const bannerId = '<%= banner._id %>'; // Extract banner ID for the URL
+async function updateBanner(bannerId){
 
     const bannerName = document.getElementById("bannerName").value;
-    const offerText = document.getElementById("offerText").value;
-    const category = document.getElementById("category").value;
-    const bannerImage = document.getElementById("bannerImage").files[0]; // Use files[0] for file input
+            const offerText = document.getElementById("offerText").value;
+            const category = document.getElementById("category").value;
+            const bannerImage = document.getElementById("bannerImage").files
+            console.log(bannerImage);
 
-    const formData = new FormData();
-    formData.append('bannerName', bannerName);
-    formData.append('offerText', offerText);
-    formData.append('category', category);
-    formData.append('bannerImage', bannerImage);
+
+
+        
+
 
     try {
         const response = await fetch(`/admin/updatebanner/${bannerId}`, {
             method: 'POST',
-            body: formData
+            headers:{
+                 'Content-Type':'application/json'
+            },
+            body: JSON.stringify({ bannerName,
+                        offerText,
+                        category,bannerImage})
         });
 
-        if (response.ok) {
-            alert("Banner updated successfully");
-        } else {
-            alert("Failed to update banner");
-        }
+        // if (response.ok) {
+        //     alert("Banner updated successfully");
+        // } else {
+        //     alert("Failed to update banner");
+        // }
     } catch (error) {
         console.error('Error:', error);
         alert("An error occurred while updating the banner");
     }
-});
+
+}
+
+   
+
+  
 </script>

@@ -33,7 +33,7 @@ const postBanner = async (req, res) => {
         });
 console.log("done");
         await newBanner.save();
-        res.send("Banner saved successfully");
+        res.redirect("/admin/viewbanner")
     } catch (error) {
         console.error(error);
         res.status(500).send("An error occurred while saving the banner");
@@ -47,7 +47,7 @@ const updateBanner=async (req,res)=>{
   const existCategory=await category.findOne({_id:banners.category})
 
   const categories=await category.find({})
-  console.log("cattttttttttttttt",existCategory);
+//   console.log("cattttttttttttttt",existCategory);
    
     res.render("admin/updatebanner",{banner:banners,categories,existCategory:existCategory.categoryName})
 };
@@ -58,6 +58,7 @@ const postUpdateBanner=async(req,res)=>{
     const bannerImage = req.file ? req.file.filename : null;
     console.log(bannerId,bannerName,offerText);
     console.log(bannerImage);
+    console.log(category);
     console.log(req.body);
 }
 
@@ -66,7 +67,7 @@ const deleteBanner=async (req,res)=>{
     console.log(id);
 
     await banner.findByIdAndDelete({_id:id})
-    res.redirect("admin/viewbanner")
+    res.redirect("/admin/viewbanner")
 }
 
 
