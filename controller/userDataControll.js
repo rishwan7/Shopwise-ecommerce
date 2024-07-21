@@ -177,7 +177,7 @@ const postSignup= async (req, res) => {
     }
     req.session.userId = usersData._id;
     // console.log(req.session.userId);
-    res.redirect("index");
+    res.redirect("/");
   }
 
  const forgotPassword= async (req, res) => {
