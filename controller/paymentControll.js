@@ -211,8 +211,8 @@ const postCheckOut = async (req, res) => {
                 payment_method_types: ['card'],
                 line_items: lineItems,
                 mode: 'payment',
-                success_url: 'https://shopwise-ecommerce-website.onrender.com/success',
-                cancel_url:'https://shopwise-ecommerce-website.onrender.com/checkout',
+                success_url: 'https://localhost:3000/success',
+                cancel_url:'https://localhost:3000/checkout',
                 client_reference_id: req.session.userId.toString(), // Save userId to retrieve later
                 metadata: {
                     deliveryAddress,
