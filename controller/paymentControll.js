@@ -11,13 +11,18 @@ const{coupons}=require("../model/couponDb")
 
 const getCheckOutPage = async (req, res) => {
     try {
-        
+       
+      
         
         
         const userId = req.session.userId;
             if(!userId){
                 return res.redirect("/login")
             }
+
+            
+
+         
         const userDetails = await userdetails.findById(userId);
         const userAddresses = await UserAddress.findOne({ userId });
         let couponslist= await coupons.find({})
@@ -30,6 +35,20 @@ const getCheckOutPage = async (req, res) => {
         }
 
         if (userId) {
+            const Cart = await cart.findOne({ userId: userId });
+          
+          let Quantity=0;
+          
+            if (Cart && Cart.items) {
+              Quantity = Cart.items.length;
+              
+              console.log(`Number of items in the cart: ${Quantity}`);
+            } else {
+              console.log("Cart not found or no items in the cart.");
+            }
+            if(Quantity<=0){
+                return res.redirect("/")
+            }
 
             
             const cartDetails = await cart.aggregate([
@@ -84,7 +103,7 @@ const getCheckOutPage = async (req, res) => {
                 }
             ]);
 
-            console.log(cartDetails[0],"hhhhhhhhhh");
+           
 
             const cartDetail = cartDetails[0];
             const totalAmount = cartDetail.totalAmount || 0;
@@ -129,9 +148,7 @@ const getCheckOutPage = async (req, res) => {
                      console.log("Cart not found or no items in the cart.");
                    }
                  }
-      if(cartQuantity<=0){
-        return res.redirect("/")
-      }
+      
            
             res.render("user/checkout", {
                 userDetails,
@@ -211,8 +228,8 @@ const postCheckOut = async (req, res) => {
                 payment_method_types: ['card'],
                 line_items: lineItems,
                 mode: 'payment',
-                success_url: 'https://shopwise-ecommerce-website-oe73.onrender.com/success',
-                cancel_url:'https://shopwise-ecommerce-website-oe73.onrender.com/checkout',
+                success_url: 'http://127.0.0.1:3000/success',
+                cancel_url:'http://127.0.0.1:3000/checkout',
                 client_reference_id: req.session.userId.toString(), // Save userId to retrieve later
                 metadata: {
                     deliveryAddress,

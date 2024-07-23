@@ -321,6 +321,7 @@ const postUserAddress = async (req, res) => {
   }
 
   try {
+
       let userAddresses = await UserAddress.findOne({ userId });
 
       if (!userAddresses) {
@@ -375,7 +376,7 @@ const addressUpdate=async (req,res)=>{
     console.log(addressupdate);
     console.log(addressId);
 
-    if (addressupdate.nModified === 0) {
+    if (addressupdate.modifiedCount === 0) {
         return res.status(404).json({ success: false, message: "Address not found or not updated" });
     }
 
@@ -393,12 +394,22 @@ const deleteAddress=async (req,res)=>{
 
   try {
       const result = await UserAddress.updateOne(
-          { userId: mongoose.Types.ObjectId.createFromHexString(userId) },
+          { userId: userId },
           { $pull: { addresses: { _id: mongoose.Types.ObjectId.createFromHexString(addressId) } } }
       );
 
-      if (result.nModified > 0) {
-          res.json({ success: true, message: "Address deleted successfully" });
+     
+      if (result. modifiedCount > 0) {
+        const addresses = await UserAddress.aggregate([
+          {
+            $match: { userId: mongoose.Types.ObjectId.createFromHexString(userId) },
+          }, // Match documents with the given userId
+          { $unwind: "$addresses" }, // Deconstruct the addresses array
+          { $replaceRoot: { newRoot: "$addresses" } }, // Replace the root with addresses array
+        ]);
+    
+
+          res.json({ success: true, message: "Address deleted successfully" ,addresses});
       } else {
           res.status(404).json({ success: false, message: "Address not found or not deleted" });
       }

@@ -539,6 +539,9 @@
                     </div>
                   </div>
                 </div>
+
+
+                
               </div>
             </div>
           </div>
@@ -722,6 +725,34 @@
               showConfirmButton: false,
               timer: 1500,
             });
+document.getElementById("billingaddress").innerHTML=''
+     result.addresses.forEach(address => {
+      const userAddress=`
+      <div class="col-lg-6">
+                                <div class="card mb-3 mb-lg-0">
+                                    <div class="card-header">
+                                        <h3>Billing Address</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <address>
+                                            FirstName: ${ address.firstName }${ address.lastName}<br>
+                                            Address:${address.address }<br>
+                                            Address 2: ${address.address2 }<br>
+                                            City:  ${address.city }<br>
+                                            State: ${address.state }<br>
+                                            Postal Code: ${address.postalCode }<br>
+                                            Phone Number: ${ address.phone }
+                                        </address>
+            
+                                        <a onclick="addressupdate('${address._id}', '${address.firstName}', '${address.lastName}', '${address.address}', '${address.address2}', '${address.city}', '${address.state}', '${address.postalCode}', '${address.phone}')" class="btn btn-fill-out">Edit</a>
+                                        <a onclick="deleteAddress('${address._id }')" class="btn btn-fill-out">Delete</a>
+                                    </div>
+                                </div>
+                            </div>  `
+
+                            document.getElementById("billingaddress").innerHTML+= productHTML;
+                                });
+
       }else{
         Swal.fire({
               icon: "error",

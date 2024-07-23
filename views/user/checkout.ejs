@@ -359,6 +359,7 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                     </button>
                   
                   </form>
+                  <div id="addressbox"></div>
         
                 <% if (userAddresses && userAddresses.addresses.length > 0) { %>
                     <div class="address-box" id="addresslist">
@@ -389,28 +390,28 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
             <form  id="addressForm2"  style="display: none;" >
                 <input type="hidden" id="userId" value="<%= userId %>">
                 <div class="form-group mb-3">
-                    <input type="text" required class="form-control" id="fname" name="fname" placeholder="First name *">
+                    <input type="text" required  class="form-control new" id="first-name" name="fname" placeholder="First name *">
                 </div>
                 <div class="form-group mb-3">
-                    <input type="text" required class="form-control" id="lname" name="lname" placeholder="Last name *">
+                    <input type="text" required class="form-control" id="last-name" name="lname" placeholder="Last name *">
                 </div>
                 <div class="form-group mb-3">
-                    <input type="text" class="form-control" id="billing_address" name="billing_address" required placeholder="Address *">
+                    <input type="text" class="form-control" id="add_billing_address" name="billing_address" required placeholder="Address *">
                 </div>
                 <div class="form-group mb-3">
-                    <input type="text" class="form-control" id="billing_address2" name="billing_address2" placeholder="Address line 2">
+                    <input type="text" class="form-control" id="add_billing_address2" name="billing_address2" placeholder="Address line 2">
                 </div>
                 <div class="form-group mb-3">
-                    <input class="form-control" required type="text" id="city" name="city" placeholder="City *">
+                    <input class="form-control" required type="text" id="add_city" name="city" placeholder="City *">
                 </div>
                 <div class="form-group mb-3">
-                    <input class="form-control" required type="text" id="state" name="state" placeholder="State *">
+                    <input class="form-control" required type="text" id="add_state" name="state" placeholder="State *">
                 </div>
                 <div class="form-group mb-3">
-                    <input class="form-control" required type="text" id="zipcode" name="zipcode" placeholder="Postcode *">
+                    <input class="form-control" required type="text" id="add_zipcode" name="zipcode" placeholder="Postcode *">
                 </div>
                 <div class="form-group mb-3">
-                    <input class="form-control" required type="text" id="phone" name="phone" placeholder="Phone *">
+                    <input class="form-control" required type="text" id="add_phone" name="phone" placeholder="Phone *">
                 </div>
 
 
@@ -445,32 +446,32 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                         <% }); %>
                     </div>
                 <% } else { %>
-                    <form method="post" id="addressForm" action="/address">
+                    <form  id="addressForm" >
                         <div class="form-group mb-3">
-                            <input type="text" required class="form-control" id="fname" name="fname" placeholder="First name *">
+                            <input type="text" required value="hello" class="form-control new" id="first-name" name="fname" placeholder="First name *">
                         </div>
                         <div class="form-group mb-3">
-                            <input type="text" required class="form-control" id="lname" name="lname" placeholder="Last name *">
+                            <input type="text" required class="form-control" id="last-name" name="lname" placeholder="Last name *">
                         </div>
                         <div class="form-group mb-3">
-                            <input type="text" class="form-control" id="billing_address" name="billing_address" required placeholder="Address *">
+                            <input type="text" class="form-control" id="add_billing_address" name="billing_address" required placeholder="Address *">
                         </div>
                         <div class="form-group mb-3">
-                            <input type="text" class="form-control" id="billing_address2" name="billing_address2" placeholder="Address line 2">
+                            <input type="text" class="form-control" id="add_billing_address2" name="billing_address2" placeholder="Address line 2">
                         </div>
                         <div class="form-group mb-3">
-                            <input class="form-control" required type="text" id="city" name="city" placeholder="City *">
+                            <input class="form-control" required type="text" id="add_city" name="city" placeholder="City *">
                         </div>
                         <div class="form-group mb-3">
-                            <input class="form-control" required type="text" id="state" name="state" placeholder="State *">
+                            <input class="form-control" required type="text" id="add_state" name="state" placeholder="State *">
                         </div>
                         <div class="form-group mb-3">
-                            <input class="form-control" required type="text" id="zipcode" name="zipcode" placeholder="Postcode *">
+                            <input class="form-control" required type="text" id="add_zipcode" name="zipcode" placeholder="Postcode *">
                         </div>
                         <div class="form-group mb-3">
-                            <input class="form-control" required type="text" id="phone" name="phone" placeholder="Phone *">
+                            <input class="form-control" required type="text" id="add_phone" name="phone" placeholder="Phone *">
                         </div>
-                        <button class="btn btn-fill-out btn-block">Add Address</button>
+                        <button class="btn btn-fill-out btn-block"  type="button" onclick="addAddress()"  >Add Address</button>
                     </form>
                 <% } %>
             </div>
@@ -580,8 +581,8 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
             <div class="col-md-6">
                 <div class="newsletter_form">
                     <form>
-                        <input type="text" required="" class="form-control rounded-0" placeholder="Enter Email Address">
-                        <button type="submit" class="btn btn-dark rounded-0" name="submit" value="Submit">Subscribe</button>
+                        <input type="text" required="" class="form-control rounded-0" id="justemail" value="just email" placeholder="Enter Email Address">
+                        <button type="submit" class="btn btn-dark rounded-0" name="submit"  value="Submit">Subscribe</button>
                     </form>
                 </div>
             </div>
@@ -599,71 +600,43 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 
 <script>
 
-    
-     
-     document.getElementById(addressForm).addEventListener("submit",async function(event){
-        event.preventDefault()
-
-        const formData = {
-            fname: document.getElementById('fname').value,
-            lname: document.getElementById('lname').value,
-            billing_address: document.getElementById('billing_address').value,
-            billing_address2: document.getElementById('billing_address2').value,
-            city: document.getElementById('city').value,
-            state: document.getElementById('state').value,
-            zipcode: document.getElementById('zipcode').value,
-            phone: document.getElementById('phone').value
-        };
-
-
-       const response= await fetch("/adress",{method:"POST",
-        headers:"application/json",
-        body:JSON.stringify({formData})
-       })
-
-       const result=await response.json()
-       console.log(result);
-       if(result.success){
-        alert("address added")
-       }
-
-     })
-
-
-
-     function showAddressForm() {
+   function showAddressForm() {
         var addressForm = document.getElementById('addressForm2');
         var moreAddresses = document.getElementById('moreAddresses');
         addressForm.style.display = 'block';
         moreAddresses.style.display = 'none';
+
     }
 
     function cancelAddressForm() {
         document.getElementById("addressForm2").style.display = "none";
     }
 
+    async function addAddress() {
+    // Retrieve values from the form inputs
+    const fname = document.getElementById("first-name").value;
+    const lname = document.getElementById('last-name').value;
+    const billing_address = document.getElementById('add_billing_address').value;
+    const billing_address2 = document.getElementById('add_billing_address2').value;
+    const city = document.getElementById('add_city').value;
+    const state = document.getElementById('add_state').value;
+    const zipcode = document.getElementById('add_zipcode').value;
+    const phone = document.getElementById('add_phone').value;
 
-    function addAddress() {
-    const fname = document.getElementById('fname').value;
-    const lname = document.getElementById('lname').value;
-    const billing_address = document.getElementById('billing_address').value;
-    const billing_address2 = document.getElementById('billing_address2').value;
-    const city = document.getElementById('city').value;
-    const state = document.getElementById('state').value;
-    const zipcode = document.getElementById('zipcode').value;
-    const phone = document.getElementById('phone').value;
-    const userId = document.getElementById('userId').value;
+    try {
+        // Send a POST request with the address data
+        const response = await fetch('/address', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ fname, lname, billing_address, billing_address2, city, state, zipcode, phone })
+        });
 
-    fetch('/address', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ fname, lname, billing_address, billing_address2, city, state, zipcode, phone, userId })
-    })
-    .then(response => response.json())
-    .then(data => {
+        // Parse the response as JSON
+        const data = await response.json();
         console.log(data);
+
         if (data.success) {
             Swal.fire({
                 position: "top-end",
@@ -674,38 +647,45 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
             });
 
             const newAddress = data.address;
-            const newAddressDiv = document.createElement('div');
-            newAddressDiv.classList.add('single-address');
-            newAddressDiv.id = `address-${newAddress._id}`;
+            if (newAddress) {
+                const newAddressDiv = document.createElement('div');
+                newAddressDiv.classList.add('single-address');
+                newAddressDiv.id = `address-${newAddress._id}`;
 
-            newAddressDiv.innerHTML = `
-                <input type="radio" name="selectedAddress" id="address${newAddress._id}" value="${newAddress._id}" onchange="selectAddress(this)">
-                <label for="address${newAddress._id}">
-                    <strong>${newAddress.firstName} ${newAddress.lastName}</strong>
-                    <span class="label-home">HOME</span>
-                    <span class="phone">${newAddress.phone}</span>
-                    <p>${newAddress.address}, ${newAddress.address2}, ${newAddress.city}, ${newAddress.state}, ${newAddress.postalCode}</p>
-                </label>
-                <button class="btn btn-edit" onclick="editAddress('${newAddress._id}')">Edit</button>
-            `;
+                // Use optional chaining and default values to handle missing properties
+                newAddressDiv.innerHTML = `
+                    <input type="radio" name="selectedAddress" id="address${newAddress._id}" value="${newAddress._id}" onchange="selectAddress(this)">
+                    <label for="address${newAddress._id}">
+                        <strong>${newAddress.firstName || 'N/A'} ${newAddress.lastName || 'N/A'}</strong>
+                        <span class="label-home">HOME</span>
+                        <span class="phone">${newAddress.phone || 'N/A'}</span>
+                        <p>${newAddress.address || ''}, ${newAddress.address2 || ''}, ${newAddress.city || ''}, ${newAddress.state || ''}, ${newAddress.postalCode || ''}</p>
+                    </label>
+                    <button class="btn btn-edit" onclick="editAddress('${newAddress._id}')">Edit</button>
+                `;
 
+                // Append the new address div to the addressbox container
+                const addressBox = document.getElementById('addressbox');
+                if (addressBox) {
+                    addressBox.appendChild(newAddressDiv);
+                } else {
+                    console.error('Addressbox container not found.');
+                }
 
-            location.reload()
-            const moreAddresses = document.getElementById('moreAddresses');
-            if (moreAddresses) {
-                moreAddresses.appendChild(newAddressDiv);
+                // Optionally hide or reset the form
+                cancelAddressForm();
             } else {
-                const addressBox = document.getElementById('addressBox');
-                addressBox.appendChild(newAddressDiv);
+                console.error('Address data is missing.');
             }
-
-            cancelAddressForm();
         } else {
-            alert('Error adding address');
+            console.error('Failed to add address.');
         }
-    })
-    .catch(error => console.error('Error:', error));
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
+
+
 
 
 
