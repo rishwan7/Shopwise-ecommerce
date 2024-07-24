@@ -388,7 +388,7 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
 
                            
             <form  id="addressForm2"  style="display: none;" >
-                <input type="hidden" id="userId" value="<%= userId %>">
+              
                 <div class="form-group mb-3">
                     <input type="text" required  class="form-control new" id="first-name" name="fname" placeholder="First name *">
                 </div>
@@ -448,7 +448,7 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                 <% } else { %>
                     <form  id="addressForm" >
                         <div class="form-group mb-3">
-                            <input type="text" required value="hello" class="form-control new" id="first-name" name="fname" placeholder="First name *">
+                            <input type="text" required  class="form-control new" id="first-name" name="fname" placeholder="First name *">
                         </div>
                         <div class="form-group mb-3">
                             <input type="text" required class="form-control" id="last-name" name="lname" placeholder="Last name *">
@@ -646,6 +646,14 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                 timer: 1500
             });
 
+
+            if(document.getElementById('addressForm')){
+                document.getElementById('addressForm').style.display='none'
+
+            }
+            if(document.getElementById('addressForm2')){
+                document.getElementById('addressForm2').style.display='none'
+            }
             const newAddress = data.address;
             if (newAddress) {
                 const newAddressDiv = document.createElement('div');
@@ -661,13 +669,14 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
                         <span class="phone">${newAddress.phone || 'N/A'}</span>
                         <p>${newAddress.address || ''}, ${newAddress.address2 || ''}, ${newAddress.city || ''}, ${newAddress.state || ''}, ${newAddress.postalCode || ''}</p>
                     </label>
-                    <button class="btn btn-edit" onclick="editAddress('${newAddress._id}')">Edit</button>
+                   <button class="btn btn-edit" onclick="editAddress('${newAddress._id}', '${newAddress.firstName}', '${newAddress.lastName}', '${newAddress.address}', '${newAddress.address2}', '${newAddress.city}', '${newAddress.state}', '${newAddress.postalCode}', '${newAddress.phone}')">Edit</button>
                 `;
 
                 // Append the new address div to the addressbox container
                 const addressBox = document.getElementById('addressbox');
                 if (addressBox) {
                     addressBox.appendChild(newAddressDiv);
+                    location.reload()
                 } else {
                     console.error('Addressbox container not found.');
                 }
@@ -677,6 +686,7 @@ document.write("<sc"+"ript src='" +scJsHost +"statcounter.com/counter/counter.js
             } else {
                 console.error('Address data is missing.');
             }
+            
         } else {
             console.error('Failed to add address.');
         }
@@ -838,6 +848,7 @@ async function removeCoupon() {
     document.getElementById("applied-coupon").style.display = 'none';
     document.getElementById("applied-coupon-code").textContent = '';
     document.getElementById("couponname").style.display="none"
+    location.reload()
 
     if(document.getElementById("couponenter")){
         document.getElementById("couponenter").style.display="block"
@@ -895,6 +906,7 @@ async function editAddress( addressId,
     state,
     postalCode,
     phone){
+        alert('okk')
 console.log(addressId,firstName,lastName,phone,address,address2,city,postalCode,state);
 
     document.getElementById("addresslist").style.display="none"
