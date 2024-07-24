@@ -228,8 +228,8 @@ const postCheckOut = async (req, res) => {
                 payment_method_types: ['card'],
                 line_items: lineItems,
                 mode: 'payment',
-                success_url: 'http://127.0.0.1:3000/success',
-                cancel_url:'http://127.0.0.1:3000/checkout',
+                success_url: 'http://3.107.57.150:3000/success',
+                cancel_url:'http://3.107.57.150:3000/checkout',
                 client_reference_id: req.session.userId.toString(), // Save userId to retrieve later
                 metadata: {
                     deliveryAddress,
