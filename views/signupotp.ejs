@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OTP Verification</title>
+    <link rel="stylesheet" href="../stylesheet/signupotp.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="otp-section">
+        <div class="otp-content">
+          <img class="logo_dark" src="assets/images/logo_dark.png" alt="logo" />
+          <h2>OTP Verification</h2>
+          <p>
+            An OTP has been sent to your mobile number  <%= usermob.phonenumber %>. Please enter it below to verify
+            your account.
+          </p>
+          <% if (error) { %>
+          <p style="color: red"><%= error %></p>
+
+          <% } %>
+          <form action="/otpvalidation" method="post">
+            <div class="input-group">
+              <input type="text" id="otp" name="otp" required maxlength="6" />
+            </div>
+            <button type="submit" class="otp-btn" >Verify OTP</button>
+          </form>
+          <div class="resend-otp">
+            <p>
+              Didn't receive OTP? <a href="#" id="resend-otp">Resend OTP</a>
+            </p>
+            <p id="resend-status"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("resend-otp")
+        .addEventListener("click", async function () {
+          try {
+            const response = await fetch("/resendOtp", { method: "POST" });
+            const result = await response.json();
+            const statusElement = document.getElementById("resend-status");
+            if (result.success) {
+              statusElement.textContent = response.message;
+              statusElement.style.color = "green";
+            } else {
+              if (result.message) {
+                statusElement.textContent = result.message;
+                statusElement.style.color = "red";
+              }
+            }
+          } catch (error) {
+            console.error("Error resending OTP:", error);
+            statusElement.textContent =
+              "Error resending OTP. Please try again.";
+            statusElement.style.color = "red";
+          }
+        });
+        
+
+
+    </script>
+  </body>
+</html>
